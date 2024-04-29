@@ -1338,6 +1338,7 @@ __metadata:
     "@types/react": ^18.0.27
     "@types/react-dom": ^18.0.10
     "@vitejs/plugin-react": ^3.1.0
+    media-chrome: ^3.2.1
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.10.0
@@ -2340,6 +2341,13 @@ __metadata:
     socks-proxy-agent: ^7.0.0
     ssri: ^9.0.0
   checksum: 2332eb9a8ec96f1ffeeea56ccefabcb4193693597b132cd110734d50f2928842e22b84cfa1508e921b8385cdfd06dda9ad68645fed62b50fff629a580f5fb72c
+  languageName: node
+  linkType: hard
+
+"media-chrome@npm:^3.2.1":
+  version: 3.2.1
+  resolution: "media-chrome@npm:3.2.1"
+  checksum: 0e7d8a6850d0c4844be7b7975bcf80886aad5f2ae3cff1081aa5a7b7920ddf9f15b2da4df875f83ffb5f083d3fc1d337a8ac204317e40391f8311eb7f2f58c5e
   languageName: node
   linkType: hard
 
