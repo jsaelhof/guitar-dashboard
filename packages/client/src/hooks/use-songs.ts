@@ -59,14 +59,11 @@ export const useSongs = () => {
 
             acc.songs[key] = song;
 
+            // While iterating all the songs, create an unsorted structure grouped by artist
             if (!acc.songsByArtist[song.artist])
               acc.songsByArtist[song.artist] = [];
             acc.songsByArtist[song.artist].push(song);
 
-            // FIXME: Not very efficient to be sorting as each song is added.
-            acc.songsByArtist[song.artist].sort((a, b) =>
-              a.title < b.title ? -1 : 1
-            );
             return acc;
           },
           {
@@ -75,8 +72,18 @@ export const useSongs = () => {
           }
         );
 
+        // Sort by artist name, and within each artist, by song title
+        const sortedbyArtist = Object.keys(songDB.songsByArtist)
+          .toSorted()
+          .reduce<SongsByArtist>((acc, artist) => {
+            acc[artist] = songDB.songsByArtist[artist].toSorted((a, b) =>
+              a.title < b.title ? -1 : 1
+            );
+            return acc;
+          }, {});
+
         setSongs(songDB.songs);
-        setSongsByArtist(songDB.songsByArtist);
+        setSongsByArtist(sortedbyArtist);
       };
 
       getSongs();

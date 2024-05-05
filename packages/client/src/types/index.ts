@@ -10,11 +10,11 @@ export type Song = {
 };
 
 export type SongsByArtist = {
-  [key: string]: Song[];
+  [artist: string]: Song[];
 };
 
 export type SongDict = {
-  [key: string]: Song;
+  [songId: string]: Song;
 };
 
 export type Riff = {

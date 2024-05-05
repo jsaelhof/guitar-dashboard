@@ -17,9 +17,9 @@ function App() {
   const riffs = useRiffs();
 
   return !songs ? null : (
-    <div style={{ display: "grid", gridTemplateColumns: "300px 1fr" }}>
+    <div>
       <SongList
-        initialSelectedArtist={songId ? songs[songId].artist : ""}
+        initialSelectedArtist={songId ? songs[songId].artist : undefined}
         songsByArtist={songsByArtist}
         onClick={(song) => {
           navigate(`/${song.id}`);
@@ -32,6 +32,7 @@ function App() {
             backgroundColor: "rgba(0,0,0,0.03)",
             padding: 16,
             minHeight: "100vh",
+            marginLeft: 300,
           }}
         >
           <SongControls song={songs[songId]} />
