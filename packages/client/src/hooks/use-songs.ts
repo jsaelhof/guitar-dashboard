@@ -1,17 +1,6 @@
 import { useEffect, useState } from "react";
 import { Song, SongDict, SongsByArtist } from "../types";
-
-const getSongInfoFromFilePath = (path?: string) => {
-  if (!path) return null;
-
-  const result = path.match(/.*\/(.*)\/.*\/\d* - (.*)\.mp3$/);
-  return result?.length === 3
-    ? {
-        artist: result[1],
-        title: result[2],
-      }
-    : null;
-};
+import { polyfillSong } from "../utils/polyfill-song";
 
 export const useSongs = () => {
   const [songs, setSongs] = useState<SongDict | null>(null);
@@ -32,31 +21,7 @@ export const useSongs = () => {
           songsByArtist: SongsByArtist;
         }>(
           (acc, [key, value]) => {
-            // Find the artist from the data or by extracting it from the file naming pattern of my mp3's
-            const artist =
-              value.artist ??
-              getSongInfoFromFilePath(value.file)?.artist ??
-              "Unknown";
-
-            // Find the title from the data or the file naming pattern of my mp3's
-            const title =
-              value.title ?? getSongInfoFromFilePath(value.file)?.title ?? key;
-
-            const song: Song = {
-              ...value,
-              id: key,
-              title,
-              artist,
-              // Use the tab from the data but if not available, do a search by title first, then fallback to artist and then fallback to the homepage of ultimate guitar.
-              tab:
-                value.tab ??
-                (title || artist
-                  ? `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(
-                      title ?? artist ?? ""
-                    )}`
-                  : "https://www.ultimate-guitar.com"),
-            };
-
+            const song = polyfillSong(key, value);
             acc.songs[key] = song;
 
             // While iterating all the songs, create an unsorted structure grouped by artist

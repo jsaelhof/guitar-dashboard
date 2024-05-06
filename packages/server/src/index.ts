@@ -1,9 +1,9 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync, readdirSync, writeFileSync } from "fs";
 import path from "path";
 import cors from "cors";
-import db from "../public/db.json";
+import db from "../db/db.json";
 
 dotenv.config();
 
@@ -56,6 +56,40 @@ app.get("/riffs/:slug", (req: Request, res: Response) => {
     console.error(ex);
     res.send([]);
   }
+});
+
+app.get("/recent", (req: Request, res: Response) => {
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+  const recentsJson: string[] = JSON.parse(recents);
+  res.send(recentsJson);
+});
+
+app.post("/update-recent/:slug", (req: Request, res: Response) => {
+  const songId = req.params.slug;
+  console.log("Update Recent", songId);
+
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+  const recentsJson: string[] = JSON.parse(recents);
+
+  // If this song exists, remove it.
+  if (recentsJson.includes(songId))
+    recentsJson.splice(recentsJson.indexOf(songId), 1);
+
+  // Add the song at the start of the array
+  recentsJson.unshift(songId);
+
+  // If the recents has gone beyond 30, trim the array
+  if (recentsJson.length > 30) recentsJson.slice(0, 30);
+
+  writeFileSync(
+    "./db/recent.json",
+    JSON.stringify(recentsJson, null, 2),
+    "utf8"
+  );
+
+  res.send({
+    ok: true,
+  });
 });
 
 app.post("/play/:slug", (req: Request, res: Response) => {

@@ -21,6 +21,7 @@ function App() {
       <SongList
         initialSelectedArtist={songId ? songs[songId].artist : undefined}
         songsByArtist={songsByArtist}
+        songs={songs}
         onClick={(song) => {
           navigate(`/${song.id}`);
         }}
@@ -31,8 +32,10 @@ function App() {
           style={{
             backgroundColor: "rgba(0,0,0,0.03)",
             padding: 16,
-            minHeight: "100vh",
+            minHeight: "calc(100vh - 32px)",
             marginLeft: 300,
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <SongControls song={songs[songId]} />
@@ -48,9 +51,11 @@ function App() {
             <embed
               src={`http://localhost:8001/${songs[songId].pdf}`}
               width="100%"
-              height="90%" // Quick and dirty... really need a flexbox solution
               type="application/pdf"
-            ></embed>
+              style={{
+                flexGrow: 1,
+              }}
+            />
           )}
         </div>
       )}
