@@ -120,7 +120,10 @@
     "file": "I/Iron Maiden/Iron Maiden - [1988] Seventh Son of a Seventh Son/01 - Moonchild.mp3"
   },
   "0032": {
-    "file": "I/Iron Maiden/Iron Maiden - [1988] Seventh Son of a Seventh Son/04 - The Evil That Men Do.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [1988] Seventh Son of a Seventh Son/04 - The Evil That Men Do.mp3",
+    "settings": {
+      "volume": 1
+    }
   },
   "0033": {
     "file": "I/Iron Maiden/Iron Maiden - [1988] Seventh Son of a Seventh Son/07 - The Clairvoyant.mp3"
@@ -192,7 +195,10 @@
     "file": "M/Megadeth/Megadeth - [2001] World Needs A Hero/03 - Moto Psycho.mp3"
   },
   "0056": {
-    "file": "M/Megadeth/Megadeth - [2004] The System Has Failed/03 - Kick The Chair.mp3"
+    "file": "M/Megadeth/Megadeth - [2004] The System Has Failed/03 - Kick The Chair.mp3",
+    "settings": {
+      "volume": 0.75
+    }
   },
   "0057": {
     "file": "M/Megadeth/Megadeth - [2004] The System Has Failed/04 - The Scorpion.mp3"
@@ -392,13 +398,19 @@
     "file": "A/ACDC/ACDC - [1975] High Voltage/05 - T.N.T..mp3"
   },
   "0111": {
-    "file": "A/ACDC/ACDC - [1975] High Voltage/06 - Can I Sit Next To You Girl.mp3"
+    "file": "A/ACDC/ACDC - [1975] High Voltage/06 - Can I Sit Next To You Girl.mp3",
+    "settings": {
+      "volume": 0
+    }
   },
   "0112": {
     "file": "A/ACDC/ACDC - [1976] Dirty Deeds Done Dirt Cheap (Remastered)/01 - Dirty Deeds Done Dirt Cheap.mp3"
   },
   "0113": {
-    "file": "A/ACDC/ACDC - [1977] Let There Be Rock (Remastered)/04 - Bad Boy Boogie.mp3"
+    "file": "A/ACDC/ACDC - [1977] Let There Be Rock (Remastered)/04 - Bad Boy Boogie.mp3",
+    "settings": {
+      "volume": 0.35
+    }
   },
   "0114": {
     "file": "A/ACDC/ACDC - [1977] Let There Be Rock (Remastered)/08 - Whole Lotta Rosie.mp3"
@@ -434,7 +446,10 @@
     "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/02 - Shoot To Thrill.mp3"
   },
   "0125": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/06 - Back In Black.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/06 - Back In Black.mp3",
+    "settings": {
+      "volume": 0.8
+    }
   },
   "0126": {
     "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/07 - You Shook Me All Night Long.mp3"
@@ -458,7 +473,10 @@
     "file": "A/ACDC/ACDC - [1990] The Razors Edge/01 - Thunderstruck.mp3"
   },
   "0134": {
-    "file": "A/ACDC/ACDC - [1990] The Razors Edge/02 - Fire Your Guns.mp3"
+    "file": "A/ACDC/ACDC - [1990] The Razors Edge/02 - Fire Your Guns.mp3",
+    "settings": {
+      "volume": 1
+    }
   },
   "0135": {
     "file": "A/ACDC/ACDC - [1990] The Razors Edge/03 - Moneytalks.mp3"
@@ -482,7 +500,10 @@
     "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/02 - Meltdown.mp3"
   },
   "0142": {
-    "file": "A/ACDC/ACDC - [2009] Backtracks/11 - Big Gun.mp3"
+    "file": "A/ACDC/ACDC - [2009] Backtracks/11 - Big Gun.mp3",
+    "settings": {
+      "volume": 0.6
+    }
   },
   "0143": {
     "file": "A/ACDC/ACDC - [2014] Rock Or Bust/01 - Rock or Bust.mp3"

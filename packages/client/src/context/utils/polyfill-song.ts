@@ -1,4 +1,4 @@
-import { Song } from "../types";
+import { Song } from "../../types";
 
 const getSongInfoFromFilePath = (path?: string) => {
   if (!path) return null;
@@ -33,5 +33,8 @@ export const polyfillSong = (id: string, song: Partial<Song>): Song => {
             title ?? artist ?? ""
           )}`
         : "https://www.ultimate-guitar.com"),
+    settings: {
+      volume: song.settings?.volume ? song.settings.volume : 0.5,
+    },
   };
 };

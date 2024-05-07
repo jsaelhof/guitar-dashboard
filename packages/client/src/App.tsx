@@ -6,17 +6,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import SongList from "./components/song-list/SongList";
 import Riffs from "./components/riffs/Riffs";
 import SongControls from "./components/song-controls/SongControls";
-import { useSongs } from "./hooks/use-songs";
-import { useRiffs } from "./hooks/use-riffs";
 import Player from "./components/player/Player";
+import { useAppContext } from "./context/AppContext";
 
 function App() {
   const navigate = useNavigate();
   const { songId } = useParams();
-  const { songs, songsByArtist } = useSongs();
-  const riffs = useRiffs();
+  const { init, songs, songsByArtist } = useAppContext();
 
-  return !songs ? null : (
+  return !init ? null : (
     <div>
       <SongList
         initialSelectedArtist={songId ? songs[songId].artist : undefined}
@@ -40,10 +38,10 @@ function App() {
         >
           <SongControls song={songs[songId]} />
 
-          <Player file={songs[songId].file} />
+          <Player song={songs[songId]} />
 
           {/* Display any associated riff data (images or data uris) */}
-          <Riffs riffs={riffs} />
+          <Riffs song={songs[songId]} />
 
           {/* FIXME: Look at PDF.js as a better solution */}
           {/* Display any PDF. This is typically used for non-pro tabs (old style ascii) as any easier option then cropping images. */}

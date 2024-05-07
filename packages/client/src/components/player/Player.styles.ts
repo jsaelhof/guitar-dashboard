@@ -5,6 +5,8 @@ export const AmpLabel = styled("div")(({ small }: { small?: boolean }) => ({
   fontWeight: 600,
   justifySelf: "center",
   fontSize: small ? 11 : 14,
+  display: "flex",
+  alignItems: "center",
 }));
 
 export const AmpDisplay = styled("div")(({ on }: { on: boolean }) => ({

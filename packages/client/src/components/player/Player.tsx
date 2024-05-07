@@ -2,17 +2,26 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { dispatchAudioEvent } from "../../utils/audio-events";
 import { IconButton, Slider } from "@mui/material";
 import { formatSeconds } from "../../utils/format-seconds";
-import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
+import {
+  BookmarkBorder,
+  Pause,
+  PlayArrow,
+  Replay10,
+  Save,
+} from "@mui/icons-material";
 import { AmpDisplay, AmpLabel } from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import ThumbComponent from "./components/thumb/Thumb";
+import { Song } from "../../types";
+import { useAppContext } from "../../context/AppContext";
 
 export type PlayerProps = {
-  file?: string;
+  song: Song;
 };
 
-const Player = ({ file }: PlayerProps) => {
+const Player = ({ song: { file, ...song } }: PlayerProps) => {
+  const { dispatchSongUpdate } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
   const [volume, setVolume] = useState<number>(0.5);
@@ -28,13 +37,6 @@ const Player = ({ file }: PlayerProps) => {
   }, []);
 
   const cycleLoop = useCallback(() => {
-    console.log(
-      new Date().toTimeString(),
-      loop,
-      loop && loop[1] != null && "1",
-      loop && loop.length === 1 && "2"
-    );
-
     setLoop((state) => {
       if (!ref.current || (state && state[1] != null)) {
         return null;
@@ -55,6 +57,7 @@ const Player = ({ file }: PlayerProps) => {
 
   // When the file changes, reset anything that shouldn't hold over from the previous song
   useEffect(() => {
+    updateVolume(song.settings.volume);
     setLoop(null);
     refresh();
   }, [file]);
@@ -66,7 +69,7 @@ const Player = ({ file }: PlayerProps) => {
           <audio
             ref={ref}
             src={`http://localhost:8001/${file}`}
-            autoPlay
+            //autoPlay
             onPlay={(e) => {
               // When a track starts, set its volume to the player's volume
               e.currentTarget.volume = volume;
@@ -252,7 +255,22 @@ const Player = ({ file }: PlayerProps) => {
               <AmpLabel>Time</AmpLabel>
               <AmpLabel>Loop</AmpLabel>
               <AmpLabel>Speed %</AmpLabel>
-              <AmpLabel>Volume</AmpLabel>
+              <AmpLabel>
+                <div>Volume</div>
+                <IconButton size="small">
+                  <BookmarkBorder
+                    onClick={() => {
+                      if (ref.current) {
+                        dispatchSongUpdate({
+                          type: "volume",
+                          id: song.id,
+                          volume: ref.current.volume,
+                        });
+                      }
+                    }}
+                  />
+                </IconButton>
+              </AmpLabel>
               <AmpLabel>Sync</AmpLabel>
             </div>
           )}

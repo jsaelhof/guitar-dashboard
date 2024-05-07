@@ -8,7 +8,7 @@ import {
   ListSubheader,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Song, SongDict, SongsByArtist } from "../../types";
+import { Song, Songs, SongsByArtist } from "../../types";
 import { useState } from "react";
 import { useUpdateRecentSongs } from "./hooks/use-update-recent-songs";
 import { useRecentSongs } from "./hooks/use-recent-songs";
@@ -16,7 +16,7 @@ import { useRecentSongs } from "./hooks/use-recent-songs";
 export type SongListProps = {
   initialSelectedArtist?: string;
   songsByArtist: SongsByArtist | null;
-  songs: SongDict;
+  songs: Songs;
   onClick: (song: Song) => void;
 };
 

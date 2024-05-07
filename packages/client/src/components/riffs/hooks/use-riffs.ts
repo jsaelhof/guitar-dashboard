@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Riff } from "../types";
-import { useParams } from "react-router-dom";
+import { Riff } from "../../../types";
 
-export const useRiffs = () => {
-  const { songId } = useParams();
+export const useRiffs = (songId: string) => {
   const [riffs, setRiffs] = useState<Riff[] | null>(null);
 
   useEffect(() => {
@@ -21,5 +19,5 @@ export const useRiffs = () => {
     }
   }, [songId]);
 
-  return riffs;
+  return { riffs };
 };

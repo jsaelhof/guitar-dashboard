@@ -7,13 +7,16 @@ export type Song = {
   tab: string;
   file?: string;
   pdf?: string;
+  settings: {
+    volume: number;
+  };
 };
 
 export type SongsByArtist = {
   [artist: string]: Song[];
 };
 
-export type SongDict = {
+export type Songs = {
   [songId: string]: Song;
 };
 

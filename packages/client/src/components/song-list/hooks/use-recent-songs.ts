@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { updateServer } from "../../../utils/update-server";
 
 export const useRecentSongs = (songId?: string) => {
   const [recentSongIds, setRecentSongIds] = useState<string[]>([]);
@@ -16,10 +17,7 @@ export const useRecentSongs = (songId?: string) => {
   useEffect(() => {
     if (songId) {
       const timeoutId = setTimeout(async () => {
-        await fetch(`http://localhost:8001/update-recent/${songId}`, {
-          method: "POST",
-        });
-
+        await updateServer(`update-recent/${songId}`);
         await getRecent();
       }, 30000);
 

@@ -5,7 +5,7 @@ import {
   AccordionSummary,
   Chip,
 } from "@mui/material";
-import { AudioEvent, Riff } from "../../types";
+import { AudioEvent, Riff, Song } from "../../types";
 import { useEffect, useMemo, useState } from "react";
 import {
   RiffList,
@@ -18,12 +18,14 @@ import {
   removeAudioEventListener,
 } from "../../utils/audio-events";
 import { formatSeconds } from "../../utils/format-seconds";
+import { useRiffs } from "./hooks/use-riffs";
 
 export type RiffsProps = {
-  riffs: Riff[] | null;
+  song: Song;
 };
 
-const Riffs = ({ riffs }: RiffsProps) => {
+const Riffs = ({ song }: RiffsProps) => {
+  const { riffs } = useRiffs(song.id);
   const allRiffs = useMemo(() => [...Array((riffs ?? []).length).keys()], []);
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
 

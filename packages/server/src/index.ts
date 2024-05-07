@@ -66,7 +66,6 @@ app.get("/recent", (req: Request, res: Response) => {
 
 app.post("/update-recent/:slug", (req: Request, res: Response) => {
   const songId = req.params.slug;
-  console.log("Update Recent", songId);
 
   const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
   const recentsJson: string[] = JSON.parse(recents);
@@ -101,6 +100,28 @@ app.post("/play/:slug", (req: Request, res: Response) => {
   });
   res.send({
     ok: true,
+  });
+});
+
+app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
+  const songId = req.params.songId;
+  const volume = parseFloat(req.params.volume);
+
+  if (songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
+    db[songId].settings = db[songId].settings ?? {};
+    db[songId].settings.volume = volume;
+
+    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+
+    res.send({
+      data: {
+        volume,
+      },
+    });
+  }
+
+  res.send({
+    ok: false,
   });
 });
 
