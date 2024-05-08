@@ -30,7 +30,7 @@ const Riffs = ({ song }: RiffsProps) => {
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
 
   // This hook sets up a listener for playback events from the the Player.tsx component as it plays through a song.
-  // Using the time, we can check and see if what riff should be shown.
+  // Using the time, we can check and see what riff should be shown.
   useEffect(() => {
     const listener = (e: AudioEvent) => {
       if (e.detail.currentTime) {
@@ -47,7 +47,7 @@ const Riffs = ({ song }: RiffsProps) => {
     () => {
       removeAudioEventListener(listener);
     };
-  }, []);
+  }, [riffs]);
 
   return (
     <div>
