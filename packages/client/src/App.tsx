@@ -8,11 +8,13 @@ import Riffs from "./components/riffs/Riffs";
 import SongControls from "./components/song-controls/SongControls";
 import Player from "./components/player/Player";
 import { useAppContext } from "./context/AppContext";
+import { useRiffs } from "./hooks/use-riffs";
 
 function App() {
   const navigate = useNavigate();
   const { songId } = useParams();
   const { init, songs, songsByArtist } = useAppContext();
+  const { riffs, riffTimes } = useRiffs(songId);
 
   return !init ? null : (
     <div>
@@ -38,10 +40,10 @@ function App() {
         >
           <SongControls song={songs[songId]} />
 
-          <Player song={songs[songId]} />
+          <Player song={songs[songId]} riffTimes={riffTimes} />
 
           {/* Display any associated riff data (images or data uris) */}
-          <Riffs song={songs[songId]} />
+          {riffs && <Riffs riffs={riffs} />}
 
           {/* FIXME: Look at PDF.js as a better solution */}
           {/* Display any PDF. This is typically used for non-pro tabs (old style ascii) as any easier option then cropping images. */}

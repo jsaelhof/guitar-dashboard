@@ -18,9 +18,10 @@ import { useAppContext } from "../../context/AppContext";
 
 export type PlayerProps = {
   song: Song;
+  riffTimes: number[];
 };
 
-const Player = ({ song: { file, ...song } }: PlayerProps) => {
+const Player = ({ song: { file, ...song }, riffTimes }: PlayerProps) => {
   const { dispatchSongUpdate } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -158,14 +159,15 @@ const Player = ({ song: { file, ...song } }: PlayerProps) => {
                     "data-loop": loop?.[1] != null,
                   },
                 }}
-                // marks={
-                //   loop?.[1] != null
-                //     ? [
-                //         { value: loop[0] / ref.current.duration },
-                //         { value: loop[1] / ref.current.duration },
-                //       ]
-                //     : undefined
-                // }
+                marks={
+                  riffTimes
+                    ? riffTimes.map((time) => ({
+                        value: ref.current?.duration
+                          ? time / ref.current.duration
+                          : undefined,
+                      }))
+                    : undefined
+                }
                 onChange={(e, value) => {
                   if (typeof value === "number" && ref.current) {
                     ref.current.currentTime = ref.current.duration * value;
@@ -177,6 +179,13 @@ const Player = ({ song: { file, ...song } }: PlayerProps) => {
                   }
                 }}
                 valueLabelDisplay="off"
+                componentsProps={{
+                  mark: {
+                    style: {
+                      height: 8,
+                    },
+                  },
+                }}
               />
 
               <div>
