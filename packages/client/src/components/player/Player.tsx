@@ -18,10 +18,15 @@ import { useAppContext } from "../../context/AppContext";
 
 export type PlayerProps = {
   song: Song;
-  riffTimes: number[];
+  riffTimes: number[] | null;
+  disableShortcuts: boolean;
 };
 
-const Player = ({ song: { file, ...song }, riffTimes }: PlayerProps) => {
+const Player = ({
+  song: { file, ...song },
+  riffTimes,
+  disableShortcuts,
+}: PlayerProps) => {
   const { dispatchSongUpdate } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -54,7 +59,7 @@ const Player = ({ song: { file, ...song }, riffTimes }: PlayerProps) => {
     if (ref.current) ref.current.volume = value;
   }, []);
 
-  useKeyboardShortcuts(ref, cycleLoop, updateVolume);
+  useKeyboardShortcuts(ref, cycleLoop, updateVolume, disableShortcuts);
 
   // When the file changes, reset anything that shouldn't hold over from the previous song
   useEffect(() => {

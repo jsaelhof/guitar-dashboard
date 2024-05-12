@@ -16,8 +16,10 @@ export const RiffListItem = styled("li")(({ theme: { palette } }) => ({
   },
 }));
 
-export const SectionLabel = styled("div")(() => ({
-  display: "flex",
+export const SectionSummary = styled("div")(() => ({
+  width: "100%",
+  display: "grid",
+  gridTemplateColumns: "auto 1fr auto",
   alignItems: "center",
   gap: 16,
 }));

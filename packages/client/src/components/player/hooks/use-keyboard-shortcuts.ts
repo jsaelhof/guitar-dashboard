@@ -3,7 +3,8 @@ import { MutableRefObject, useCallback, useEffect } from "react";
 export const useKeyboardShortcuts = (
   ref: MutableRefObject<HTMLAudioElement | null>,
   onCycleLoop: () => void,
-  onVolumeChange: (value: number) => void
+  onVolumeChange: (value: number) => void,
+  disableShortcuts: boolean
 ) => {
   useEffect(() => {
     if (ref.current !== null) {
@@ -92,8 +93,8 @@ export const useKeyboardShortcuts = (
         e.preventDefault();
       };
 
-      window.addEventListener("keydown", listener);
+      if (!disableShortcuts) window.addEventListener("keydown", listener);
       return () => window.removeEventListener("keydown", listener);
     }
-  }, []);
+  }, [disableShortcuts]);
 };

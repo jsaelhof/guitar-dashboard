@@ -7,6 +7,10 @@ export const useRiffs = (songId?: string) => {
 
   useEffect(() => {
     if (songId) {
+      // When the song changes, clear any riffs.
+      setRiffs(null);
+      setRiffTimes(null);
+
       const getRiffs = async (songId: string) => {
         const riffsData: Riff[] = await (
           await fetch(`http://localhost:8001/riffs/${songId}`)

@@ -9,12 +9,20 @@ import SongControls from "./components/song-controls/SongControls";
 import Player from "./components/player/Player";
 import { useAppContext } from "./context/AppContext";
 import { useRiffs } from "./hooks/use-riffs";
+import { useState } from "react";
+import AddRiff from "./components/add-riff/AddRiff";
 
 function App() {
   const navigate = useNavigate();
   const { songId } = useParams();
   const { init, songs, songsByArtist } = useAppContext();
   const { riffs, riffTimes } = useRiffs(songId);
+
+  // When adding new riffs, I need to disable the keyboard shortcuts listener.
+  // Since I want it to apply to the whole page (so I don't have to deal with focus issues), that listener prevents default which eats the keystrokes.
+  // When these are disabled, I can type into the fields to add new riffs.
+  // I don't see a need to have foot-controls enabled while adding a riff so I'm toggling it.
+  const [disableShortcuts, setDisableShortcuts] = useState(false);
 
   return !init ? null : (
     <div>
@@ -40,10 +48,14 @@ function App() {
         >
           <SongControls song={songs[songId]} />
 
-          <Player song={songs[songId]} riffTimes={riffTimes} />
+          <Player
+            song={songs[songId]}
+            riffTimes={riffTimes}
+            disableShortcuts={disableShortcuts}
+          />
 
           {/* Display any associated riff data (images or data uris) */}
-          {riffs && <Riffs riffs={riffs} />}
+          {riffs && <Riffs song={songs[songId]} riffs={riffs} />}
 
           {/* FIXME: Look at PDF.js as a better solution */}
           {/* Display any PDF. This is typically used for non-pro tabs (old style ascii) as any easier option then cropping images. */}
@@ -57,6 +69,8 @@ function App() {
               }}
             />
           )}
+
+          <AddRiff song={songs[songId]} onAdding={setDisableShortcuts} />
         </div>
       )}
     </div>

@@ -1,6 +1,13 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import { readFileSync, readdirSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdir,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "fs";
 import path from "path";
 import cors from "cors";
 import db from "../db/db.json";
@@ -15,6 +22,8 @@ app.use(
     origin: "http://localhost:8000",
   })
 );
+
+app.use(express.json({ limit: "100mb" }));
 
 app.use(express.static("public"));
 app.use(express.static("/Volumes/Public/Music"));
@@ -87,7 +96,7 @@ app.post("/update-recent/:slug", (req: Request, res: Response) => {
   );
 
   res.send({
-    ok: true,
+    songId,
   });
 });
 
@@ -98,9 +107,7 @@ app.post("/play/:slug", (req: Request, res: Response) => {
   cp.exec(`open -a "iina" "${file}"`, (error, stdout, stderr) => {
     console.log(error);
   });
-  res.send({
-    ok: true,
-  });
+  res.send({});
 });
 
 app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
@@ -118,11 +125,86 @@ app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
         volume,
       },
     });
+  } else {
+    res.send({
+      error: true,
+    });
   }
+});
 
-  res.send({
-    ok: false,
-  });
+app.post(
+  "/set/rifftime/:songId/:riffIndex/:seconds",
+  (req: Request, res: Response) => {
+    const songId = req.params.songId;
+    const seconds = parseInt(req.params.seconds);
+    const riffIndex = parseInt(req.params.riffIndex);
+
+    if (songId && !isNaN(seconds) && seconds >= 0 && riffIndex >= 0) {
+      const riffFile = `./public/assets/${songId}/riffs.json`;
+      if (existsSync(riffFile)) {
+        const riffData = JSON.parse(
+          readFileSync(riffFile, { encoding: "utf-8" })
+        );
+        riffData[req.params.riffIndex].time = seconds;
+        writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+
+        res.send({
+          data: {
+            songId,
+            riffIndex,
+            seconds,
+          },
+        });
+      } else {
+        res.send({
+          error: true,
+        });
+      }
+    } else {
+      res.send({
+        error: true,
+      });
+    }
+  }
+);
+
+app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
+  const songId = req.params.songId;
+
+  if (songId) {
+    console.log(req.body);
+
+    try {
+      const riffDir = `./public/assets/${songId}`;
+      const riffFile = `${riffDir}/riffs.json`;
+
+      let riffData = [];
+
+      if (existsSync(riffFile)) {
+        riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
+      } else if (!existsSync(riffDir)) {
+        mkdirSync(riffDir);
+      }
+
+      riffData.push(req.body);
+      writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+
+      res.send({
+        data: {
+          songId,
+        },
+      });
+    } catch (ex) {
+      console.log(ex);
+      res.send({
+        error: true,
+      });
+    }
+  } else {
+    res.send({
+      error: true,
+    });
+  }
 });
 
 app.listen(port, () => {
