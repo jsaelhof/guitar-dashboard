@@ -1,5 +1,6 @@
 [
   {
+    "id": "3b63fadd-773b-4c90-a083-181c963bee60",
     "label": "Intro Pt 1",
     "labelDesc": "Clean",
     "time": 0,
@@ -11,6 +12,7 @@
     ]
   },
   {
+    "id": "939da93c-be82-481c-8c81-4a7f3e9eb29c",
     "label": "Intro Pt 2",
     "time": 67,
     "uri": [
@@ -20,6 +22,7 @@
     ]
   },
   {
+    "id": "de082a87-4149-46a5-b8da-f953fa37bd90",
     "label": "Intro Pt 3",
     "time": 98,
     "uri": [
@@ -29,6 +32,7 @@
     ]
   },
   {
+    "id": "03a4f086-816e-4931-bc93-3b49f94e7d81",
     "label": "Verse 1",
     "time": 116,
     "uri": [
@@ -42,6 +46,7 @@
     ]
   },
   {
+    "id": "75c146af-4c54-4863-8922-78b6192f30ad",
     "label": "Chorus",
     "time": 150,
     "uri": [
@@ -50,6 +55,7 @@
     ]
   },
   {
+    "id": "f27fc9c1-6db5-4c6b-ab87-6cad2baaae23",
     "label": "Bridge 1",
     "time": 166,
     "uri": [
@@ -60,6 +66,7 @@
     ]
   },
   {
+    "id": "1ceb9af3-ca5f-41dc-886e-2b884b45369c",
     "label": "Verse 2",
     "time": 183,
     "uri": [
@@ -71,6 +78,7 @@
     ]
   },
   {
+    "id": "8ff0b219-0bc6-41d3-9ee7-040c335dcea2",
     "label": "Interlude Pt 1",
     "labelDesc": "Clean",
     "time": 241,
@@ -87,6 +95,7 @@
     ]
   },
   {
+    "id": "25c9ca7a-7025-4264-b807-c163120f1d3c",
     "label": "Interlude Pt 2",
     "time": 276,
     "uri": [
@@ -96,6 +105,7 @@
     ]
   },
   {
+    "id": "4c288a15-fa25-4204-a419-2a216ef2860b",
     "label": "Interlude Pt 3",
     "time": 299,
     "uri": [

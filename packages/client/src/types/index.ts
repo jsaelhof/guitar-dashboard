@@ -21,6 +21,8 @@ export type Songs = {
 };
 
 export type Riff = {
+  clones?: string;
+  id: string;
   label: string;
   labelDesc?: string;
   src?: string;

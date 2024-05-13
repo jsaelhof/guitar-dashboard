@@ -5,18 +5,13 @@ import {
   BookmarkAdd,
   Close,
   ExpandMore,
-  MoreTime,
-  SwapHoriz,
-  Timer,
   Update,
 } from "@mui/icons-material";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Badge,
   Box,
-  Button,
   Chip,
   IconButton,
   Typography,
@@ -54,17 +49,31 @@ const Riffs = ({ riffs: initialRiffs, song }: RiffsProps) => {
 
   const ref = useRef<number>(0);
 
+  // Sort the riffs by time (0) mapped to riff index (1)
+  const timeMap = useMemo(
+    () =>
+      riffs
+        .reduce<[number, number][]>((acc, riff, index) => {
+          if (riff.time !== undefined) {
+            acc.push([riff.time, index]);
+          }
+          return acc;
+        }, [])
+        .sort((a, b) => a[0] - b[0]),
+    [riffs]
+  );
+
   // This hook sets up a listener for playback events from the the Player.tsx component as it plays through a song.
   // Using the time, we can check and see what riff should be shown.
   useEffect(() => {
     const listener = (e: AudioEvent) => {
       if (e.detail.currentTime) {
-        ref.current = e.detail.currentTime;
-        const currentRiffIndex = riffs?.findLastIndex(
-          ({ time }) => time != null && time < e.detail.currentTime
-        );
+        ref.current = Math.round(e.detail.currentTime);
 
-        currentRiffIndex !== undefined && setOpenItems([currentRiffIndex]);
+        const currentRiffIndex =
+          timeMap.findLast(([time]) => time < e.detail.currentTime)?.[1] ?? -1;
+
+        currentRiffIndex >= 0 && setOpenItems([currentRiffIndex]);
       }
     };
 
@@ -119,7 +128,7 @@ const Riffs = ({ riffs: initialRiffs, song }: RiffsProps) => {
             <SectionSummary>
               <Chip
                 label={`${
-                  time !== undefined ? `${formatSeconds(time)}: ` : ""
+                  time !== undefined ? `${formatSeconds(time)} | ` : ""
                 }${label}`}
               />
 

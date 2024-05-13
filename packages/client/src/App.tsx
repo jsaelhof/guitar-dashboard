@@ -16,7 +16,7 @@ function App() {
   const navigate = useNavigate();
   const { songId } = useParams();
   const { init, songs, songsByArtist } = useAppContext();
-  const { riffs, riffTimes } = useRiffs(songId);
+  const { riffs, riffTimes, refreshRiffs } = useRiffs(songId);
 
   // When adding new riffs, I need to disable the keyboard shortcuts listener.
   // Since I want it to apply to the whole page (so I don't have to deal with focus issues), that listener prevents default which eats the keystrokes.
@@ -70,7 +70,13 @@ function App() {
             />
           )}
 
-          <AddRiff song={songs[songId]} onAdding={setDisableShortcuts} />
+          <AddRiff
+            song={songs[songId]}
+            onAdding={(isAdding) => {
+              setDisableShortcuts(isAdding);
+              if (!isAdding) refreshRiffs();
+            }}
+          />
         </div>
       )}
     </div>
