@@ -13,21 +13,15 @@ import { AmpDisplay, AmpLabel } from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import ThumbComponent from "./components/thumb/Thumb";
-import { Song } from "../../types";
 import { useAppContext } from "../../context/AppContext";
 
-export type PlayerProps = {
-  song: Song;
-  riffTimes: number[] | null;
-  disableShortcuts: boolean;
-};
-
-const Player = ({
-  song: { file, ...song },
-  riffTimes,
-  disableShortcuts,
-}: PlayerProps) => {
-  const { dispatchSongUpdate } = useAppContext();
+const Player = () => {
+  const {
+    disableShortcuts,
+    dispatchSongUpdate,
+    song: { file, ...song },
+    riffTimes,
+  } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
   const [volume, setVolume] = useState<number>(0.5);

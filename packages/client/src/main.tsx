@@ -1,23 +1,24 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import "./index.css";
 import { AppProvider } from "./context/AppContext";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <div>REDIRECT?</div>,
   },
   {
-    path: "/:songId",
-    element: <App />,
+    path: ":songId",
+    element: (
+      <AppProvider>
+        <Dashboard />
+      </AppProvider>
+    ),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <AppProvider>
-    <RouterProvider router={router} />
-  </AppProvider>
+  <RouterProvider router={router} />
 );

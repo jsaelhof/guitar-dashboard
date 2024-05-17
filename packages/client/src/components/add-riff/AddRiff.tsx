@@ -1,17 +1,11 @@
 import { Button, IconButton, TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { updateServer } from "../../utils/update-server";
-import { Song } from "../../types";
 import { AddBox, Close } from "@mui/icons-material";
 import { Controls, Info, Layout, RiffInput, RiffList } from "./AddRiff.styles";
-import { v4 as uuid } from "uuid";
+import { useAppContext } from "../../context/AppContext";
 
-export type AddRiffProps = {
-  song: Song;
-  onAdding: (isAdding: boolean) => void;
-};
-
-const AddRiff = ({ song, onAdding }: AddRiffProps) => {
+const AddRiff = () => {
+  const { song, dispatchRiffsUpdate, setDisableShortcuts } = useAppContext();
   const [section, setSection] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [tabs, setTabs] = useState<string[]>([]);
@@ -29,7 +23,7 @@ const AddRiff = ({ song, onAdding }: AddRiffProps) => {
       setSection("");
       setDesc("");
       tabsRef.current = {};
-      onAdding(false);
+      setDisableShortcuts(false);
     }
   }, [tabs]);
 
@@ -109,12 +103,12 @@ const AddRiff = ({ song, onAdding }: AddRiffProps) => {
           variant="outlined"
           startIcon={<AddBox />}
           onClick={() => {
-            onAdding(true);
+            setDisableShortcuts(true);
             if (
               tabs.length === 0 ||
               tabsRef.current[tabs.at(-1) ?? ""].length
             ) {
-              const newId = uuid();
+              const newId = tabs.length.toString();
               tabsRef.current[newId] = "";
               setTabs([...tabs, newId]);
             }
@@ -133,12 +127,13 @@ const AddRiff = ({ song, onAdding }: AddRiffProps) => {
               tabs.some((tab) => tab.length === 0)
             }
             onClick={async () => {
-              await updateServer(`set/riffsection/${song.id}`, {
+              dispatchRiffsUpdate({
+                type: "add",
+                songId: song.id,
                 label: section,
-                ...(desc && { labelDesc: desc }),
+                labelDesc: desc,
                 uri: tabs.map((tabId) => tabsRef.current[tabId]),
               });
-
               setTabs([]);
             }}
           >

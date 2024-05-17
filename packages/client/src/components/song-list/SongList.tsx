@@ -7,26 +7,15 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { Song, Songs, SongsByArtist } from "../../types";
 import { useState } from "react";
-import { useUpdateRecentSongs } from "./hooks/use-update-recent-songs";
 import { useRecentSongs } from "./hooks/use-recent-songs";
+import { useAppContext } from "../../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
-export type SongListProps = {
-  initialSelectedArtist?: string;
-  songsByArtist: SongsByArtist | null;
-  songs: Songs;
-  onClick: (song: Song) => void;
-};
-
-const SongList = ({
-  initialSelectedArtist,
-  songsByArtist,
-  songs,
-  onClick,
-}: SongListProps) => {
-  const { songId } = useParams();
+const SongList = () => {
+  const navigate = useNavigate();
+  const { songId, song, songs, songsByArtist } = useAppContext();
+  const initialSelectedArtist = song ? song.artist : undefined;
 
   // Fetch the recent songs, also marks the current song as recent if sufficient time has elapsed
   const recentSongs = useRecentSongs(songId);
@@ -65,7 +54,7 @@ const SongList = ({
                     sx={{ py: 0 }}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                      onClick(songs[id]);
+                      navigate(`/${id}`);
                     }}
                     selected={id === songId}
                   >
@@ -94,7 +83,7 @@ const SongList = ({
                     setSelectedArtist(
                       artist !== selectedArtist ? artist : undefined
                     );
-                    onClick(songs[0]);
+                    navigate(`/${songs[0].id}`);
                   }}
                 >
                   {artist}
@@ -107,7 +96,7 @@ const SongList = ({
                       sx={{ py: 0 }}
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                        onClick(song);
+                        navigate(`/${song.id}`);
                       }}
                       selected={song.id === songId}
                     >

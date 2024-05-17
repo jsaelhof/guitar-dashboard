@@ -29,16 +29,10 @@ import {
   removeAudioEventListener,
 } from "../../utils/audio-events";
 import { formatSeconds } from "../../utils/format-seconds";
-import { updateServer } from "../../utils/update-server";
+import { useAppContext } from "../../context/AppContext";
 
-export type RiffsProps = {
-  riffs: Riff[];
-  song: Song;
-};
-
-const Riffs = ({ riffs: initialRiffs, song }: RiffsProps) => {
-  // Don't totally love this, but when updating a riff, I either have to re-download (which means telling the parent to refetch) or I can do this and keep a local copy that I can update optimistically.
-  const [riffs, setRiffs] = useState<Riff[]>(structuredClone(initialRiffs));
+const Riffs = () => {
+  const { song, riffs, dispatchRiffsUpdate } = useAppContext();
 
   const allRiffs = useMemo(() => [...Array((riffs ?? []).length).keys()], []);
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
@@ -101,7 +95,7 @@ const Riffs = ({ riffs: initialRiffs, song }: RiffsProps) => {
           </RiffList>
         </div>
       )}
-      {(riffs || []).map(({ label, labelDesc, src, uri, time }, index) => (
+      {(riffs || []).map(({ id, label, labelDesc, src, uri, time }, index) => (
         <Accordion
           key={src}
           expanded={
@@ -137,79 +131,81 @@ const Riffs = ({ riffs: initialRiffs, song }: RiffsProps) => {
               <Box display="flex" alignItems="center">
                 {activeTimeMark?.index === index && (
                   <>
-                    {activeTimeMark?.index === index && (
-                      <>
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={(e) => {
-                            e.stopPropagation();
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={(e) => {
+                        e.stopPropagation();
 
-                            setActiveTimeMark({
-                              ...activeTimeMark,
-                              time:
-                                riffs[index].time === undefined ||
-                                riffs[index].time === activeTimeMark.time
-                                  ? ref.current
-                                  : riffs[index].time ?? 0,
-                            });
-                          }}
-                        >
-                          <Update />
-                        </IconButton>
+                        setActiveTimeMark({
+                          ...activeTimeMark,
+                          time:
+                            riffs[index].time === undefined ||
+                            riffs[index].time === activeTimeMark.time
+                              ? ref.current
+                              : riffs[index].time ?? 0,
+                        });
+                      }}
+                    >
+                      <Update />
+                    </IconButton>
 
-                        <IconButton
-                          size="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveTimeMark({
-                              ...activeTimeMark,
-                              time: activeTimeMark.time - 1,
-                            });
-                          }}
-                        >
-                          <ArrowLeft />
-                        </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTimeMark({
+                          ...activeTimeMark,
+                          time: activeTimeMark.time - 1,
+                        });
+                      }}
+                    >
+                      <ArrowLeft />
+                    </IconButton>
 
-                        <Typography fontSize={14} sx={{ mx: 1 }}>
-                          {formatSeconds(activeTimeMark.time)}
-                        </Typography>
+                    <Typography fontSize={14} sx={{ mx: 1 }}>
+                      {formatSeconds(activeTimeMark.time)}
+                    </Typography>
 
-                        <IconButton
-                          size="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveTimeMark({
-                              ...activeTimeMark,
-                              time: activeTimeMark.time + 1,
-                            });
-                          }}
-                        >
-                          <ArrowRight />
-                        </IconButton>
+                    <IconButton
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActiveTimeMark({
+                          ...activeTimeMark,
+                          time: activeTimeMark.time + 1,
+                        });
+                      }}
+                    >
+                      <ArrowRight />
+                    </IconButton>
 
-                        <IconButton
-                          size="small"
-                          color="success"
-                          onClick={async (e) => {
-                            e.stopPropagation();
+                    <IconButton
+                      size="small"
+                      color="success"
+                      onClick={async (e) => {
+                        e.stopPropagation();
 
-                            await updateServer(
-                              `set/rifftime/${song.id}/${index}/${activeTimeMark.time}`
-                            );
+                        dispatchRiffsUpdate({
+                          type: "setTime",
+                          songId: song.id,
+                          riffId: id,
+                          value: activeTimeMark.time,
+                        });
+                        // await updateServer(
+                        //   `set/rifftime/${song.id}/${index}/${activeTimeMark.time}`
+                        // );
 
-                            // Optimistic update
-                            const updatedRiffs = structuredClone(riffs);
-                            updatedRiffs[index].time = activeTimeMark.time;
-                            setRiffs(updatedRiffs);
+                        // // Optimistic update
+                        // const updatedRiffs = structuredClone(riffs);
+                        // updatedRiffs[index].time = activeTimeMark.time;
+                        // setRiffs(updatedRiffs);
 
-                            setActiveTimeMark(null);
-                          }}
-                        >
-                          <BookmarkAdd />
-                        </IconButton>
-                      </>
-                    )}
+                        setActiveTimeMark(null);
+                      }}
+                    >
+                      <BookmarkAdd />
+                    </IconButton>
                   </>
                 )}
 

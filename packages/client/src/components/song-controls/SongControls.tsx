@@ -1,18 +1,16 @@
 import { PlayArrow, QueueMusic } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
-import { Song } from "../../types";
 import { useCallback } from "react";
+import { useAppContext } from "../../context/AppContext";
 
-export type SongControlsProps = {
-  song: Song;
-};
+const SongControls = () => {
+  const { song } = useAppContext();
 
-const SongControls = ({ song }: SongControlsProps) => {
   const play = useCallback((songId: string) => {
     fetch(`http://localhost:8001/play/${songId}`, { method: "post" });
   }, []);
 
-  return (
+  return song ? (
     <div
       style={{
         display: "grid",
@@ -44,7 +42,7 @@ const SongControls = ({ song }: SongControlsProps) => {
         Full Tab
       </Button>
     </div>
-  );
+  ) : null;
 };
 
 export default SongControls;

@@ -9,7 +9,10 @@
   },
   "0002": {
     "tab": "https://tabs.ultimate-guitar.com/tab/ghost/square-hammer-official-2076729",
-    "file": "G/Ghost/Ghost - [2016] Popestar/01 - Square Hammer.mp3"
+    "file": "G/Ghost/Ghost - [2016] Popestar/01 - Square Hammer.mp3",
+    "settings": {
+      "volume": 0.4
+    }
   },
   "0003": {
     "tab": "https://tabs.ultimate-guitar.com/tab/iron-maiden/hallowed-be-thy-name-official-2202561",
@@ -991,7 +994,10 @@
     "file": "G/Ghost/Ghost - [2018] Prequelle/08 - Witch Image.mp3"
   },
   "0297": {
-    "file": "G/Ghost/Ghost - [2022] Impera/04 - Call Me Little Sunshine.mp3"
+    "file": "G/Ghost/Ghost - [2022] Impera/04 - Call Me Little Sunshine.mp3",
+    "settings": {
+      "volume": 0.4
+    }
   },
   "0298": {
     "file": "G/Ghost/Ghost - [2022] Impera/05 - Hunter's Moon.mp3"

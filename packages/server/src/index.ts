@@ -2,7 +2,6 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import {
   existsSync,
-  mkdir,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -133,25 +132,28 @@ app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
 });
 
 app.post(
-  "/set/rifftime/:songId/:riffIndex/:seconds",
+  "/set/rifftime/:songId/:riffId/:seconds",
   (req: Request, res: Response) => {
     const songId = req.params.songId;
     const seconds = parseInt(req.params.seconds);
-    const riffIndex = parseInt(req.params.riffIndex);
+    const riffId = req.params.riffId;
 
-    if (songId && !isNaN(seconds) && seconds >= 0 && riffIndex >= 0) {
+    console.log(songId, seconds, riffId);
+
+    if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
       const riffFile = `./public/assets/${songId}/riffs.json`;
       if (existsSync(riffFile)) {
         const riffData = JSON.parse(
           readFileSync(riffFile, { encoding: "utf-8" })
         );
-        riffData[req.params.riffIndex].time = seconds;
+        const riffIndex = riffData.findIndex(({ id }) => id === riffId);
+        riffData[riffIndex].time = seconds;
         writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
 
         res.send({
           data: {
             songId,
-            riffIndex,
+            riffId,
             seconds,
           },
         });
@@ -172,8 +174,6 @@ app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
   const songId = req.params.songId;
 
   if (songId) {
-    console.log(req.body);
-
     try {
       const riffDir = `./public/assets/${songId}`;
       const riffFile = `${riffDir}/riffs.json`;
@@ -195,7 +195,6 @@ app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
         },
       });
     } catch (ex) {
-      console.log(ex);
       res.send({
         error: true,
       });
