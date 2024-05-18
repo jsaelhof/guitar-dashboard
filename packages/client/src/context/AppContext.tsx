@@ -6,9 +6,16 @@ import {
   useState,
 } from "react";
 import { Riff, Song, Songs, SongsByArtist } from "../types";
-import { SongUpdateDispatch, useSongsReducer } from "./hooks/useSongsReducer";
+import { SongUpdateDispatch, useSongsReducer } from "./hooks/use-songs-reducer";
 import { useParams } from "react-router-dom";
-import { RiffsUpdateDispatch, useRiffsReducer } from "./hooks/useRiffsReducer";
+import {
+  RiffsUpdateDispatch,
+  useRiffsReducer,
+} from "./hooks/use-riffs-reducer";
+import {
+  RecentSongsUpdateDispatch,
+  useRecentSongsReducer,
+} from "./hooks/use-recent-songs-reducer";
 
 export type AppContextType = {
   init: boolean;
@@ -20,6 +27,8 @@ export type AppContextType = {
   riffs: Riff[];
   riffTimes: number[] | null;
   dispatchRiffsUpdate: RiffsUpdateDispatch;
+  recentSongIds: string[];
+  dispatchRecentSongsUpdate: RecentSongsUpdateDispatch;
   disableShortcuts: boolean;
   setDisableShortcuts: (disabled: boolean) => void;
 };
@@ -30,6 +39,7 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   const { songId = "" } = useParams();
   const { songs, songsByArtist, dispatchSongUpdate } = useSongsReducer();
   const { riffs, riffTimes, dispatchRiffsUpdate } = useRiffsReducer(songId);
+  const { recentSongIds, dispatchRecentSongsUpdate } = useRecentSongsReducer();
 
   // When needing to accept typed input, such as adding new riffs, I need to disable the keyboard shortcuts listener.
   // Since I want keyboard shortcuts to apply to the whole page (so I don't have to deal with focus issues), that listener prevents default which eats the keystrokes.
@@ -48,6 +58,8 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       riffs,
       riffTimes,
       dispatchRiffsUpdate,
+      recentSongIds,
+      dispatchRecentSongsUpdate,
       disableShortcuts,
       setDisableShortcuts,
     }),
@@ -59,6 +71,8 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       riffs,
       riffTimes,
       dispatchRiffsUpdate,
+      recentSongIds,
+      dispatchRecentSongsUpdate,
       disableShortcuts,
     ]
   );

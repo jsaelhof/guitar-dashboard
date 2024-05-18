@@ -10,35 +10,39 @@ import Player from "./components/player/Player";
 import { useAppContext } from "./context/AppContext";
 import AddRiff from "./components/add-riff/AddRiff";
 import PDF from "./components/pdf/PDF";
+import {
+  Content,
+  DashboardLayout,
+  Header,
+  LeftColumn,
+} from "./Dashboard.styles";
 
 function Dashboard() {
   const { songId } = useParams();
   const { init } = useAppContext();
 
   return !init ? null : (
-    <div>
-      <SongList />
+    <DashboardLayout>
+      <LeftColumn>
+        <SongList />
+      </LeftColumn>
 
       {songId && (
-        <div
-          style={{
-            backgroundColor: "rgba(0,0,0,0.03)",
-            padding: 16,
-            minHeight: "calc(100vh - 32px)",
-            marginLeft: 300,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <SongControls />
-          <Player />
-          {/* Display any associated riff data (images or data uris) */}
-          <Riffs />
-          <PDF />
-          <AddRiff />
-        </div>
+        <>
+          <Header>
+            <SongControls />
+            <Player />
+          </Header>
+
+          <Content>
+            {/* Display any associated riff data (images or data uris) */}
+            <Riffs />
+            <PDF />
+            <AddRiff />
+          </Content>
+        </>
       )}
-    </div>
+    </DashboardLayout>
   );
 }
 

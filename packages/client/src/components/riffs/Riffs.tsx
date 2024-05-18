@@ -16,7 +16,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { AudioEvent, Riff, Song } from "../../types";
+import { AudioEvent } from "../../types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   RiffList,
@@ -120,11 +120,7 @@ const Riffs = () => {
             }}
           >
             <SectionSummary>
-              <Chip
-                label={`${
-                  time !== undefined ? `${formatSeconds(time)} | ` : ""
-                }${label}`}
-              />
+              <Chip label={label} />
 
               <div>{labelDesc}</div>
 
@@ -192,14 +188,6 @@ const Riffs = () => {
                           riffId: id,
                           value: activeTimeMark.time,
                         });
-                        // await updateServer(
-                        //   `set/rifftime/${song.id}/${index}/${activeTimeMark.time}`
-                        // );
-
-                        // // Optimistic update
-                        // const updatedRiffs = structuredClone(riffs);
-                        // updatedRiffs[index].time = activeTimeMark.time;
-                        // setRiffs(updatedRiffs);
 
                         setActiveTimeMark(null);
                       }}
@@ -207,6 +195,12 @@ const Riffs = () => {
                       <BookmarkAdd />
                     </IconButton>
                   </>
+                )}
+
+                {activeTimeMark?.index !== index && (
+                  <Typography fontSize={14}>
+                    {time !== undefined ? formatSeconds(time) : ""}
+                  </Typography>
                 )}
 
                 <IconButton

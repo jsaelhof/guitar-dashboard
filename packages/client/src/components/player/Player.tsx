@@ -7,7 +7,6 @@ import {
   Pause,
   PlayArrow,
   Replay10,
-  Save,
 } from "@mui/icons-material";
 import { AmpDisplay, AmpLabel } from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
@@ -21,6 +20,7 @@ const Player = () => {
     dispatchSongUpdate,
     song: { file, ...song },
     riffTimes,
+    dispatchRecentSongsUpdate,
   } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -73,6 +73,10 @@ const Player = () => {
             onPlay={(e) => {
               // When a track starts, set its volume to the player's volume
               e.currentTarget.volume = volume;
+
+              // When a track plays for the first time, mark it as recent.
+              e.currentTarget.played.length === 0 &&
+                dispatchRecentSongsUpdate({ type: "add", songId: song.id });
             }}
             onRateChange={refresh}
             onDurationChange={refresh}

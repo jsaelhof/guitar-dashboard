@@ -8,31 +8,20 @@ import {
   ListSubheader,
 } from "@mui/material";
 import { useState } from "react";
-import { useRecentSongs } from "./hooks/use-recent-songs";
 import { useAppContext } from "../../context/AppContext";
 import { useNavigate } from "react-router-dom";
 
 const SongList = () => {
   const navigate = useNavigate();
-  const { songId, song, songs, songsByArtist } = useAppContext();
+  const { songId, song, songs, songsByArtist, recentSongIds } = useAppContext();
   const initialSelectedArtist = song ? song.artist : undefined;
-
-  // Fetch the recent songs, also marks the current song as recent if sufficient time has elapsed
-  const recentSongs = useRecentSongs(songId);
 
   const [selectedArtist, setSelectedArtist] = useState<string | undefined>(
     initialSelectedArtist
   );
 
   return songsByArtist ? (
-    <div
-      style={{
-        height: "100vh",
-        width: "300px",
-        overflowY: "scroll",
-        position: "fixed",
-      }}
-    >
+    <>
       <List dense>
         <ListItem sx={{ p: 0, width: 1 }}>
           <List dense sx={{ py: 0, width: 1 }}>
@@ -48,7 +37,7 @@ const SongList = () => {
               </ListItemButton>
             </ListSubheader>
             <Collapse in={selectedArtist === "__RECENT__"}>
-              {recentSongs.map((id) => (
+              {recentSongIds.map((id) => (
                 <ListItem key={id} sx={{ p: 0 }}>
                   <ListItemButton
                     sx={{ py: 0 }}
@@ -115,7 +104,7 @@ const SongList = () => {
           </ListItem>
         ))}
       </List>
-    </div>
+    </>
   ) : null;
 };
 

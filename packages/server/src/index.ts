@@ -72,25 +72,23 @@ app.get("/recent", (req: Request, res: Response) => {
   res.send(recentsJson);
 });
 
-app.post("/update-recent/:slug", (req: Request, res: Response) => {
-  const songId = req.params.slug;
+app.post("/update-recent/:songId", (req: Request, res: Response) => {
+  const { songId } = req.params;
 
   const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-  const recentsJson: string[] = JSON.parse(recents);
-
-  // If this song exists, remove it.
-  if (recentsJson.includes(songId))
-    recentsJson.splice(recentsJson.indexOf(songId), 1);
-
-  // Add the song at the start of the array
-  recentsJson.unshift(songId);
-
-  // If the recents has gone beyond 30, trim the array
-  if (recentsJson.length > 30) recentsJson.slice(0, 30);
 
   writeFileSync(
     "./db/recent.json",
-    JSON.stringify(recentsJson, null, 2),
+    JSON.stringify(
+      [
+        songId,
+        ...JSON.parse(recents)
+          .filter((id) => id !== songId)
+          .slice(0, 30),
+      ],
+      null,
+      2
+    ),
     "utf8"
   );
 
@@ -137,8 +135,6 @@ app.post(
     const songId = req.params.songId;
     const seconds = parseInt(req.params.seconds);
     const riffId = req.params.riffId;
-
-    console.log(songId, seconds, riffId);
 
     if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
       const riffFile = `./public/assets/${songId}/riffs.json`;
