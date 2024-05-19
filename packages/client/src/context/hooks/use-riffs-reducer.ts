@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid";
 export type RiffsUpdateAction =
   | { type: "init"; riffs: Riff[] }
   | { type: "setTime"; songId: string; riffId: string; value: number }
+  | { type: "setOrder"; songId: string; riffId: string; value: number }
   | {
       type: "add";
       songId: string;
@@ -50,6 +51,10 @@ const riffsReducer = (
           `set/rifftime/${action.songId}/${action.riffId}/${action.value}`
         );
       }
+      break;
+
+    case "setOrder":
+      updateServer(`riff/${action.songId}/${action.riffId}/${action.value}`);
       break;
 
     case "add":

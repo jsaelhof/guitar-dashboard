@@ -202,6 +202,46 @@ app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
   }
 });
 
+app.post("/riff/:songId/:riffId/:order", (req: Request, res: Response) => {
+  const { songId, riffId, order } = req.params;
+
+  if (songId) {
+    try {
+      const riffDir = `./public/assets/${songId}`;
+      const riffFile = `${riffDir}/riffs.json`;
+
+      let riffData = [];
+
+      if (existsSync(riffFile)) {
+        riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
+        const riff = riffData.find(({ id }) => riffId === id);
+        const update = riffData
+          .filter(({ id }) => riffId !== id)
+          .toSpliced(order, 0, riff);
+        writeFileSync(riffFile, JSON.stringify(update, null, 2), "utf8");
+
+        res.send({
+          data: {
+            songId,
+            riffId,
+            order,
+          },
+        });
+      } else {
+        res.send({ error: true });
+      }
+    } catch (ex) {
+      res.send({
+        error: true,
+      });
+    }
+  } else {
+    res.send({
+      error: true,
+    });
+  }
+});
+
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

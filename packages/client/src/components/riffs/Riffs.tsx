@@ -1,5 +1,7 @@
 import {
   Alarm,
+  ArrowDropDown,
+  ArrowDropUp,
   ArrowLeft,
   ArrowRight,
   BookmarkAdd,
@@ -13,14 +15,18 @@ import {
   AccordionSummary,
   Box,
   Chip,
+  Hidden,
   IconButton,
   Typography,
 } from "@mui/material";
 import { AudioEvent } from "../../types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  OrderLayout,
   RiffList,
   RiffListItem,
+  RiffOrderDown,
+  RiffOrderUp,
   SectionSummary,
   UriTablature,
 } from "./Riffs.styles";
@@ -218,6 +224,39 @@ const Riffs = () => {
                 >
                   {activeTimeMark?.index === index ? <Close /> : <Alarm />}
                 </IconButton>
+
+                <OrderLayout>
+                  <RiffOrderUp
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatchRiffsUpdate({
+                        type: "setOrder",
+                        songId: song.id,
+                        riffId: id,
+                        value: Math.max(index - 1, 0),
+                      });
+                    }}
+                  >
+                    <svg viewBox="0 0 24 12">
+                      <path d="M 7 4 H 17 L 12 9" />
+                    </svg>
+                  </RiffOrderUp>
+                  <RiffOrderDown
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      dispatchRiffsUpdate({
+                        type: "setOrder",
+                        songId: song.id,
+                        riffId: id,
+                        value: Math.min(index + 1, riffs.length - 1),
+                      });
+                    }}
+                  >
+                    <svg viewBox="0 0 24 12">
+                      <path d="M 7 4 H 17 L 12 9" />
+                    </svg>
+                  </RiffOrderDown>
+                </OrderLayout>
               </Box>
             </SectionSummary>
           </AccordionSummary>
