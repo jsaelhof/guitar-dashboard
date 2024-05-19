@@ -10,7 +10,7 @@ export const AmpLabel = styled("div")(({ small }: { small?: boolean }) => ({
 }));
 
 export const AmpDisplay = styled("div")(({ on }: { on: boolean }) => ({
-  height: 44,
+  height: 28,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

@@ -3,6 +3,8 @@ import { dispatchAudioEvent } from "../../utils/audio-events";
 import { IconButton, Slider } from "@mui/material";
 import { formatSeconds } from "../../utils/format-seconds";
 import {
+  ArrowLeft,
+  ArrowRight,
   BookmarkBorder,
   Pause,
   PlayArrow,
@@ -88,6 +90,12 @@ const Player = () => {
               //setCurrentTime(e.currentTarget.currentTime);
 
               // Check if a loop is defined and it is time to restart the loop
+              console.log(
+                e.currentTarget.currentTime,
+                loop?.[1],
+                e.currentTarget.ended,
+                e.currentTarget.paused
+              );
               if (
                 loop &&
                 loop[1] != null &&
@@ -194,7 +202,7 @@ const Player = () => {
               <div>
                 {formatSeconds(Math.floor(ref.current.currentTime))} /{" "}
                 {formatSeconds(
-                  Math.floor(
+                  Math.round(
                     !isNaN(ref.current.duration) ? ref.current.duration : 0
                   )
                 )}
@@ -218,6 +226,57 @@ const Player = () => {
                     <div>{formatSeconds(Math.round(loop[1]))}</div>
                   )}
                 </AmpDisplay>
+                <div>
+                  <ArrowLeft
+                    // Decrease Loop A, can't be less than 0 (track start)
+                    onClick={() =>
+                      loop?.[0] != null &&
+                      setLoop([Math.max(loop[0] - 1, 0), loop[1]])
+                    }
+                    style={{ cursor: "pointer" }}
+                  />
+                  <ArrowRight
+                    // Increase Loop A, can't be more than Loop B - 1. Loop B may not be set yet so also have to check track duration.
+                    onClick={() =>
+                      loop?.[0] != null &&
+                      ref.current &&
+                      setLoop([
+                        Math.min(
+                          loop[0] + 1, // Time + 1
+                          ref.current.duration, // Track length
+                          ...(loop?.[1] != null ? [loop[1] - 1] : []) // If exists, Loop B - 1
+                        ),
+                        loop[1],
+                      ])
+                    }
+                    style={{ cursor: "pointer" }}
+                  />
+                </div>
+                <div>
+                  <ArrowLeft
+                    // Decrease Loop B, can't be less than Loop A + 1
+                    onClick={() =>
+                      loop?.[1] != null &&
+                      loop?.[0] != null &&
+                      setLoop([loop[0], Math.max(loop[1] - 1, loop[0] + 1)])
+                    }
+                    style={{ cursor: "pointer" }}
+                  />
+                  <ArrowRight
+                    // Increase Loop B, can't be more than the track length.
+                    // Weird little issue here... if the loop is set to end at the exact track end, it won't loop because it pauses when it reaches the end of playback.
+                    // This is basically impossible to set using the keyboard shortcuts but using the arrows, it can, so I've set the max to be a fraction of a second below the track end.
+                    onClick={() =>
+                      loop?.[1] != null &&
+                      ref.current &&
+                      setLoop([
+                        loop[0],
+                        Math.min(loop[1] + 1, ref.current.duration - 0.0001),
+                      ])
+                    }
+                    style={{ cursor: "pointer" }}
+                  />
+                </div>
                 <AmpLabel small>A</AmpLabel>
                 <AmpLabel small>B</AmpLabel>
               </div>
