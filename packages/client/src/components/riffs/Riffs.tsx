@@ -1,7 +1,5 @@
 import {
   Alarm,
-  ArrowDropDown,
-  ArrowDropUp,
   ArrowLeft,
   ArrowRight,
   BookmarkAdd,
@@ -15,7 +13,6 @@ import {
   AccordionSummary,
   Box,
   Chip,
-  Hidden,
   IconButton,
   Typography,
 } from "@mui/material";
@@ -38,7 +35,7 @@ import { formatSeconds } from "../../utils/format-seconds";
 import { useAppContext } from "../../context/AppContext";
 
 const Riffs = () => {
-  const { song, riffs, dispatchRiffsUpdate } = useAppContext();
+  const { song, riffs, send } = useAppContext();
 
   const allRiffs = useMemo(() => [...Array((riffs ?? []).length).keys()], []);
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
@@ -188,11 +185,10 @@ const Riffs = () => {
                       onClick={async (e) => {
                         e.stopPropagation();
 
-                        dispatchRiffsUpdate({
-                          type: "setTime",
+                        send("riffs", "time", {
                           songId: song.id,
                           riffId: id,
-                          value: activeTimeMark.time,
+                          seconds: activeTimeMark.time,
                         });
 
                         setActiveTimeMark(null);
@@ -229,12 +225,14 @@ const Riffs = () => {
                   <RiffOrderUp
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatchRiffsUpdate({
-                        type: "setOrder",
-                        songId: song.id,
-                        riffId: id,
-                        value: Math.max(index - 1, 0),
-                      });
+
+                      if (index > 0) {
+                        send("riffs", "order", {
+                          songId: song.id,
+                          riffId: id,
+                          order: Math.max(index - 1, 0),
+                        });
+                      }
                     }}
                   >
                     <svg viewBox="0 0 24 12">
@@ -244,12 +242,14 @@ const Riffs = () => {
                   <RiffOrderDown
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatchRiffsUpdate({
-                        type: "setOrder",
-                        songId: song.id,
-                        riffId: id,
-                        value: Math.min(index + 1, riffs.length - 1),
-                      });
+
+                      if (index < riffs.length - 1) {
+                        send("riffs", "order", {
+                          songId: song.id,
+                          riffId: id,
+                          order: Math.min(index + 1, riffs.length - 1),
+                        });
+                      }
                     }}
                   >
                     <svg viewBox="0 0 24 12">

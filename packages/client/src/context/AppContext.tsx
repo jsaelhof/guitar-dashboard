@@ -1,21 +1,17 @@
 import {
   PropsWithChildren,
   createContext,
+  useCallback,
   useContext,
   useMemo,
   useState,
 } from "react";
 import { Riff, Song, Songs, SongsByArtist } from "../types";
-import { SongUpdateDispatch, useSongsReducer } from "./hooks/use-songs-reducer";
 import { useParams } from "react-router-dom";
-import {
-  RiffsUpdateDispatch,
-  useRiffsReducer,
-} from "./hooks/use-riffs-reducer";
-import {
-  RecentSongsUpdateDispatch,
-  useRecentSongsReducer,
-} from "./hooks/use-recent-songs-reducer";
+import { updateServer } from "../utils/update-server";
+import { useRiffs } from "./hooks/use-riffs";
+import { useRecentSongs } from "./hooks/use-recent-songs";
+import { useSongs } from "./hooks/use-songs";
 
 export type AppContextType = {
   init: boolean;
@@ -23,23 +19,64 @@ export type AppContextType = {
   song: Song;
   songs: Songs;
   songsByArtist: SongsByArtist;
-  dispatchSongUpdate: SongUpdateDispatch;
   riffs: Riff[];
   riffTimes: number[] | null;
-  dispatchRiffsUpdate: RiffsUpdateDispatch;
   recentSongIds: string[];
-  dispatchRecentSongsUpdate: RecentSongsUpdateDispatch;
   disableShortcuts: boolean;
   setDisableShortcuts: (disabled: boolean) => void;
+  send: (scope: string, type: string, body?: Record<string, unknown>) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: PropsWithChildren) => {
   const { songId = "" } = useParams();
-  const { songs, songsByArtist, dispatchSongUpdate } = useSongsReducer();
-  const { riffs, riffTimes, dispatchRiffsUpdate } = useRiffsReducer(songId);
-  const { recentSongIds, dispatchRecentSongsUpdate } = useRecentSongsReducer();
+  //const { songs, songsByArtist, dispatchSongUpdate } = useSongsReducer();
+  const { songs, songsByArtist, updateSongs } = useSongs();
+  const { riffs, riffTimes, updateRiffs } = useRiffs(songId);
+  const { recentSongIds, updateRecent } = useRecentSongs();
+
+  type Response<TScope, TType, TData> = {
+    error: boolean;
+    scope: TScope;
+    type: TType;
+    data: TData;
+  };
+
+  const send = useCallback(
+    async (scope: string, type: string, body?: Record<string, unknown>) => {
+      const {
+        response,
+      }: {
+        url: string;
+        response:
+          | Response<
+              "riffs",
+              "time" | "order" | "add",
+              { songId: string; riffs: Riff[] }
+            >
+          | Response<"recent", "add", { recentSongIds: string[] }>
+          | Response<"songs", "volume", { songs: Songs }>;
+      } = await updateServer(`${scope}/${type}`, body);
+
+      if (response.error) {
+        console.error(response.error);
+      } else {
+        switch (response.scope) {
+          case "songs":
+            updateSongs(response.data.songs);
+            break;
+          case "riffs":
+            updateRiffs(response.data.riffs);
+            break;
+          case "recent":
+            updateRecent(response.data.recentSongIds);
+            break;
+        }
+      }
+    },
+    []
+  );
 
   // When needing to accept typed input, such as adding new riffs, I need to disable the keyboard shortcuts listener.
   // Since I want keyboard shortcuts to apply to the whole page (so I don't have to deal with focus issues), that listener prevents default which eats the keystrokes.
@@ -54,26 +91,22 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
       song: songs[songId],
       songs,
       songsByArtist,
-      dispatchSongUpdate,
       riffs,
       riffTimes,
-      dispatchRiffsUpdate,
       recentSongIds,
-      dispatchRecentSongsUpdate,
       disableShortcuts,
       setDisableShortcuts,
+      send,
     }),
     [
       songId,
       songs,
       songsByArtist,
-      dispatchSongUpdate,
       riffs,
       riffTimes,
-      dispatchRiffsUpdate,
       recentSongIds,
-      dispatchRecentSongsUpdate,
       disableShortcuts,
+      send,
     ]
   );
 

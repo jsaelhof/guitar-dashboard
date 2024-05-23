@@ -19,10 +19,9 @@ import { useAppContext } from "../../context/AppContext";
 const Player = () => {
   const {
     disableShortcuts,
-    dispatchSongUpdate,
     song: { file, ...song },
     riffTimes,
-    dispatchRecentSongsUpdate,
+    send,
   } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -78,7 +77,7 @@ const Player = () => {
 
               // When a track plays for the first time, mark it as recent.
               e.currentTarget.played.length === 0 &&
-                dispatchRecentSongsUpdate({ type: "add", songId: song.id });
+                send("recent", "add", { songId: song.id });
             }}
             onRateChange={refresh}
             onDurationChange={refresh}
@@ -332,9 +331,8 @@ const Player = () => {
                   <BookmarkBorder
                     onClick={() => {
                       if (ref.current) {
-                        dispatchSongUpdate({
-                          type: "volume",
-                          id: song.id,
+                        send("songs", "volume", {
+                          songId: song.id,
                           volume: ref.current.volume,
                         });
                       }

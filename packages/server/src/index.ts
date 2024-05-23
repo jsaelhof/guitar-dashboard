@@ -27,89 +27,37 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.static("public"));
 app.use(express.static("/Volumes/Public/Music"));
 
-app.get("/songs", (req: Request, res: Response) => {
-  res.send(db);
-});
-
-app.get("/riffs/:slug", (req: Request, res: Response) => {
-  let riffImages, riffUris;
-
-  try {
-    riffImages = readdirSync(`public/assets/${req.params.slug}/riffs`).map(
-      (file) => {
-        const [, label, ...labelDesc] = path.parse(file).name.split("_");
-        return {
-          label: label.split("-").join(" "),
-          ...(labelDesc.length && {
-            labelDesc: labelDesc.join(" "),
-          }),
-          src: `assets/${req.params.slug}/riffs/${file}`,
-        };
-      }
-    );
-  } catch (ex) {}
-
-  try {
-    riffUris = JSON.parse(
-      readFileSync(`public/assets/${req.params.slug}/riffs.json`).toString()
-    );
-  } catch (ex) {}
-
-  try {
-    res.send([
-      ...(riffImages ? riffImages : []),
-      ...(riffUris ? riffUris : []),
-    ]);
-  } catch (ex) {
-    console.error(ex);
-    res.send([]);
-  }
-});
-
-app.get("/recent", (req: Request, res: Response) => {
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-  const recentsJson: string[] = JSON.parse(recents);
-  res.send(recentsJson);
-});
-
-app.post("/update-recent/:songId", (req: Request, res: Response) => {
-  const { songId } = req.params;
-
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-
-  writeFileSync(
-    "./db/recent.json",
-    JSON.stringify(
-      [
-        songId,
-        ...JSON.parse(recents)
-          .filter((id) => id !== songId)
-          .slice(0, 30),
-      ],
-      null,
-      2
-    ),
-    "utf8"
-  );
-
-  res.send({
-    songId,
-  });
-});
-
-app.post("/play/:slug", (req: Request, res: Response) => {
-  const { file } = db[req.params.slug];
+app.post("/play/:songId", (req: Request, res: Response) => {
+  const { file } = db[req.params.songId];
 
   var cp = require("child_process");
-  cp.exec(`open -a "iina" "${file}"`, (error, stdout, stderr) => {
-    console.log(error);
+  cp.exec(
+    `open -a "iina" "/Volumes/Public/Music/${file}"`,
+    (error, stdout, stderr) => {
+      console.log(error);
+    }
+  );
+  res.send({
+    error: false,
+    scope: "songs",
+    type: "play",
   });
-  res.send({});
 });
 
-app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
-  const songId = req.params.songId;
-  const volume = parseFloat(req.params.volume);
+app.get("/songs", (req: Request, res: Response) => {
+  res.send({
+    error: false,
+    scope: "songs",
+    type: "init",
+    data: {
+      songs: db,
+    },
+  });
+});
+
+app.post("/songs/volume", (req: Request, res: Response) => {
+  const songId = req.body.songId;
+  const volume = parseFloat(req.body.volume);
 
   if (songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
     db[songId].settings = db[songId].settings ?? {};
@@ -118,56 +66,137 @@ app.post("/set/volume/:songId/:volume", (req: Request, res: Response) => {
     writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
 
     res.send({
+      error: false,
+      scope: "songs",
+      type: "volume",
       data: {
-        volume,
+        songs: db,
       },
     });
   } else {
     res.send({
       error: true,
+      scope: "songs",
+      type: "volume",
     });
   }
 });
 
-app.post(
-  "/set/rifftime/:songId/:riffId/:seconds",
-  (req: Request, res: Response) => {
-    const songId = req.params.songId;
-    const seconds = parseInt(req.params.seconds);
-    const riffId = req.params.riffId;
+app.get("/recent", (req: Request, res: Response) => {
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+  const recentSongIds: string[] = JSON.parse(recents);
+  res.send({
+    error: false,
+    scope: "recent",
+    type: "init",
+    data: {
+      recentSongIds,
+    },
+  });
+});
 
-    if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
-      const riffFile = `./public/assets/${songId}/riffs.json`;
-      if (existsSync(riffFile)) {
-        const riffData = JSON.parse(
-          readFileSync(riffFile, { encoding: "utf-8" })
-        );
-        const riffIndex = riffData.findIndex(({ id }) => id === riffId);
-        riffData[riffIndex].time = seconds;
-        writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+app.post("/recent/add", (req: Request, res: Response) => {
+  const { songId } = req.body;
 
-        res.send({
-          data: {
-            songId,
-            riffId,
-            seconds,
-          },
-        });
-      } else {
-        res.send({
-          error: true,
-        });
-      }
-    } else {
-      res.send({
-        error: true,
-      });
-    }
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+
+  const update = [
+    songId,
+    ...JSON.parse(recents)
+      .filter((id) => id !== songId)
+      .slice(0, 30),
+  ];
+
+  writeFileSync("./db/recent.json", JSON.stringify(update, null, 2), "utf8");
+
+  res.send({
+    error: false,
+    scope: "recent",
+    type: "add",
+    data: {
+      recentSongIds: update,
+    },
+  });
+});
+
+app.get("/riffs/:songId", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  let riffImages, riffUris;
+
+  try {
+    riffImages = readdirSync(`public/assets/${songId}/riffs`).map((file) => {
+      const [, label, ...labelDesc] = path.parse(file).name.split("_");
+      return {
+        label: label.split("-").join(" "),
+        ...(labelDesc.length && {
+          labelDesc: labelDesc.join(" "),
+        }),
+        src: `assets/${songId}/riffs/${file}`,
+      };
+    });
+  } catch (ex) {}
+
+  try {
+    riffUris = JSON.parse(
+      readFileSync(`public/assets/${songId}/riffs.json`).toString()
+    );
+  } catch (ex) {}
+
+  try {
+    res.send({
+      error: false,
+      scope: "riffs",
+      type: "init",
+      data: {
+        songId,
+        riffs: [
+          ...(riffImages ? riffImages : []),
+          ...(riffUris ? riffUris : []),
+        ],
+      },
+    });
+  } catch (ex) {
+    res.send({
+      error: true,
+      scope: "riffs",
+      type: "init",
+    });
   }
-);
+});
 
-app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
-  const songId = req.params.songId;
+app.post("/riffs/time", (req: Request, res: Response) => {
+  const { songId, riffId } = req.body;
+  const seconds = parseInt(req.body.seconds);
+
+  if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
+    const riffFile = `./public/assets/${songId}/riffs.json`;
+    if (existsSync(riffFile)) {
+      const riffData = JSON.parse(
+        readFileSync(riffFile, { encoding: "utf-8" })
+      );
+      const riffIndex = riffData.findIndex(({ id }) => id === riffId);
+      riffData[riffIndex].time = seconds;
+      writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+
+      res.send({
+        error: false,
+        scope: "riffs",
+        type: "time",
+        data: {
+          songId,
+          riffs: riffData,
+        },
+      });
+    } else {
+      res.send({ error: true, scope: "riffs", type: "time" });
+    }
+  } else {
+    res.send({ error: true, scope: "riffs", type: "time" });
+  }
+});
+
+app.post("/riffs/add", (req: Request, res: Response) => {
+  const { songId, ...riff } = req.body;
 
   if (songId) {
     try {
@@ -182,28 +211,28 @@ app.post("/set/riffsection/:songId", (req: Request, res: Response) => {
         mkdirSync(riffDir);
       }
 
-      riffData.push(req.body);
+      riffData.push(riff);
       writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
 
       res.send({
+        error: false,
+        scope: "riffs",
+        type: "add",
         data: {
           songId,
+          riffs: riffData,
         },
       });
     } catch (ex) {
-      res.send({
-        error: true,
-      });
+      res.send({ error: true, scope: "riffs", type: "add" });
     }
   } else {
-    res.send({
-      error: true,
-    });
+    res.send({ error: true, scope: "riffs", type: "add" });
   }
 });
 
-app.post("/riff/:songId/:riffId/:order", (req: Request, res: Response) => {
-  const { songId, riffId, order } = req.params;
+app.post("/riffs/order", (req: Request, res: Response) => {
+  const { songId, riffId, order } = req.body;
 
   if (songId) {
     try {
@@ -221,24 +250,22 @@ app.post("/riff/:songId/:riffId/:order", (req: Request, res: Response) => {
         writeFileSync(riffFile, JSON.stringify(update, null, 2), "utf8");
 
         res.send({
+          error: false,
+          scope: "riffs",
+          type: "order",
           data: {
             songId,
-            riffId,
-            order,
+            riffs: update,
           },
         });
       } else {
-        res.send({ error: true });
+        res.send({ error: true, scope: "riffs", type: "order" });
       }
     } catch (ex) {
-      res.send({
-        error: true,
-      });
+      res.send({ error: true, scope: "riffs", type: "order" });
     }
   } else {
-    res.send({
-      error: true,
-    });
+    res.send({ error: true, scope: "riffs", type: "order" });
   }
 });
 

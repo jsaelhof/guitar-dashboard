@@ -3,7 +3,7 @@ export const updateServer = async (
   body?: Record<string, unknown>
 ) => {
   const response = await fetch(`http://localhost:8001/${url}`, {
-    method: "POST",
+    method: body ? "POST" : "GET",
     headers: {
       "Content-Type": "application/json",
     },
@@ -12,5 +12,5 @@ export const updateServer = async (
     }),
   });
   const data = await response.json();
-  return { ok: response.ok, data };
+  return { url, response: data };
 };

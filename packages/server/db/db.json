@@ -159,7 +159,10 @@
     "file": "I/Iron Maiden/Iron Maiden - [1984] Powerslave/08 - Rime Of The Ancient Mariner.mp3"
   },
   "0038": {
-    "file": "I/Iron Maiden/Iron Maiden - [2006] A Matter Of Life And Death/08 - For The Greater Good Of God.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [2006] A Matter Of Life And Death/08 - For The Greater Good Of God.mp3",
+    "settings": {
+      "volume": 0.6
+    }
   },
   "0039": {
     "file": "I/Iron Maiden/Iron Maiden - [2006] A Matter Of Life And Death/03 - Brighter Than A Thousand Suns.mp3"
@@ -589,7 +592,10 @@
     "file": "I/Iron Maiden/Iron Maiden - [2021] Senjutsu/02 - Stratego.mp3"
   },
   "0163": {
-    "file": "A/Alice Cooper/Alice Cooper - [1989] Trash/01 - Poison.mp3"
+    "file": "A/Alice Cooper/Alice Cooper - [1989] Trash/01 - Poison.mp3",
+    "settings": {
+      "volume": 0.6
+    }
   },
   "0164": {
     "file": "A/Alice Cooper/Alice Cooper - [1991] Hey Stoopid/01 - Hey Stoopid.mp3"
