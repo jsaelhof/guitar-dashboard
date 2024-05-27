@@ -10,6 +10,8 @@ import {
 import path from "path";
 import cors from "cors";
 import db from "../db/db.json";
+import { polyfillSong } from "./utils/polyfill-song";
+import { Songs, SongsByArtist } from "./types";
 
 dotenv.config();
 
@@ -45,18 +47,53 @@ app.post("/play/:songId", (req: Request, res: Response) => {
 });
 
 app.get("/songs", (req: Request, res: Response) => {
+  const songsByArtist = Object.entries(db as Songs).reduce<SongsByArtist>(
+    (acc, [songId, data]) => {
+      const song = polyfillSong(songId, data);
+
+      // While iterating all the songs, create an unsorted structure grouped by artist
+      if (!acc[song.artist]) acc[song.artist] = [];
+      acc[song.artist].push({
+        id: song.id,
+        title: song.title,
+      });
+
+      return acc;
+    },
+    {}
+  );
+
   res.send({
     error: false,
     scope: "songs",
     type: "init",
     data: {
-      songs: db,
+      // Sort by artist name, and within each artist, by song title
+      songsByArtist: Object.keys(songsByArtist)
+        .toSorted()
+        .reduce<SongsByArtist>((acc, artist) => {
+          acc[artist] = songsByArtist[artist].toSorted((a, b) =>
+            a.title < b.title ? -1 : 1
+          );
+          return acc;
+        }, {}),
     },
   });
 });
 
-app.post("/songs/volume", (req: Request, res: Response) => {
-  const songId = req.body.songId;
+app.get("/song/:songId", (req: Request, res: Response) => {
+  res.send({
+    error: false,
+    scope: "song",
+    type: "init",
+    data: {
+      song: polyfillSong(req.params.songId, db[req.params.songId]),
+    },
+  });
+});
+
+app.post("/song/:songId/volume", (req: Request, res: Response) => {
+  const { songId } = req.params;
   const volume = parseFloat(req.body.volume);
 
   if (songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
@@ -67,16 +104,16 @@ app.post("/songs/volume", (req: Request, res: Response) => {
 
     res.send({
       error: false,
-      scope: "songs",
+      scope: "song",
       type: "volume",
       data: {
-        songs: db,
+        [songId]: db[songId],
       },
     });
   } else {
     res.send({
       error: true,
-      scope: "songs",
+      scope: "song",
       type: "volume",
     });
   }
@@ -90,7 +127,10 @@ app.get("/recent", (req: Request, res: Response) => {
     scope: "recent",
     type: "init",
     data: {
-      recentSongIds,
+      recentSongs: recentSongIds.map((id) => ({
+        id,
+        title: polyfillSong(id, db[id]).title,
+      })),
     },
   });
 });

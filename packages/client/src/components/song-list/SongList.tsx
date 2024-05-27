@@ -13,8 +13,14 @@ import { useNavigate } from "react-router-dom";
 
 const SongList = () => {
   const navigate = useNavigate();
-  const { songId, song, songs, songsByArtist, recentSongIds } = useAppContext();
-  const initialSelectedArtist = song ? song.artist : undefined;
+  // TODO: SongsByArtist and RecentSongs are only used by this component now.
+  // State could be moved out of context and down to here.
+  // SongsByArtist -> Move the useSongs hook here
+  // RecentSongs -> Move the useRecents hook here
+  // --- Probably just have the initial songs fetch include the recents!
+  // The initialSelectedArtist will need to be set after fetch completes but the useSongs hook does return an pending boolean that can be used.
+  const { songId, song, songsByArtist, recentSongs } = useAppContext();
+  const initialSelectedArtist = song ? song.artist : "__RECENT__";
 
   const [selectedArtist, setSelectedArtist] = useState<string | undefined>(
     initialSelectedArtist
@@ -37,7 +43,7 @@ const SongList = () => {
               </ListItemButton>
             </ListSubheader>
             <Collapse in={selectedArtist === "__RECENT__"}>
-              {recentSongIds.map((id) => (
+              {recentSongs.map(({ id, title }) => (
                 <ListItem key={id} sx={{ p: 0 }}>
                   <ListItemButton
                     sx={{ py: 0 }}
@@ -48,7 +54,7 @@ const SongList = () => {
                     selected={id === songId}
                   >
                     <ListItemText
-                      primary={songs[id].title}
+                      primary={title}
                       primaryTypographyProps={{
                         fontSize: 12,
                       }}

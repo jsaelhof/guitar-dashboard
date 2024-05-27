@@ -6,22 +6,22 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Riff, Song, Songs, SongsByArtist } from "../types";
+import { RecentSong, Riff, Song, Songs, SongsByArtist } from "../types";
 import { useParams } from "react-router-dom";
 import { updateServer } from "../utils/update-server";
 import { useRiffs } from "./hooks/use-riffs";
 import { useRecentSongs } from "./hooks/use-recent-songs";
 import { useSongs } from "./hooks/use-songs";
+import { useSong } from "./hooks/use-song";
 
 export type AppContextType = {
   init: boolean;
   songId: string;
-  song: Song;
-  songs: Songs;
+  song?: Song;
   songsByArtist: SongsByArtist;
   riffs: Riff[];
   riffTimes: number[] | null;
-  recentSongIds: string[];
+  recentSongs: RecentSong[];
   disableShortcuts: boolean;
   setDisableShortcuts: (disabled: boolean) => void;
   send: (scope: string, type: string, body?: Record<string, unknown>) => void;
@@ -31,10 +31,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider = ({ children }: PropsWithChildren) => {
   const { songId = "" } = useParams();
-  //const { songs, songsByArtist, dispatchSongUpdate } = useSongsReducer();
-  const { songs, songsByArtist, updateSongs } = useSongs();
-  const { riffs, riffTimes, updateRiffs } = useRiffs(songId);
-  const { recentSongIds, updateRecent } = useRecentSongs();
+  const { songsReady, songsByArtist } = useSongs();
+  const { song, dispatch: dispatchSong } = useSong(songId);
+  const { riffs, riffTimes, dispatch: dispatchRiffs } = useRiffs(songId);
+  const { recentSongs, dispatch: dispatchRecent } = useRecentSongs();
 
   type Response<TScope, TType, TData> = {
     error: boolean;
@@ -44,35 +44,26 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
   };
 
   const send = useCallback(
+    // TODO: This should be an action type union interface.
     async (scope: string, type: string, body?: Record<string, unknown>) => {
-      const {
-        response,
-      }: {
-        url: string;
-        response:
-          | Response<
-              "riffs",
-              "time" | "order" | "add",
-              { songId: string; riffs: Riff[] }
-            >
-          | Response<"recent", "add", { recentSongIds: string[] }>
-          | Response<"songs", "volume", { songs: Songs }>;
-      } = await updateServer(`${scope}/${type}`, body);
-
-      if (response.error) {
-        console.error(response.error);
-      } else {
-        switch (response.scope) {
-          case "songs":
-            updateSongs(response.data.songs);
-            break;
-          case "riffs":
-            updateRiffs(response.data.riffs);
-            break;
-          case "recent":
-            updateRecent(response.data.recentSongIds);
-            break;
-        }
+      if (scope === "songs") {
+        dispatchSong({
+          type,
+          ...body,
+        });
+        return;
+      } else if (scope === "recent") {
+        dispatchRecent({
+          type,
+          ...body,
+        });
+        return;
+      } else if (scope === "riffs") {
+        dispatchRiffs({
+          type,
+          ...body,
+        });
+        return;
       }
     },
     []
@@ -86,25 +77,23 @@ export const AppProvider = ({ children }: PropsWithChildren) => {
 
   const value = useMemo(
     () => ({
-      init: Object.keys(songs).length > 0,
+      init: songsReady,
       songId,
-      song: songs[songId],
-      songs,
+      song,
       songsByArtist,
       riffs,
       riffTimes,
-      recentSongIds,
+      recentSongs,
       disableShortcuts,
       setDisableShortcuts,
       send,
     }),
     [
       songId,
-      songs,
       songsByArtist,
       riffs,
       riffTimes,
-      recentSongIds,
+      recentSongs,
       disableShortcuts,
       send,
     ]

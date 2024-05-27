@@ -81,7 +81,7 @@ const Riffs = () => {
     };
   }, [riffs]);
 
-  return (
+  return song ? (
     <div>
       {riffs && riffs.length > 0 && (
         <div>
@@ -269,7 +269,7 @@ const Riffs = () => {
         </Accordion>
       ))}
     </div>
-  );
+  ) : null;
 };
 
 export default Riffs;

@@ -13,11 +13,11 @@ export type Song = {
 };
 
 export type SongsByArtist = {
-  [artist: string]: Song[];
+  [artist: string]: Pick<Song, "id" | "title">[];
 };
 
 export type Songs = {
-  [songId: string]: Song;
+  [songId: string]: string;
 };
 
 export type Riff = {
@@ -29,3 +29,5 @@ export type Riff = {
   uri?: string[];
   time?: number;
 };
+
+export type RecentSong = Pick<Song, "id" | "title">;

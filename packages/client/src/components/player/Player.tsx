@@ -17,12 +17,7 @@ import ThumbComponent from "./components/thumb/Thumb";
 import { useAppContext } from "../../context/AppContext";
 
 const Player = () => {
-  const {
-    disableShortcuts,
-    song: { file, ...song },
-    riffTimes,
-    send,
-  } = useAppContext();
+  const { disableShortcuts, song, riffTimes, send } = useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
   const [volume, setVolume] = useState<number>(0.5);
@@ -58,18 +53,19 @@ const Player = () => {
 
   // When the file changes, reset anything that shouldn't hold over from the previous song
   useEffect(() => {
-    updateVolume(song.settings.volume);
+    song && updateVolume(song.settings.volume);
     setLoop(null);
     refresh();
-  }, [file]);
+  }, [song?.file]);
 
-  return (
+  return song ? (
     <div>
-      {file ? (
+      {song.file && !ref.current?.error ? (
         <>
           <audio
             ref={ref}
-            src={`http://localhost:8001/${file}`}
+            src={`http://localhost:8001/${song.file}`}
+            onError={refresh}
             //autoPlay
             onPlay={(e) => {
               // When a track starts, set its volume to the player's volume
@@ -345,10 +341,20 @@ const Player = () => {
           )}
         </>
       ) : (
-        "No File"
+        <div
+          style={{
+            width: "100%",
+            height: "100px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          File could not be loaded
+        </div>
       )}
     </div>
-  );
+  ) : null;
 };
 
 export default Player;

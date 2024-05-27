@@ -1,20 +1,44 @@
-import { useCallback, useEffect, useState } from "react";
-import { updateServer } from "../../utils/update-server";
+import { useActionState, useCallback, useEffect } from "react";
+import { RecentSong } from "../../types";
+
+type FetchRecentSongsResponse = { data: { recentSongs: RecentSong[] } };
 
 export const useRecentSongs = () => {
-  const [recentSongIds, setRecentSongIds] = useState<string[]>([]);
+  const [{ recentSongs }, getRecentSongs, isPending] = useActionState<
+    FetchRecentSongsResponse["data"]
+  >(
+    async () => {
+      const response = await fetch(`http://localhost:8001/recent`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const { data } = (await response.json()) as FetchRecentSongsResponse;
 
-  const updateRecent = useCallback(async (recent: string[]) => {
-    setRecentSongIds(recent);
-  }, []);
+      return data;
+    },
+    {
+      recentSongs: [],
+    }
+  );
 
-  useEffect(() => {
-    const getRecent = async () => {
-      const { response } = await updateServer("recent");
-      updateRecent(response.error ? [] : response.data.recentSongIds);
-    };
-    getRecent();
-  }, []);
+  const dispatch = useCallback(
+    async (action: { type: "add"; songId: string }) => {
+      await fetch(`http://localhost:8001/recent/${action.type}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(action),
+      });
 
-  return { recentSongIds, updateRecent };
+      // Refetch.
+      getRecentSongs();
+    },
+    []
+  );
+
+  useEffect(() => getRecentSongs(), []);
+
+  return { recentSongs, dispatch };
 };

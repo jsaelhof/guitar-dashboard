@@ -2,7 +2,6 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { useParams } from "react-router-dom";
 import SongList from "./components/song-list/SongList";
 import Riffs from "./components/riffs/Riffs";
 import SongControls from "./components/song-controls/SongControls";
@@ -18,8 +17,8 @@ import {
 } from "./Dashboard.styles";
 
 function Dashboard() {
-  const { songId } = useParams();
   const { init } = useAppContext();
+  const { song } = useAppContext();
 
   return !init ? null : (
     <DashboardLayout>
@@ -27,7 +26,9 @@ function Dashboard() {
         <SongList />
       </LeftColumn>
 
-      {songId && (
+      {song && (
+        // TODO: Since all this needs "Song", I could wrap this all up as a Song component and move it's data out of context into that component and start passing it in to each subcomponent.
+        // I'd need to think a bit about how to update the server state if there is no context.
         <>
           <Header>
             <SongControls />
@@ -35,7 +36,6 @@ function Dashboard() {
           </Header>
 
           <Content>
-            {/* Display any associated riff data (images or data uris) */}
             <Riffs />
             <PDF />
             <AddRiff />

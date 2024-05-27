@@ -28,7 +28,7 @@ const AddRiff = () => {
     }
   }, [tabs]);
 
-  return (
+  return song ? (
     <Layout>
       {tabs.length > 0 && (
         <>
@@ -143,7 +143,7 @@ const AddRiff = () => {
         )}
       </Controls>
     </Layout>
-  );
+  ) : null;
 };
 
 export default AddRiff;

@@ -8,5 +8,9 @@
   ],
   "scripts": {
     "dev": "yarn workspaces foreach -vpi run dev"
+  },
+  "resolutions": {
+    "@types/react": "npm:types-react@beta",
+    "@types/react-dom": "npm:types-react-dom@beta"
   }
 }
