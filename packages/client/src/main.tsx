@@ -1,8 +1,9 @@
 import ReactDOM from "react-dom/client";
 import Dashboard from "./Dashboard";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
 import { AppProvider } from "./context/AppContext";
+import App from "./App";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
         <Dashboard />
       </AppProvider>
     ),
+  },
+  {
+    path: "test",
+    element: <App />,
   },
 ]);
 

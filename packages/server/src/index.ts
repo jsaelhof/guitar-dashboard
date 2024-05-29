@@ -47,6 +47,9 @@ app.post("/play/:songId", (req: Request, res: Response) => {
 });
 
 app.get("/songs", (req: Request, res: Response) => {
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+  const recentSongIds: string[] = JSON.parse(recents);
+
   const songsByArtist = Object.entries(db as Songs).reduce<SongsByArtist>(
     (acc, [songId, data]) => {
       const song = polyfillSong(songId, data);
@@ -77,6 +80,50 @@ app.get("/songs", (req: Request, res: Response) => {
           );
           return acc;
         }, {}),
+
+      recentSongs: recentSongIds.map((id) => {
+        const { artist, title } = polyfillSong(id, db[id]);
+        return {
+          id,
+          title,
+          artist,
+        };
+      }),
+    },
+  });
+});
+
+app.post("/songs/recent", (req: Request, res: Response) => {
+  const { songId } = req.body;
+
+  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+
+  const recentSongIds = [
+    songId,
+    ...JSON.parse(recents)
+      .filter((id) => id !== songId)
+      .slice(0, 30),
+  ];
+
+  writeFileSync(
+    "./db/recent.json",
+    JSON.stringify(recentSongIds, null, 2),
+    "utf8"
+  );
+
+  res.send({
+    error: false,
+    scope: "recent",
+    type: "add",
+    data: {
+      recentSongs: recentSongIds.map((id) => {
+        const { artist, title } = polyfillSong(id, db[id]);
+        return {
+          id,
+          title,
+          artist,
+        };
+      }),
     },
   });
 });
@@ -107,7 +154,7 @@ app.post("/song/:songId/volume", (req: Request, res: Response) => {
       scope: "song",
       type: "volume",
       data: {
-        [songId]: db[songId],
+        song: polyfillSong(songId, db[songId]),
       },
     });
   } else {
@@ -119,62 +166,23 @@ app.post("/song/:songId/volume", (req: Request, res: Response) => {
   }
 });
 
-app.get("/recent", (req: Request, res: Response) => {
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-  const recentSongIds: string[] = JSON.parse(recents);
-  res.send({
-    error: false,
-    scope: "recent",
-    type: "init",
-    data: {
-      recentSongs: recentSongIds.map((id) => ({
-        id,
-        title: polyfillSong(id, db[id]).title,
-      })),
-    },
-  });
-});
-
-app.post("/recent/add", (req: Request, res: Response) => {
-  const { songId } = req.body;
-
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-
-  const update = [
-    songId,
-    ...JSON.parse(recents)
-      .filter((id) => id !== songId)
-      .slice(0, 30),
-  ];
-
-  writeFileSync("./db/recent.json", JSON.stringify(update, null, 2), "utf8");
-
-  res.send({
-    error: false,
-    scope: "recent",
-    type: "add",
-    data: {
-      recentSongIds: update,
-    },
-  });
-});
-
 app.get("/riffs/:songId", (req: Request, res: Response) => {
   const { songId } = req.params;
-  let riffImages, riffUris;
+  let /*riffImages,*/ riffUris;
 
-  try {
-    riffImages = readdirSync(`public/assets/${songId}/riffs`).map((file) => {
-      const [, label, ...labelDesc] = path.parse(file).name.split("_");
-      return {
-        label: label.split("-").join(" "),
-        ...(labelDesc.length && {
-          labelDesc: labelDesc.join(" "),
-        }),
-        src: `assets/${songId}/riffs/${file}`,
-      };
-    });
-  } catch (ex) {}
+  // TODO: Need to integrate actual image files with the riffs.json file so that order, time etc work.
+  // try {
+  //   riffImages = readdirSync(`public/assets/${songId}/riffs`).map((file) => {
+  //     const [, label, ...labelDesc] = path.parse(file).name.split("_");
+  //     return {
+  //       label: label.split("-").join(" "),
+  //       ...(labelDesc.length && {
+  //         labelDesc: labelDesc.join(" "),
+  //       }),
+  //       src: `assets/${songId}/riffs/${file}`,
+  //     };
+  //   });
+  // } catch (ex) {}
 
   try {
     riffUris = JSON.parse(
@@ -190,7 +198,7 @@ app.get("/riffs/:songId", (req: Request, res: Response) => {
       data: {
         songId,
         riffs: [
-          ...(riffImages ? riffImages : []),
+          //...(riffImages ? riffImages : []),
           ...(riffUris ? riffUris : []),
         ],
       },
@@ -204,8 +212,9 @@ app.get("/riffs/:songId", (req: Request, res: Response) => {
   }
 });
 
-app.post("/riffs/time", (req: Request, res: Response) => {
-  const { songId, riffId } = req.body;
+app.post("/riffs/:songId/time", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const { riffId } = req.body;
   const seconds = parseInt(req.body.seconds);
 
   if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
@@ -235,76 +244,70 @@ app.post("/riffs/time", (req: Request, res: Response) => {
   }
 });
 
-app.post("/riffs/add", (req: Request, res: Response) => {
-  const { songId, ...riff } = req.body;
+app.post("/riffs/:songId/add", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const riff = req.body;
 
-  if (songId) {
-    try {
-      const riffDir = `./public/assets/${songId}`;
-      const riffFile = `${riffDir}/riffs.json`;
+  try {
+    const riffDir = `./public/assets/${songId}`;
+    const riffFile = `${riffDir}/riffs.json`;
 
-      let riffData = [];
+    let riffData = [];
 
-      if (existsSync(riffFile)) {
-        riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
-      } else if (!existsSync(riffDir)) {
-        mkdirSync(riffDir);
-      }
-
-      riffData.push(riff);
-      writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
-
-      res.send({
-        error: false,
-        scope: "riffs",
-        type: "add",
-        data: {
-          songId,
-          riffs: riffData,
-        },
-      });
-    } catch (ex) {
-      res.send({ error: true, scope: "riffs", type: "add" });
+    if (existsSync(riffFile)) {
+      riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
+    } else if (!existsSync(riffDir)) {
+      mkdirSync(riffDir);
     }
-  } else {
+
+    riffData.push(riff);
+    writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+
+    res.send({
+      error: false,
+      scope: "riffs",
+      type: "add",
+      data: {
+        songId,
+        riffs: riffData,
+      },
+    });
+  } catch (ex) {
     res.send({ error: true, scope: "riffs", type: "add" });
   }
 });
 
-app.post("/riffs/order", (req: Request, res: Response) => {
-  const { songId, riffId, order } = req.body;
+app.post("/riffs/:songId/order", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const { riffId, order } = req.body;
 
-  if (songId) {
-    try {
-      const riffDir = `./public/assets/${songId}`;
-      const riffFile = `${riffDir}/riffs.json`;
+  try {
+    const riffDir = `./public/assets/${songId}`;
+    const riffFile = `${riffDir}/riffs.json`;
 
-      let riffData = [];
+    let riffData = [];
 
-      if (existsSync(riffFile)) {
-        riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
-        const riff = riffData.find(({ id }) => riffId === id);
-        const update = riffData
-          .filter(({ id }) => riffId !== id)
-          .toSpliced(order, 0, riff);
-        writeFileSync(riffFile, JSON.stringify(update, null, 2), "utf8");
+    if (existsSync(riffFile)) {
+      riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
+      const riff = riffData.find(({ id }) => riffId === id);
+      const update = riffData
+        .filter(({ id }) => riffId !== id)
+        .toSpliced(order, 0, riff);
+      writeFileSync(riffFile, JSON.stringify(update, null, 2), "utf8");
 
-        res.send({
-          error: false,
-          scope: "riffs",
-          type: "order",
-          data: {
-            songId,
-            riffs: update,
-          },
-        });
-      } else {
-        res.send({ error: true, scope: "riffs", type: "order" });
-      }
-    } catch (ex) {
+      res.send({
+        error: false,
+        scope: "riffs",
+        type: "order",
+        data: {
+          songId,
+          riffs: update,
+        },
+      });
+    } else {
       res.send({ error: true, scope: "riffs", type: "order" });
     }
-  } else {
+  } catch (ex) {
     res.send({ error: true, scope: "riffs", type: "order" });
   }
 });

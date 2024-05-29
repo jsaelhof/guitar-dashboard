@@ -7,26 +7,33 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
-import { useNavigate } from "react-router-dom";
 
 const SongList = () => {
   const navigate = useNavigate();
-  // TODO: SongsByArtist and RecentSongs are only used by this component now.
-  // State could be moved out of context and down to here.
-  // SongsByArtist -> Move the useSongs hook here
-  // RecentSongs -> Move the useRecents hook here
-  // --- Probably just have the initial songs fetch include the recents!
-  // The initialSelectedArtist will need to be set after fetch completes but the useSongs hook does return an pending boolean that can be used.
-  const { songId, song, songsByArtist, recentSongs } = useAppContext();
-  const initialSelectedArtist = song ? song.artist : "__RECENT__";
+  const { songId = "" } = useParams();
+  const { songsByArtist, recentSongs } = useAppContext();
 
-  const [selectedArtist, setSelectedArtist] = useState<string | undefined>(
-    initialSelectedArtist
+  const currentArtist = useMemo(
+    () =>
+      songId
+        ? Object.entries(songsByArtist).reduce<string | null>(
+            (selectedArtist, [artist, songs]) => {
+              if (songs.map(({ id }) => id).includes(songId))
+                selectedArtist = artist;
+              return selectedArtist;
+            },
+            null
+          )
+        : null,
+    [songId, songsByArtist]
   );
 
-  return songsByArtist ? (
+  const [recentOpen, setRecentOpen] = useState(false);
+
+  return (
     <>
       <List dense>
         <ListItem sx={{ p: 0, width: 1 }}>
@@ -34,16 +41,14 @@ const SongList = () => {
             <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
               <ListItemButton
                 onClick={() => {
-                  setSelectedArtist(
-                    selectedArtist !== "__RECENT__" ? "__RECENT__" : undefined
-                  );
+                  setRecentOpen(!recentOpen);
                 }}
               >
                 Recent Songs
               </ListItemButton>
             </ListSubheader>
-            <Collapse in={selectedArtist === "__RECENT__"}>
-              {recentSongs.map(({ id, title }) => (
+            <Collapse in={recentOpen}>
+              {recentSongs.map(({ id, title, artist }) => (
                 <ListItem key={id} sx={{ p: 0 }}>
                   <ListItemButton
                     sx={{ py: 0 }}
@@ -54,7 +59,14 @@ const SongList = () => {
                     selected={id === songId}
                   >
                     <ListItemText
-                      primary={title}
+                      primary={
+                        <div>
+                          <div>{title}</div>
+                          <div style={{ fontSize: "0.8em", opacity: 0.66 }}>
+                            {artist}
+                          </div>
+                        </div>
+                      }
                       primaryTypographyProps={{
                         fontSize: 12,
                       }}
@@ -69,22 +81,19 @@ const SongList = () => {
 
         <Divider variant="middle" sx={{ my: 2 }} />
 
-        {Object.entries(songsByArtist ?? []).map(([artist, songs]) => (
+        {Object.entries(songsByArtist).map(([artist, songs]) => (
           <ListItem key={artist} sx={{ p: 0, width: 1 }}>
             <List dense sx={{ py: 0, width: 1 }}>
               <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
                 <ListItemButton
                   onClick={() => {
-                    setSelectedArtist(
-                      artist !== selectedArtist ? artist : undefined
-                    );
                     navigate(`/${songs[0].id}`);
                   }}
                 >
                   {artist}
                 </ListItemButton>
               </ListSubheader>
-              <Collapse in={selectedArtist === artist}>
+              <Collapse in={currentArtist === artist}>
                 {songs.map((song) => (
                   <ListItem key={song.id} sx={{ p: 0 }}>
                     <ListItemButton
@@ -111,7 +120,7 @@ const SongList = () => {
         ))}
       </List>
     </>
-  ) : null;
+  );
 };
 
 export default SongList;

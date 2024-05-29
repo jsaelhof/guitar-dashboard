@@ -1,22 +1,50 @@
-import { useActionState, useCallback, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { Riff } from "../../types";
 
 type FetchRiffsResponse = { data: { riffs: Riff[] } };
 
 export const useRiffs = (songId: string) => {
-  const [{ riffs, riffTimes }, getRiffs, isPending] = useActionState<
+  const [{ riffs, riffTimes }, dispatch, isPending] = useActionState<
     {
       riffs: Riff[];
       riffTimes: number[] | null;
     },
-    string
+    | {
+        type: "get";
+      }
+    | {
+        type: "add";
+        id: string;
+        label: string;
+        labelDesc?: string;
+        uri: string[];
+      }
+    | {
+        type: "time";
+        riffId: string;
+        seconds: number;
+      }
+    | {
+        type: "order";
+        riffId: string;
+        order: number;
+      }
   >(
-    async (_, songId: string) => {
-      const response = await fetch(`http://localhost:8001/riffs/${songId}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+    async (_, { type, ...body }) => {
+      const response = await fetch(
+        `http://localhost:8001/riffs/${songId}${
+          type !== "get" ? `/${type}` : ""
+        }`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          ...(type !== "get" && {
+            method: "POST",
+            body: JSON.stringify(body),
+          }),
+        }
+      );
       const {
         data: { riffs },
       } = (await response.json()) as FetchRiffsResponse;
@@ -52,44 +80,7 @@ export const useRiffs = (songId: string) => {
     }
   );
 
-  const dispatch = useCallback(
-    async (
-      action:
-        | {
-            type: "add";
-            id: string;
-            label: string;
-            labelDesc?: string;
-            uri: string[];
-          }
-        | {
-            type: "time";
-            songId: string;
-            riffId: string;
-            seconds: number;
-          }
-        | {
-            type: "order";
-            songId: string;
-            riffId: string;
-            order: number;
-          }
-    ) => {
-      await fetch(`http://localhost:8001/riffs/${action.type}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(action),
-      });
-
-      // Refetch.
-      getRiffs(songId);
-    },
-    []
-  );
-
-  useEffect(() => getRiffs(songId), [songId]);
+  useEffect(() => dispatch({ type: "get" }), [songId]);
 
   return { riffs, riffTimes, dispatch };
 };

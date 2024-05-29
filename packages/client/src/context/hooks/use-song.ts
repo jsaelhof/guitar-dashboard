@@ -1,47 +1,36 @@
-import { useActionState, useCallback, useEffect } from "react";
+import { useActionState, useEffect } from "react";
 import { Song } from "../../types";
 
 type FetchSongResponse = {
   data: { song: Song };
 };
-
 // TODO: This whole hook could potentially be combined with riffs, even if they keep separate data on the BE.
 // This could easily fetch twice or have the BE pull together the two sources into one response.
-export const useSong = (songId: string) => {
-  const [song, getSong, isPending] = useActionState<Song | undefined, string>(
-    async (_, songId) => {
-      const response = await fetch(`http://localhost:8001/song/${songId}`, {
+export const useSong = (songId?: string) => {
+  const [song, dispatch, isPending] = useActionState<
+    Song | undefined,
+    { type: "get" } | { type: "volume"; volume: number }
+  >(async (_, { type, ...body }) => {
+    const response = await fetch(
+      `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,
+      {
         headers: {
           "Content-Type": "application/json",
         },
-      });
-      const { data } = (await response.json()) as FetchSongResponse;
-
-      return data.song;
-    },
-    undefined
-  );
-
-  const dispatch = useCallback(
-    async (action: { type: "volume"; songId: string; volume: number }) => {
-      await fetch(
-        `http://localhost:8001/song/${action.songId}/${action.type}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
+        ...(type !== "get" && {
           method: "POST",
-          body: JSON.stringify(action),
-        }
-      );
+          body: JSON.stringify(body),
+        }),
+      }
+    );
+    const { data } = (await response.json()) as FetchSongResponse;
 
-      // Refetch.
-      getSong(action.songId);
-    },
-    []
-  );
+    return data.song;
+  }, undefined);
 
-  useEffect(() => getSong(songId), [songId]);
+  useEffect(() => {
+    dispatch({ type: "get" });
+  }, [songId]);
 
   return { song, dispatch };
 };

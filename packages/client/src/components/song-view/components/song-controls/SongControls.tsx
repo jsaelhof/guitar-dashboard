@@ -1,7 +1,7 @@
 import { PlayArrow, QueueMusic } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import { useCallback } from "react";
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../../../context/AppContext";
 
 const SongControls = () => {
   const { song } = useAppContext();

@@ -16,7 +16,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { AudioEvent } from "../../types";
+import { AudioEvent } from "../../../../types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   OrderLayout,
@@ -30,12 +30,12 @@ import {
 import {
   addAudioEventListener,
   removeAudioEventListener,
-} from "../../utils/audio-events";
-import { formatSeconds } from "../../utils/format-seconds";
-import { useAppContext } from "../../context/AppContext";
+} from "../../../../utils/audio-events";
+import { formatSeconds } from "../../../../utils/format-seconds";
+import { useAppContext } from "../../../../context/AppContext";
 
 const Riffs = () => {
-  const { song, riffs, send } = useAppContext();
+  const { song, riffs, dispatchRiffs } = useAppContext();
 
   const allRiffs = useMemo(() => [...Array((riffs ?? []).length).keys()], []);
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
@@ -90,8 +90,8 @@ const Riffs = () => {
               All
             </RiffListItem>
 
-            {riffs.map(({ label }, index) => (
-              <RiffListItem onClick={() => setOpenItems([index])}>
+            {riffs.map(({ id, label }, index) => (
+              <RiffListItem key={id} onClick={() => setOpenItems([index])}>
                 {label}
               </RiffListItem>
             ))}
@@ -100,7 +100,7 @@ const Riffs = () => {
       )}
       {(riffs || []).map(({ id, label, labelDesc, src, uri, time }, index) => (
         <Accordion
-          key={src}
+          key={id}
           expanded={
             openItems.find((itemIndex) => itemIndex === index) != null ?? false
           }
@@ -185,8 +185,8 @@ const Riffs = () => {
                       onClick={async (e) => {
                         e.stopPropagation();
 
-                        send("riffs", "time", {
-                          songId: song.id,
+                        dispatchRiffs({
+                          type: "time",
                           riffId: id,
                           seconds: activeTimeMark.time,
                         });
@@ -227,8 +227,8 @@ const Riffs = () => {
                       e.stopPropagation();
 
                       if (index > 0) {
-                        send("riffs", "order", {
-                          songId: song.id,
+                        dispatchRiffs({
+                          type: "order",
                           riffId: id,
                           order: Math.max(index - 1, 0),
                         });
@@ -244,8 +244,8 @@ const Riffs = () => {
                       e.stopPropagation();
 
                       if (index < riffs.length - 1) {
-                        send("riffs", "order", {
-                          songId: song.id,
+                        dispatchRiffs({
+                          type: "order",
                           riffId: id,
                           order: Math.min(index + 1, riffs.length - 1),
                         });

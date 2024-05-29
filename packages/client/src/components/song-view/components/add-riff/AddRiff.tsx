@@ -2,11 +2,11 @@ import { Button, IconButton, TextField } from "@mui/material";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { AddBox, Close } from "@mui/icons-material";
 import { Controls, Info, Layout, RiffInput, RiffList } from "./AddRiff.styles";
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../../../context/AppContext";
 import { v4 as uuid } from "uuid";
 
 const AddRiff = () => {
-  const { song, send, setDisableShortcuts } = useAppContext();
+  const { song, dispatchRiffs, setDisableShortcuts } = useAppContext();
   const [section, setSection] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [tabs, setTabs] = useState<string[]>([]);
@@ -128,8 +128,8 @@ const AddRiff = () => {
               tabs.some((tab) => tab.length === 0)
             }
             onClick={async () => {
-              send("riffs", "add", {
-                songId: song.id,
+              dispatchRiffs({
+                type: "add",
                 id: uuid(),
                 label: section,
                 labelDesc: desc,

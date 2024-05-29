@@ -1,7 +1,7 @@
-import { MutableRefObject, useCallback, useEffect } from "react";
+import { RefObject, useEffect } from "react";
 
 export const useKeyboardShortcuts = (
-  ref: MutableRefObject<HTMLAudioElement | null>,
+  ref: RefObject<HTMLAudioElement | null>,
   onCycleLoop: () => void,
   onVolumeChange: (value: number) => void,
   disableShortcuts: boolean
@@ -96,5 +96,5 @@ export const useKeyboardShortcuts = (
       if (!disableShortcuts) window.addEventListener("keydown", listener);
       return () => window.removeEventListener("keydown", listener);
     }
-  }, [disableShortcuts]);
+  }, [disableShortcuts, ref.current]);
 };

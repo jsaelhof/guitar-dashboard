@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { dispatchAudioEvent } from "../../utils/audio-events";
+import { dispatchAudioEvent } from "../../../../utils/audio-events";
 import { IconButton, Slider } from "@mui/material";
-import { formatSeconds } from "../../utils/format-seconds";
+import { formatSeconds } from "../../../../utils/format-seconds";
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,10 +14,11 @@ import { AmpDisplay, AmpLabel } from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import ThumbComponent from "./components/thumb/Thumb";
-import { useAppContext } from "../../context/AppContext";
+import { useAppContext } from "../../../../context/AppContext";
 
 const Player = () => {
-  const { disableShortcuts, song, riffTimes, send } = useAppContext();
+  const { disableShortcuts, song, riffTimes, dispatchSong, dispatchSongs } =
+    useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
 
   const [volume, setVolume] = useState<number>(0.5);
@@ -73,7 +74,7 @@ const Player = () => {
 
               // When a track plays for the first time, mark it as recent.
               e.currentTarget.played.length === 0 &&
-                send("recent", "add", { songId: song.id });
+                dispatchSongs({ type: "recent", songId: song.id });
             }}
             onRateChange={refresh}
             onDurationChange={refresh}
@@ -85,12 +86,6 @@ const Player = () => {
               //setCurrentTime(e.currentTarget.currentTime);
 
               // Check if a loop is defined and it is time to restart the loop
-              console.log(
-                e.currentTarget.currentTime,
-                loop?.[1],
-                e.currentTarget.ended,
-                e.currentTarget.paused
-              );
               if (
                 loop &&
                 loop[1] != null &&
@@ -155,6 +150,9 @@ const Player = () => {
                         loop[0] / ref.current.duration,
                         loop[1] / ref.current.duration,
                       ]
+                    : // Duration is NaN if the file doesn't load, even though it doesn't get rendered. I think it happens on first render when it's trying to load before ref.current.error becomes true.
+                    isNaN(ref.current.duration)
+                    ? 0
                     : ref.current.currentTime / ref.current.duration
                 }
                 // Override the thumb component with a custom one.
@@ -211,12 +209,12 @@ const Player = () => {
                   transform: "translateY(8px)",
                 }}
               >
-                <AmpDisplay on={loop?.[0] != null}>
+                <AmpDisplay $on={loop?.[0] != null}>
                   {loop?.[0] != null && (
                     <div>{formatSeconds(Math.round(loop[0]))}</div>
                   )}
                 </AmpDisplay>
-                <AmpDisplay on={loop?.[1] != null}>
+                <AmpDisplay $on={loop?.[1] != null}>
                   {loop?.[1] != null && (
                     <div>{formatSeconds(Math.round(loop[1]))}</div>
                   )}
@@ -327,8 +325,8 @@ const Player = () => {
                   <BookmarkBorder
                     onClick={() => {
                       if (ref.current) {
-                        send("songs", "volume", {
-                          songId: song.id,
+                        dispatchSong({
+                          type: "volume",
                           volume: ref.current.volume,
                         });
                       }

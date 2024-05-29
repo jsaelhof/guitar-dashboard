@@ -30,4 +30,4 @@ export type Riff = {
   time?: number;
 };
 
-export type RecentSong = Pick<Song, "id" | "title">;
+export type RecentSong = Pick<Song, "id" | "title" | "artist">;
