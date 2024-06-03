@@ -1,5 +1,3 @@
-export type AudioEvent = CustomEvent<{ currentTime: number }>;
-
 export type Song = {
   id: string;
   title: string;
