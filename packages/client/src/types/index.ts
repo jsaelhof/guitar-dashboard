@@ -10,6 +10,12 @@ export type Song = {
   settings: {
     volume: number;
   };
+  loops?: {
+    id: string;
+    loopA: number;
+    loopB: number;
+    label: string;
+  }[];
 };
 
 export type SongsByArtist = {

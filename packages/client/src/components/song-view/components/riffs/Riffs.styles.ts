@@ -1,12 +1,23 @@
 import { styled } from "@mui/material";
 
+export const Shortcuts = styled("div")(() => ({
+  display: "flex",
+  justifyContent: "space-between",
+}));
+
 export const RiffList = styled("ul")(() => ({
   display: "flex",
   gap: 32,
-  justifyContent: "center",
+  padding: 0,
 }));
 
-export const RiffListItem = styled("li")(({ theme: { palette } }) => ({
+export const LoopList = styled("ul")(() => ({
+  display: "flex",
+  gap: 32,
+  padding: 0,
+}));
+
+export const ListItem = styled("li")(({ theme: { palette } }) => ({
   listStyle: "none",
   fontSize: 12,
   cursor: "pointer",

@@ -3104,6 +3104,7 @@ __metadata:
     express: ^4.18.2
     nodemon: ^2.0.21
     typescript: ^4.9.5
+    uuid: ^9.0.1
   languageName: unknown
   linkType: soft
 

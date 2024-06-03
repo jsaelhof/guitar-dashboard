@@ -1,17 +1,11 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  writeFileSync,
-} from "fs";
-import path from "path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import cors from "cors";
 import db from "../db/db.json";
 import { polyfillSong } from "./utils/polyfill-song";
 import { Songs, SongsByArtist } from "./types";
+import { v4 as uuid } from "uuid";
 
 dotenv.config();
 
@@ -162,6 +156,40 @@ app.post("/song/:songId/volume", (req: Request, res: Response) => {
       error: true,
       scope: "song",
       type: "volume",
+    });
+  }
+});
+
+app.post("/song/:songId/loop", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const loopA = parseFloat(req.body.loopA);
+  const loopB = parseFloat(req.body.loopB);
+  const { label } = req.body;
+
+  if (songId && loopA && loopB && label) {
+    db[songId].loops = db[songId].loops ?? [];
+    db[songId].loops.push({
+      id: uuid(),
+      loopA,
+      loopB,
+      label,
+    });
+
+    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+
+    res.send({
+      error: false,
+      scope: "song",
+      type: "loop",
+      data: {
+        song: polyfillSong(songId, db[songId]),
+      },
+    });
+  } else {
+    res.send({
+      error: true,
+      scope: "song",
+      type: "loop",
     });
   }
 });

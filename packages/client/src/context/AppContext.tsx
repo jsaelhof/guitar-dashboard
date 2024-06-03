@@ -12,7 +12,6 @@ import { useSong } from "./hooks/use-song";
 import { useSongs } from "./hooks/use-songs";
 
 export type AppContextType = {
-  songId: string;
   song?: Song;
   songsByArtist: SongsByArtist;
   riffs: Riff[];

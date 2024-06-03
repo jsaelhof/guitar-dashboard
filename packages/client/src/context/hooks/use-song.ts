@@ -9,7 +9,9 @@ type FetchSongResponse = {
 export const useSong = (songId?: string) => {
   const [song, dispatch, isPending] = useActionState<
     Song | undefined,
-    { type: "get" } | { type: "volume"; volume: number }
+    | { type: "get" }
+    | { type: "volume"; volume: number }
+    | { type: "loop"; loopA: number; loopB: number; label: string }
   >(async (_, { type, ...body }) => {
     const response = await fetch(
       `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,

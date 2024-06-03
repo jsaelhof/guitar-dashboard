@@ -16,23 +16,25 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { AudioEvent } from "../../../../types";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+  LoopList,
   OrderLayout,
   RiffList,
-  RiffListItem,
+  ListItem,
   RiffOrderDown,
   RiffOrderUp,
   SectionSummary,
+  Shortcuts,
   UriTablature,
 } from "./Riffs.styles";
-import {
-  addAudioEventListener,
-  removeAudioEventListener,
-} from "../../../../utils/audio-events";
 import { formatSeconds } from "../../../../utils/format-seconds";
 import { useAppContext } from "../../../../context/AppContext";
+import {
+  CustomEvents,
+  PlaySavedLoopDetail,
+  UpdateTimeDetail,
+} from "../../../../types/events";
 
 const Riffs = () => {
   const { song, riffs, dispatchRiffs } = useAppContext();
@@ -63,41 +65,64 @@ const Riffs = () => {
   // This hook sets up a listener for playback events from the the Player.tsx component as it plays through a song.
   // Using the time, we can check and see what riff should be shown.
   useEffect(() => {
-    const listener = (e: AudioEvent) => {
-      if (e.detail.currentTime) {
-        ref.current = Math.round(e.detail.currentTime);
+    const listener = ({
+      detail: { currentTime },
+    }: CustomEvent<UpdateTimeDetail>) => {
+      if (currentTime) {
+        ref.current = Math.round(currentTime);
 
         const currentRiffIndex =
-          timeMap.findLast(([time]) => time < e.detail.currentTime)?.[1] ?? -1;
+          timeMap.findLast(([time]) => time < currentTime)?.[1] ?? -1;
 
         currentRiffIndex >= 0 && setOpenItems([currentRiffIndex]);
       }
     };
 
-    addAudioEventListener(listener);
+    document.addEventListener(CustomEvents.UPDATE_TIME, listener);
 
     () => {
-      removeAudioEventListener(listener);
+      document.removeEventListener(CustomEvents.UPDATE_TIME, listener);
     };
   }, [riffs]);
 
   return song ? (
     <div>
-      {riffs && riffs.length > 0 && (
-        <div>
-          <RiffList>
-            <RiffListItem onClick={() => setOpenItems(allRiffs)}>
-              All
-            </RiffListItem>
+      {/* This should maybe move out to its own component */}
+      <Shortcuts>
+        <RiffList>
+          {riffs.length > 0 && (
+            <ListItem onClick={() => setOpenItems(allRiffs)}>All</ListItem>
+          )}
 
-            {riffs.map(({ id, label }, index) => (
-              <RiffListItem key={id} onClick={() => setOpenItems([index])}>
-                {label}
-              </RiffListItem>
-            ))}
-          </RiffList>
-        </div>
-      )}
+          {riffs.map(({ id, label }, index) => (
+            <ListItem key={id} onClick={() => setOpenItems([index])}>
+              {label}
+            </ListItem>
+          ))}
+        </RiffList>
+
+        <LoopList>
+          {(song.loops ?? []).map((loopData) => (
+            <ListItem
+              key={loopData.id}
+              onClick={() => {
+                document.dispatchEvent(
+                  new CustomEvent<PlaySavedLoopDetail>(
+                    CustomEvents.PLAY_SAVED_LOOP,
+                    {
+                      detail: loopData,
+                    }
+                  )
+                );
+              }}
+            >
+              {loopData.label} : ({formatSeconds(Math.round(loopData.loopA))}-
+              {formatSeconds(Math.round(loopData.loopB))})
+            </ListItem>
+          ))}
+        </LoopList>
+      </Shortcuts>
+
       {(riffs || []).map(({ id, label, labelDesc, src, uri, time }, index) => (
         <Accordion
           key={id}

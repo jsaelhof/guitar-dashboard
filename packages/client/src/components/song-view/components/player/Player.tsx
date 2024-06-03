@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { dispatchAudioEvent } from "../../../../utils/audio-events";
 import { IconButton, Slider } from "@mui/material";
 import { formatSeconds } from "../../../../utils/format-seconds";
 import {
@@ -15,6 +14,11 @@ import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import ThumbComponent from "./components/thumb/Thumb";
 import { useAppContext } from "../../../../context/AppContext";
+import {
+  CustomEvents,
+  PlaySavedLoopDetail,
+  UpdateTimeDetail,
+} from "../../../../types/events";
 
 const Player = () => {
   const { disableShortcuts, song, riffTimes, dispatchSong, dispatchSongs } =
@@ -59,6 +63,24 @@ const Player = () => {
     refresh();
   }, [song?.file]);
 
+  // This hook sets up a listener for events.
+  useEffect(() => {
+    const listener = ({
+      detail: { loopA, loopB },
+    }: CustomEvent<PlaySavedLoopDetail>) => {
+      setLoop([loopA, loopB]);
+      if (ref.current) {
+        ref.current.currentTime = loopA;
+      }
+    };
+
+    document.addEventListener(CustomEvents.PLAY_SAVED_LOOP, listener);
+
+    () => {
+      document.removeEventListener(CustomEvents.PLAY_SAVED_LOOP, listener);
+    };
+  }, []);
+
   return song ? (
     <div>
       {song.file && !ref.current?.error ? (
@@ -83,8 +105,6 @@ const Player = () => {
             // }}
             onTimeUpdate={(e) => {
               refresh();
-              //setCurrentTime(e.currentTarget.currentTime);
-
               // Check if a loop is defined and it is time to restart the loop
               if (
                 loop &&
@@ -95,7 +115,12 @@ const Player = () => {
               }
 
               // If sync is enabled, broadcast events about the current time
-              sync && dispatchAudioEvent(e.currentTarget.currentTime);
+              sync &&
+                document.dispatchEvent(
+                  new CustomEvent<UpdateTimeDetail>(CustomEvents.UPDATE_TIME, {
+                    detail: { currentTime: e.currentTarget.currentTime },
+                  })
+                );
             }}
             style={{ width: "100%" }}
           />
@@ -317,7 +342,39 @@ const Player = () => {
               <AmpLabel>Seek</AmpLabel>
               <AmpLabel>Playback</AmpLabel>
               <AmpLabel>Time</AmpLabel>
-              <AmpLabel>Loop</AmpLabel>
+              <AmpLabel>
+                <div>Loop</div>
+                <IconButton
+                  size="small"
+                  // If a loop isn't fully set or the loop exactly matches an existing loop, disable the button
+                  disabled={
+                    loop?.[1] == null ||
+                    !!song.loops?.find(
+                      ({ loopA, loopB }) =>
+                        loop[0] === loopA && loop[1] === loopB
+                    )
+                  }
+                >
+                  <BookmarkBorder
+                    onClick={() => {
+                      if (
+                        ref.current &&
+                        loop &&
+                        loop[0] != null &&
+                        loop[1] != null
+                      ) {
+                        dispatchSong({
+                          type: "loop",
+                          loopA: loop[0],
+                          loopB: loop[1],
+                          // TODO: Build a UI that allows entering the loop name or at least editing this name wherever loops are displayed.
+                          label: `Loop ${(song.loops ?? []).length + 1}`,
+                        });
+                      }
+                    }}
+                  />
+                </IconButton>
+              </AmpLabel>
               <AmpLabel>Speed %</AmpLabel>
               <AmpLabel>
                 <div>Volume</div>

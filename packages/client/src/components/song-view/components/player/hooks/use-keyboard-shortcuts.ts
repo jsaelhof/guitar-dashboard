@@ -89,8 +89,11 @@ export const useKeyboardShortcuts = (
           }
         }
 
-        // !Important: Without this, the spacebar invokes a default "page down" behaviour
-        e.preventDefault();
+        // !Important: Without this, the spacebar invokes a default "page down" behaviour amongst other things that may be tied to keys.
+        // Allow F12 so I can open dev tools!
+        if (e.key !== "F12") {
+          e.preventDefault();
+        }
       };
 
       if (!disableShortcuts) window.addEventListener("keydown", listener);
