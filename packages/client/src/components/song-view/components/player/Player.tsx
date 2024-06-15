@@ -1,24 +1,29 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IconButton, Slider } from "@mui/material";
+import { Slider } from "@mui/material";
 import { formatSeconds } from "../../../../utils/format-seconds";
+import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
 import {
-  ArrowLeft,
-  ArrowRight,
-  BookmarkBorder,
-  Pause,
-  PlayArrow,
-  Replay10,
-} from "@mui/icons-material";
-import { AmpDisplay, AmpLabel } from "./Player.styles";
+  AmpDisplay,
+  AmpLabel,
+  DigitalButton,
+  DigitalSaveButton,
+  LeftButton,
+  Light,
+  PlayerBase,
+  RightButton,
+  TimeDisplay,
+} from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
-import ThumbComponent from "./components/thumb/Thumb";
 import { useAppContext } from "../../../../context/AppContext";
 import {
   CustomEvents,
   PlaySavedLoopDetail,
   UpdateTimeDetail,
 } from "../../../../types/events";
+import SwitchButton from "./components/switch-button/SwitchButton";
+import { Track, Rail, Thumb } from "./components/playback/playback.styles";
+import Playback from "./components/playback/Playback";
 
 const Player = () => {
   const { disableShortcuts, song, riffTimes, dispatchSong, dispatchSongs } =
@@ -126,217 +131,122 @@ const Player = () => {
           />
 
           {ref.current && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "max-content max-content 1fr 90px 110px max-content max-content max-content",
-                // Play Seek Playback Time Loop Speed Volume Sync
-                alignItems: "center",
-                justifyItems: "center",
-                columnGap: 32,
-                rowGap: 8,
-                backgroundImage: "url('ui/gold.jpeg')",
-                backgroundPositionY: "30%",
-                backgroundSize: "cover",
-                padding: "20px 20px",
-                borderRadius: 8,
-                border: "2px solid #141414",
-                fontSize: 14,
-                boxShadow: "inset 0 5px 15px #00000099",
-              }}
-            >
+            <PlayerBase>
               {/* Paused is undefined if the track has not started, boolean afterwards. */}
               {!ref.current.paused ? (
-                <IconButton onClick={() => ref.current?.pause()}>
+                <DigitalButton onClick={() => ref.current?.pause()}>
                   <Pause />
-                </IconButton>
+                </DigitalButton>
               ) : (
-                <IconButton onClick={() => ref.current?.play()}>
+                <DigitalButton onClick={() => ref.current?.play()}>
                   <PlayArrow />
-                </IconButton>
+                </DigitalButton>
               )}
 
               <div>
-                <IconButton>
+                <DigitalButton>
                   <Replay10 />
-                </IconButton>
+                </DigitalButton>
               </div>
 
-              <Slider
-                // size="small"
-                defaultValue={0}
-                max={1}
-                step={0.01}
-                value={
-                  loop?.[1] != null
-                    ? [
-                        ref.current.currentTime / ref.current.duration,
-                        loop[0] / ref.current.duration,
-                        loop[1] / ref.current.duration,
-                      ]
-                    : // Duration is NaN if the file doesn't load, even though it doesn't get rendered. I think it happens on first render when it's trying to load before ref.current.error becomes true.
-                    isNaN(ref.current.duration)
-                    ? 0
-                    : ref.current.currentTime / ref.current.duration
-                }
-                // Override the thumb component with a custom one.
-                slots={{ thumb: ThumbComponent }}
-                slotProps={{
-                  // Tell the thumb component whether a loop is active.
-                  thumb: {
-                    "data-loop": loop?.[1] != null,
-                  },
-                }}
+              {/* Should this take callbacks instead of passing in the audio ref? */}
+              <Playback
+                audioRef={ref.current}
+                loop={loop}
                 marks={
                   riffTimes
                     ? riffTimes.map((time) => ({
                         value: ref.current?.duration
                           ? time / ref.current.duration
-                          : undefined,
+                          : 0,
                       }))
                     : undefined
                 }
-                onChange={(e, value) => {
-                  if (typeof value === "number" && ref.current) {
-                    ref.current.currentTime = ref.current.duration * value;
-                  }
-                }}
-                onChangeCommitted={(e, value) => {
-                  if (typeof value === "number" && ref.current) {
-                    ref.current.currentTime = ref.current.duration * value;
-                  }
-                }}
-                valueLabelDisplay="off"
-                componentsProps={{
-                  mark: {
-                    style: {
-                      height: 8,
-                    },
-                  },
-                }}
               />
 
-              <div>
+              <TimeDisplay>
                 {formatSeconds(Math.floor(ref.current.currentTime))} /{" "}
                 {formatSeconds(
                   Math.round(
                     !isNaN(ref.current.duration) ? ref.current.duration : 0
                   )
                 )}
-              </div>
+              </TimeDisplay>
 
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "50px 50px",
-                  columnGap: 16,
-                  transform: "translateY(8px)",
+                  gridTemplateColumns: "auto 20px auto 50px auto",
+                  rowGap: 4,
+                  alignItems: "center",
+                  columnGap: 4,
                 }}
               >
+                <Light $on={loop?.[0] != null} />
+                <AmpLabel small>A</AmpLabel>
+                <LeftButton
+                  // Decrease Loop A, can't be less than 0 (track start)
+                  onClick={() =>
+                    loop?.[0] != null &&
+                    setLoop([Math.max(loop[0] - 1, 0), loop[1]])
+                  }
+                />
                 <AmpDisplay $on={loop?.[0] != null}>
                   {loop?.[0] != null && (
                     <div>{formatSeconds(Math.round(loop[0]))}</div>
                   )}
                 </AmpDisplay>
+                <RightButton
+                  // Increase Loop A, can't be more than Loop B - 1. Loop B may not be set yet so also have to check track duration.
+                  onClick={() =>
+                    loop?.[0] != null &&
+                    ref.current &&
+                    setLoop([
+                      Math.min(
+                        loop[0] + 1, // Time + 1
+                        ref.current.duration, // Track length
+                        ...(loop?.[1] != null ? [loop[1] - 1] : []) // If exists, Loop B - 1
+                      ),
+                      loop[1],
+                    ])
+                  }
+                />
+
+                <Light $on={loop?.[1] != null} />
+                <AmpLabel small>B</AmpLabel>
+                <LeftButton
+                  // Decrease Loop B, can't be less than Loop A + 1
+                  onClick={() =>
+                    loop?.[1] != null &&
+                    loop?.[0] != null &&
+                    setLoop([loop[0], Math.max(loop[1] - 1, loop[0] + 1)])
+                  }
+                />
                 <AmpDisplay $on={loop?.[1] != null}>
                   {loop?.[1] != null && (
                     <div>{formatSeconds(Math.round(loop[1]))}</div>
                   )}
                 </AmpDisplay>
-                <div>
-                  <ArrowLeft
-                    // Decrease Loop A, can't be less than 0 (track start)
-                    onClick={() =>
-                      loop?.[0] != null &&
-                      setLoop([Math.max(loop[0] - 1, 0), loop[1]])
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                  <ArrowRight
-                    // Increase Loop A, can't be more than Loop B - 1. Loop B may not be set yet so also have to check track duration.
-                    onClick={() =>
-                      loop?.[0] != null &&
-                      ref.current &&
-                      setLoop([
-                        Math.min(
-                          loop[0] + 1, // Time + 1
-                          ref.current.duration, // Track length
-                          ...(loop?.[1] != null ? [loop[1] - 1] : []) // If exists, Loop B - 1
-                        ),
-                        loop[1],
-                      ])
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                </div>
-                <div>
-                  <ArrowLeft
-                    // Decrease Loop B, can't be less than Loop A + 1
-                    onClick={() =>
-                      loop?.[1] != null &&
-                      loop?.[0] != null &&
-                      setLoop([loop[0], Math.max(loop[1] - 1, loop[0] + 1)])
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                  <ArrowRight
-                    // Increase Loop B, can't be more than the track length.
-                    // Weird little issue here... if the loop is set to end at the exact track end, it won't loop because it pauses when it reaches the end of playback.
-                    // This is basically impossible to set using the keyboard shortcuts but using the arrows, it can, so I've set the max to be a fraction of a second below the track end.
-                    onClick={() =>
-                      loop?.[1] != null &&
-                      ref.current &&
-                      setLoop([
-                        loop[0],
-                        Math.min(loop[1] + 1, ref.current.duration - 0.0001),
-                      ])
-                    }
-                    style={{ cursor: "pointer" }}
-                  />
-                </div>
-                <AmpLabel small>A</AmpLabel>
-                <AmpLabel small>B</AmpLabel>
+                <RightButton
+                  // Increase Loop B, can't be more than the track length.
+                  // Weird little issue here... if the loop is set to end at the exact track end, it won't loop because it pauses when it reaches the end of playback.
+                  // This is basically impossible to set using the keyboard shortcuts but using the arrows, it can, so I've set the max to be a fraction of a second below the track end.
+                  onClick={() =>
+                    loop?.[1] != null &&
+                    ref.current &&
+                    setLoop([
+                      loop[0],
+                      Math.min(loop[1] + 1, ref.current.duration - 0.0001),
+                    ])
+                  }
+                />
               </div>
-
-              {/* <AmpDisplay on={!!loop}>
-                {!loop && <div>OFF</div>}
-                {loop && (
-                  <div style={{ display: "flex", gap: 4, fontSize: 14 }}>
-                    <div>{formatSeconds(Math.round(loop[0]))}</div>
-                    <div>-</div>
-                    <div>
-                      {loop[1] ? formatSeconds(Math.round(loop[1])) : "?"}
-                    </div>
-                  </div>
-                )}
-              </AmpDisplay> */}
 
               <AmpDial value={ref.current?.playbackRate ?? 1} percent />
 
-              <AmpDial value={volume} />
+              <AmpDial value={volume} divisions="5" />
 
-              <div
-                onClick={() => setSync(!sync)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                  borderRadius: 6,
-                  width: 60,
-                  height: 44,
-                  backgroundColor: sync ? "rgb(220 50 20)" : "rgb(50 0 0)",
-                  boxShadow: sync
-                    ? "rgb(0, 15, 15) 0px 0px 30px inset, #FF000099 0px 0px 50px 10px"
-                    : "unset",
-                  border: "2px solid #141414",
-                  color: sync ? "#FFFFFFDD" : "#FFFFFF22",
-                  textShadow: "0 2px 3px #00000066",
-                }}
-              >
-                <div>ON</div>
-              </div>
+              <SwitchButton on={sync} onClick={() => setSync(!sync)} />
 
               <AmpLabel>Play</AmpLabel>
               <AmpLabel>Seek</AmpLabel>
@@ -344,8 +254,7 @@ const Player = () => {
               <AmpLabel>Time</AmpLabel>
               <AmpLabel>
                 <div>Loop</div>
-                <IconButton
-                  size="small"
+                <DigitalSaveButton
                   // If a loop isn't fully set or the loop exactly matches an existing loop, disable the button
                   disabled={
                     loop?.[1] == null ||
@@ -354,45 +263,40 @@ const Player = () => {
                         loop[0] === loopA && loop[1] === loopB
                     )
                   }
-                >
-                  <BookmarkBorder
-                    onClick={() => {
-                      if (
-                        ref.current &&
-                        loop &&
-                        loop[0] != null &&
-                        loop[1] != null
-                      ) {
-                        dispatchSong({
-                          type: "loop",
-                          loopA: loop[0],
-                          loopB: loop[1],
-                          // TODO: Build a UI that allows entering the loop name or at least editing this name wherever loops are displayed.
-                          label: `Loop ${(song.loops ?? []).length + 1}`,
-                        });
-                      }
-                    }}
-                  />
-                </IconButton>
+                  onClick={() => {
+                    if (
+                      ref.current &&
+                      loop &&
+                      loop[0] != null &&
+                      loop[1] != null
+                    ) {
+                      dispatchSong({
+                        type: "loop",
+                        loopA: loop[0],
+                        loopB: loop[1],
+                        // TODO: Build a UI that allows entering the loop name or at least editing this name wherever loops are displayed.
+                        label: `Loop ${(song.loops ?? []).length + 1}`,
+                      });
+                    }
+                  }}
+                />
               </AmpLabel>
               <AmpLabel>Speed %</AmpLabel>
               <AmpLabel>
                 <div>Volume</div>
-                <IconButton size="small">
-                  <BookmarkBorder
-                    onClick={() => {
-                      if (ref.current) {
-                        dispatchSong({
-                          type: "volume",
-                          volume: ref.current.volume,
-                        });
-                      }
-                    }}
-                  />
-                </IconButton>
+                <DigitalSaveButton
+                  onClick={() => {
+                    if (ref.current) {
+                      dispatchSong({
+                        type: "volume",
+                        volume: ref.current.volume,
+                      });
+                    }
+                  }}
+                />
               </AmpLabel>
               <AmpLabel>Sync</AmpLabel>
-            </div>
+            </PlayerBase>
           )}
         </>
       ) : (

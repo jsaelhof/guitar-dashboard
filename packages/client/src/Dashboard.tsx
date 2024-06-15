@@ -5,15 +5,19 @@ import "@fontsource/roboto/700.css";
 import SongList from "./components/song-list/SongList";
 import { DashboardLayout, LeftColumn } from "./Dashboard.styles";
 import SongView from "./components/song-view/SongView";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./theme/theme";
 
 function Dashboard() {
   return (
-    <DashboardLayout>
-      <LeftColumn>
-        <SongList />
-      </LeftColumn>
-      <SongView />
-    </DashboardLayout>
+    <ThemeProvider theme={theme}>
+      <DashboardLayout>
+        <LeftColumn>
+          <SongList />
+        </LeftColumn>
+        <SongView />
+      </DashboardLayout>
+    </ThemeProvider>
   );
 }
 

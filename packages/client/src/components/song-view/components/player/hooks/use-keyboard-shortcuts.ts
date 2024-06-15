@@ -91,7 +91,12 @@ export const useKeyboardShortcuts = (
 
         // !Important: Without this, the spacebar invokes a default "page down" behaviour amongst other things that may be tied to keys.
         // Allow F12 so I can open dev tools!
-        if (e.key !== "F12") {
+        // Allow Cmd+ and Cmd- so I can zoom in and out.
+        if (
+          e.key !== "F12" &&
+          !(e.metaKey && e.key === "=") &&
+          !(e.metaKey && e.key === "-")
+        ) {
           e.preventDefault();
         }
       };

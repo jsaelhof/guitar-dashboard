@@ -1,3 +1,31 @@
+@font-face {
+  font-family: StereoGothic;
+  font-weight: 300;
+  src: url(/fonts/stereo-gothic-300.woff);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: StereoGothic;
+  font-weight: 400;
+  src: url(/fonts/stereo-gothic-400.woff);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Circular;
+  font-weight: 400;
+  src: url(/fonts/Circular/CircularStd-Book.woff);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Circular;
+  font-weight: 700;
+  src: url(/fonts/Circular/CircularStd-Bold.woff);
+  font-display: swap;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
