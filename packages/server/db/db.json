@@ -132,7 +132,36 @@
     "file": "B/Boston/Boston - [1976] Boston/02 - Peace Of Mind.mp3"
   },
   "0030": {
-    "file": "B/Boston/Boston - [1986] Third Stage/04 - Cool The Engines.mp3"
+    "file": "B/Boston/Boston - [1986] Third Stage/04 - Cool The Engines.mp3",
+    "loops": [
+      {
+        "id": "d61dd6d9-160a-4bc9-928a-32581f645789",
+        "loopA": 8,
+        "loopB": 18,
+        "label": "test"
+      },
+      {
+        "id": "bf456cf9-a779-4c35-803b-aa6bf9fb2b36",
+        "loopA": 15,
+        "loopB": 19,
+        "label": "test"
+      },
+      {
+        "id": "1fe5856c-621a-4374-9b57-5322f64a111b",
+        "loopA": 4.76216,
+        "loopB": 9.77478,
+        "label": "Loop 3"
+      },
+      {
+        "id": "5aac0339-9406-4fa9-8824-9fc211572efa",
+        "loopA": 96.077152,
+        "loopB": 97.942945,
+        "label": "Loop 4"
+      }
+    ],
+    "settings": {
+      "volume": 1
+    }
   },
   "0031": {
     "file": "I/Iron Maiden/Iron Maiden - [1988] Seventh Son of a Seventh Son/01 - Moonchild.mp3"
@@ -990,8 +1019,22 @@
   "0294": {
     "file": "G/Ghost/Ghost - [2018] Prequelle/02 - Rats.mp3",
     "settings": {
-      "volume": 0.55
-    }
+      "volume": 0.4
+    },
+    "loops": [
+      {
+        "id": "d3163cc9-d79b-40ae-911b-8c27dbc31760",
+        "loopA": 130.788728,
+        "loopB": 168.151994,
+        "label": "Loop 1"
+      },
+      {
+        "id": "b53a63d7-796b-4eae-bfb7-2388458155c7",
+        "loopA": 149.864779,
+        "loopB": 167.051745,
+        "label": "Loop 2"
+      }
+    ]
   },
   "0295": {
     "file": "G/Ghost/Ghost - [2018] Prequelle/06 - Dance Macabre.mp3"
@@ -1277,5 +1320,95 @@
   },
   "0388": {
     "file": "M/Motorhead/Motorhead - [1986] Orgasmatron/08 - Doctor Rock.mp3"
+  },
+  "0389": {
+    "file": "V/Van Halen/Van Halen - [1984] 1984/06 -  Hot For Teacher.mp3",
+    "settings": {
+      "volume": 0.8
+    }
+  },
+  "0390": {
+    "file": "V/Van Halen/Van Halen - [1984] 1984/03 -  Panama.mp3"
+  },
+  "0391": {
+    "file": "V/Van Halen/Van Halen - [1986] 5150/08 - 5150.mp3"
+  },
+  "0392": {
+    "file": "V/Van Halen/Van Halen - [1991] For Unlawful Carnal Knowledge/02 - Judgement Day.mp3"
+  },
+  "0393": {
+    "file": "V/Van Halen/Van Halen - [1991] For Unlawful Carnal Knowledge/04 - Runaround.mp3",
+    "settings": {
+      "volume": 0.9
+    }
+  },
+  "0394": {
+    "file": "V/Van Halen/Van Halen - [1991] For Unlawful Carnal Knowledge/10 - 316.mp3"
+  },
+  "0395": {
+    "file": "V/Van Halen/Van Halen - [1991] For Unlawful Carnal Knowledge/11 - Top Of The World.mp3"
+  },
+  "0396": {
+    "file": "V/Van Halen/Van Halen - [1978] Van Halen/04 - Ain't Talkin' 'bout Love.mp3",
+    "settings": {
+      "volume": 0.85
+    }
+  },
+  "0397": {
+    "file": "S/Scorpions/Scorpions - [1982] Blackout/03 - No One Like You.mp3"
+  },
+  "0398": {
+    "file": "S/Scorpions/Scorpions - [2010] Sting In The Tail/01 - Raised On Rock.mp3"
+  },
+  "0399": {
+    "file": "S/Scorpions/Scorpions - [1982] Blackout/01 - Blackout.mp3"
+  },
+  "0400": {
+    "file": "S/Scorpions/Scorpions - [2002] Bad For Good - The Very Best Of Scorpions/01 - Rock You Like a Hurricane.mp3"
+  },
+  "0401": {
+    "file": "Y/Y & T/Y & T - [1983] Mean Streak/01 - Mean Streak.mp3"
+  },
+  "0402": {
+    "file": "Y/Y & T/Y & T - [1984] In Rock We Trust/07 - Don't Stop Runnin'.mp3"
+  },
+  "0403": {
+    "file": "Y/Y & T/Y & T - [1985] Down For The Count/06 - Summertime Girls (Studio Version).mp3"
+  },
+  "0404": {
+    "file": "Y/Y & T/Y & T - [1987] Contagious/01 - Contagious.mp3"
+  },
+  "0405": {
+    "file": "R/Rush/Rush - [1974] Rush/06 - In The Mood.mp3",
+    "settings": {
+      "volume": 0.6
+    }
+  },
+  "0406": {
+    "file": "R/Rush/Rush - [1974] Rush/08 - Working Man.mp3"
+  },
+  "0407": {
+    "file": "R/Rush/Rush - [1976] 2112/02 - A Passage to Bangkok.mp3"
+  },
+  "0408": {
+    "file": "R/Rush/Rush - [1977] A Farewell To Kings/01 - A Farewell To Kings.mp3"
+  },
+  "0409": {
+    "file": "R/Rush/Rush - [1978] Hemispheres/03 - The Trees.mp3"
+  },
+  "0410": {
+    "file": "R/Rush/Rush - [1980] Permanent Waves/01 - The Spirit Of Radio.mp3"
+  },
+  "0411": {
+    "file": "R/Rush/Rush - [1980] Permanent Waves/02 - Freewill.mp3"
+  },
+  "0412": {
+    "file": "R/Rush/Rush - [1981] Moving Pictures/04 - Limelight.mp3",
+    "settings": {
+      "volume": 0.7
+    }
+  },
+  "0413": {
+    "file": "U/UFO/UFO - [1974] Phenomenon/03 - Doctor Doctor.mp3"
   }
 }
