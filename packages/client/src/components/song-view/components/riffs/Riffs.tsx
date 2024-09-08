@@ -39,7 +39,10 @@ import {
 const Riffs = () => {
   const { song, riffs, dispatchRiffs } = useAppContext();
 
-  const allRiffs = useMemo(() => [...Array((riffs ?? []).length).keys()], []);
+  const allRiffs = useMemo(
+    () => [...Array((riffs ?? []).length).keys()],
+    [riffs]
+  );
   const [openItems, setOpenItems] = useState<number[]>(allRiffs);
   const [activeTimeMark, setActiveTimeMark] = useState<{
     index: number;
@@ -84,6 +87,12 @@ const Riffs = () => {
       document.removeEventListener(CustomEvents.UPDATE_TIME, listener);
     };
   }, [riffs]);
+
+  // This useEffect resets anything that should be cleared from the previous song.
+  useEffect(() => {
+    ref.current = 0;
+    setActiveTimeMark(null);
+  }, [song?.id]);
 
   return song ? (
     <div>

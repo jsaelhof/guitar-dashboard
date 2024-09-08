@@ -98,7 +98,6 @@ export const theme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: ({ ownerState, theme: { palette, textGlows } }) => {
-          console.log(palette);
           switch (ownerState.color) {
             case "blueLights":
               return {

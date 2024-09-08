@@ -16,15 +16,24 @@
   },
   "0003": {
     "tab": "https://tabs.ultimate-guitar.com/tab/iron-maiden/hallowed-be-thy-name-official-2202561",
-    "file": "I/Iron Maiden/Iron Maiden - [1982] The Number of the Beast/09 - Hallowed Be Thy Name.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [1982] The Number of the Beast/09 - Hallowed Be Thy Name.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0004": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/02 - Atlas, Rise!.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/02 - Atlas, Rise!.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0005": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/01 - Hardwired.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/01 - Hardwired.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0006": {
     "artist": "Metallica",
@@ -32,7 +41,10 @@
   },
   "0007": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/04 - Moth Into Flame.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/04 - Moth Into Flame.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0008": {
     "artist": "Metallica",
@@ -59,13 +71,16 @@
   },
   "0013": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [2023] 72 Seasons/02 - Shadows Follow.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [2023] 72 Seasons/02 - Shadows Follow.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0014": {
     "artist": "Metallica",
     "file": "M/Metallica/Studio Albums/Metallica - [2023] 72 Seasons/06 - Lux Æterna.mp3",
     "settings": {
-      "volume": 0.45
+      "volume": 0.5
     }
   },
   "0015": {
@@ -82,7 +97,10 @@
   },
   "0018": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/07 - Through The Never.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/07 - Through The Never.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0019": {
     "artist": "Metallica",
@@ -108,7 +126,18 @@
     "file": "I/Iron Maiden/Iron Maiden - [1986] Somewhere In Time/08 - Alexander The Great.mp3"
   },
   "0023": {
-    "file": "I/Iron Maiden/Iron Maiden - [1986] Somewhere In Time/05 - The Loneliness Of The Long Distance Runner.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [1986] Somewhere In Time/05 - The Loneliness Of The Long Distance Runner.mp3",
+    "settings": {
+      "volume": 0.55
+    },
+    "loops": [
+      {
+        "id": "e2919282-8c57-4eaf-aa05-e2628366dce3",
+        "loopA": 113.119147,
+        "loopB": 145.230221,
+        "label": "Loop 1"
+      }
+    ]
   },
   "0024": {
     "file": "I/Iron Maiden/Iron Maiden - [1986] Somewhere In Time/02 - Wasted Years.mp3"
@@ -179,7 +208,10 @@
     "file": "I/Iron Maiden/Iron Maiden - [1984] Powerslave/01 - Aces High.mp3"
   },
   "0035": {
-    "file": "I/Iron Maiden/Iron Maiden - [1984] Powerslave/02 - 2 Minutes To Midnight.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [1984] Powerslave/02 - 2 Minutes To Midnight.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0036": {
     "file": "I/Iron Maiden/Iron Maiden - [1984] Powerslave/07 - Powerslave.mp3"
@@ -221,7 +253,10 @@
     "file": "M/Megadeth/Megadeth - [1994] Youthanasia (Remastered)/02 - Train of Consequences.mp3"
   },
   "0048": {
-    "file": "M/Megadeth/Megadeth - [1994] Youthanasia (Remastered)/03 - Addicted to Chaos.mp3"
+    "file": "M/Megadeth/Megadeth - [1994] Youthanasia (Remastered)/03 - Addicted to Chaos.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0049": {
     "file": "M/Megadeth/Megadeth - [1994] Youthanasia (Remastered)/07 - Blood of Heroes.mp3"
@@ -230,7 +265,10 @@
     "file": "M/Megadeth/Megadeth - [1995] Hidden Treasures/04 - Angry Again.mp3"
   },
   "0051": {
-    "file": "M/Megadeth/Megadeth - [1995] Hidden Treasures/05 - 99 Ways To Die.mp3"
+    "file": "M/Megadeth/Megadeth - [1995] Hidden Treasures/05 - 99 Ways To Die.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0052": {
     "file": "M/Megadeth/Megadeth - [1997] Cryptic Writings (Remastered)/01 - Trust.mp3"
@@ -275,7 +313,10 @@
     "file": "M/Megadeth/Megadeth - [2009] Engame/06 - Bodies.mp3"
   },
   "0064": {
-    "file": "M/Megadeth/Megadeth - [2009] Engame/09 - Head Crusher.mp3"
+    "file": "M/Megadeth/Megadeth - [2009] Engame/09 - Head Crusher.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0065": {
     "file": "M/Megadeth/Megadeth - [2009] Engame/10 - How the Story Ends.mp3"
@@ -311,7 +352,10 @@
   },
   "0076": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/02 - Sad But True.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/02 - Sad But True.mp3",
+    "settings": {
+      "volume": 1
+    }
   },
   "0077": {
     "artist": "Metallica",
@@ -319,7 +363,10 @@
   },
   "0078": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/06 - Dont Tread On Me.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1991] Metallica/06 - Dont Tread On Me.mp3",
+    "settings": {
+      "volume": 0.7
+    }
   },
   "0079": {
     "artist": "Metallica",
@@ -335,7 +382,10 @@
   },
   "0082": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1988] ...And Justice For All (Remastered)/02 - ...And Justice for All.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1988] ...And Justice For All (Remastered)/02 - ...And Justice for All.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0083": {
     "artist": "Metallica",
@@ -351,7 +401,10 @@
   },
   "0086": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1988] ...And Justice For All (Remastered)/06 - Harvester of Sorrow.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1988] ...And Justice For All (Remastered)/06 - Harvester of Sorrow.mp3",
+    "settings": {
+      "volume": 0.75
+    }
   },
   "0087": {
     "artist": "Metallica",
@@ -383,11 +436,25 @@
   },
   "0094": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/06 - Leper Messiah.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/06 - Leper Messiah.mp3",
+    "settings": {
+      "volume": 1
+    },
+    "loops": [
+      {
+        "id": "85528ef3-ed27-4686-860d-c6da8d84e388",
+        "loopA": 256.66552,
+        "loopB": 279.621565,
+        "label": "Loop 1"
+      }
+    ]
   },
   "0095": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/07 - Orion (Instrumental).mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/07 - Orion (Instrumental).mp3",
+    "settings": {
+      "volume": 0.8
+    }
   },
   "0096": {
     "artist": "Metallica",
@@ -395,7 +462,10 @@
   },
   "0097": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1984] Ride The Lightning/03 - For Whom The Bell Tolls.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1984] Ride The Lightning/03 - For Whom The Bell Tolls.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0098": {
     "artist": "Metallica",
@@ -419,7 +489,10 @@
   },
   "0103": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1983] Kill Em All (Remaster)/04 - Jump In The Fire.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1983] Kill Em All (Remaster)/04 - Jump In The Fire.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0104": {
     "artist": "Metallica",
@@ -427,7 +500,10 @@
   },
   "0105": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1983] Kill Em All (Remaster)/09 - Seek & Destroy.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1983] Kill Em All (Remaster)/09 - Seek & Destroy.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0106": {
     "artist": "Metallica",
@@ -441,22 +517,31 @@
     "file": "M/Metallica/Studio Albums/Metallica - [1983] Kill Em All (Remaster)/12 - Blitzkrieg (bonus track).mp3"
   },
   "0108": {
-    "file": "M/Motley Crue/Motley Crue - [1989] Dr. Feelgood/05 - Kickstart My Heart.mp3"
+    "file": "M/Motley Crue/Motley Crue - [1989] Dr. Feelgood/05 - Kickstart My Heart.mp3",
+    "settings": {
+      "volume": 0.7
+    }
   },
   "0109": {
     "file": "M/Motley Crue/Motley Crue - [1989] Dr. Feelgood/07 - Same Ol' Situation (S.O.S.).mp3"
   },
   "0110": {
-    "file": "A/ACDC/ACDC - [1975] High Voltage/05 - T.N.T..mp3"
+    "file": "A/ACDC/ACDC - [1975] High Voltage/05 - T.N.T..mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0111": {
     "file": "A/ACDC/ACDC - [1975] High Voltage/06 - Can I Sit Next To You Girl.mp3",
     "settings": {
-      "volume": 0
+      "volume": 0.5
     }
   },
   "0112": {
-    "file": "A/ACDC/ACDC - [1976] Dirty Deeds Done Dirt Cheap (Remastered)/01 - Dirty Deeds Done Dirt Cheap.mp3"
+    "file": "A/ACDC/ACDC - [1976] Dirty Deeds Done Dirt Cheap (Remastered)/01 - Dirty Deeds Done Dirt Cheap.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0113": {
     "file": "A/ACDC/ACDC - [1977] Let There Be Rock (Remastered)/04 - Bad Boy Boogie.mp3",
@@ -474,31 +559,58 @@
     }
   },
   "0116": {
-    "file": "A/ACDC/ACDC - [1978] Powerage (Remastered)/05 - Sin City.mp3"
+    "file": "A/ACDC/ACDC - [1978] Powerage (Remastered)/05 - Sin City.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0117": {
-    "file": "A/ACDC/ACDC - [1978] Powerage (Remastered)/07 - Gone Shootin'.mp3"
+    "file": "A/ACDC/ACDC - [1978] Powerage (Remastered)/07 - Gone Shootin'.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0118": {
-    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/01 - Highway To Hell.mp3"
+    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/01 - Highway To Hell.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0119": {
-    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/02 - Girls Got Rhythm.mp3"
+    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/02 - Girls Got Rhythm.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0120": {
-    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/03 - Walk All Over You.mp3"
+    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/03 - Walk All Over You.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0121": {
-    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/04 - Touch Too Much.mp3"
+    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/04 - Touch Too Much.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0122": {
-    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/06 - Shot Down In Flames.mp3"
+    "file": "A/ACDC/ACDC - [1979] Highway to Hell (Remastered)/06 - Shot Down In Flames.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0123": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/01 - Hells Bells.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/01 - Hells Bells.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0124": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/02 - Shoot To Thrill.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/02 - Shoot To Thrill.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0125": {
     "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/06 - Back In Black.mp3",
@@ -507,25 +619,46 @@
     }
   },
   "0126": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/07 - You Shook Me All Night Long.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/07 - You Shook Me All Night Long.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0127": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/08 - Have A Drink On Me.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/08 - Have A Drink On Me.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0128": {
-    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/10 - Rock And Roll Ain't Noise Pollution.mp3"
+    "file": "A/ACDC/ACDC - [1980] Back in Black (Remastered)/10 - Rock And Roll Ain't Noise Pollution.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0129": {
-    "file": "A/ACDC/ACDC - [1983] Flick of the Switch (Remastered)/03 - Flick Of The Switch.mp3"
+    "file": "A/ACDC/ACDC - [1983] Flick of the Switch (Remastered)/03 - Flick Of The Switch.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0130": {
-    "file": "A/ACDC/ACDC - [1985] Fly on the Wall/05 - Sink The Pink.mp3"
+    "file": "A/ACDC/ACDC - [1985] Fly on the Wall/05 - Sink The Pink.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0131": {
-    "file": "A/ACDC/ACDC - [1986] Who Made Who/01 - Who Made Who.mp3"
+    "file": "A/ACDC/ACDC - [1986] Who Made Who/01 - Who Made Who.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0133": {
-    "file": "A/ACDC/ACDC - [1990] The Razors Edge/01 - Thunderstruck.mp3"
+    "file": "A/ACDC/ACDC - [1990] The Razors Edge/01 - Thunderstruck.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0134": {
     "file": "A/ACDC/ACDC - [1990] The Razors Edge/02 - Fire Your Guns.mp3",
@@ -534,25 +667,43 @@
     }
   },
   "0135": {
-    "file": "A/ACDC/ACDC - [1990] The Razors Edge/03 - Moneytalks.mp3"
+    "file": "A/ACDC/ACDC - [1990] The Razors Edge/03 - Moneytalks.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0136": {
-    "file": "A/ACDC/ACDC - [1992] Live-Special Collector Edition/06 - Heatseeker.mp3"
+    "file": "A/ACDC/ACDC - [1992] Live-Special Collector Edition/06 - Heatseeker.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0137": {
-    "file": "A/ACDC/ACDC - [1995] Ballbreaker/10 - Whiskey On the Rocks.mp3"
+    "file": "A/ACDC/ACDC - [1995] Ballbreaker/10 - Whiskey On the Rocks.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0138": {
-    "file": "A/ACDC/ACDC - [1995] Ballbreaker/01 - Hard As A Rock.mp3"
+    "file": "A/ACDC/ACDC - [1995] Ballbreaker/01 - Hard As A Rock.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0139": {
     "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/01 - Stiff Upper Lip.mp3"
   },
   "0140": {
-    "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/08 - Satellite Blues.mp3"
+    "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/08 - Satellite Blues.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0141": {
-    "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/02 - Meltdown.mp3"
+    "file": "A/ACDC/ACDC - [2000] Stiff Upper Lip/02 - Meltdown.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0142": {
     "file": "A/ACDC/ACDC - [2009] Backtracks/11 - Big Gun.mp3",
@@ -561,13 +712,22 @@
     }
   },
   "0143": {
-    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/01 - Rock or Bust.mp3"
+    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/01 - Rock or Bust.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0144": {
-    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/02 - Play Ball.mp3"
+    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/02 - Play Ball.mp3",
+    "settings": {
+      "volume": 0.6
+    }
   },
   "0145": {
-    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/03 - Rock The Blues Away.mp3"
+    "file": "A/ACDC/ACDC - [2014] Rock Or Bust/03 - Rock The Blues Away.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0146": {
     "file": "I/Iron Maiden/Iron Maiden - [1980] Iron Maiden/04 - Phantom Of The Opera.mp3"
@@ -615,7 +775,10 @@
     "file": "I/Iron Maiden/Iron Maiden - [2021] Senjutsu/03 - The Writing On The Wall.mp3"
   },
   "0161": {
-    "file": "I/Iron Maiden/Iron Maiden - [2021] Senjutsu/10 - Hell On Earth.mp3"
+    "file": "I/Iron Maiden/Iron Maiden - [2021] Senjutsu/10 - Hell On Earth.mp3",
+    "settings": {
+      "volume": 0.55
+    }
   },
   "0162": {
     "file": "I/Iron Maiden/Iron Maiden - [2021] Senjutsu/02 - Stratego.mp3"
@@ -849,22 +1012,34 @@
     "file": "B/Black Star Riders/Black Star Riders - [2019] Another State Of Grace/02 - Another State of Grace.mp3"
   },
   "0240": {
-    "file": "B/Blackberry Smoke/Blackberry Smoke - [2009] Little Piece Of Dixie/02 - Good One Comin' On.mp3"
+    "file": "B/Blackberry Smoke/Blackberry Smoke - [2009] Little Piece Of Dixie/02 - Good One Comin' On.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0241": {
     "file": "B/Blackberry Smoke/Blackberry Smoke - [2012] The Whippoorwill/04 - One Horse Town.mp3"
   },
   "0242": {
-    "file": "B/Blackberry Smoke/Blackberry Smoke - [2016] Like An Arrow/02 - Let It Burn.mp3"
+    "file": "B/Blackberry Smoke/Blackberry Smoke - [2016] Like An Arrow/02 - Let It Burn.mp3",
+    "settings": {
+      "volume": 0.45
+    }
   },
   "0243": {
     "file": "C/Cheap Trick/Cheap Trick - [1977] In Color/01 - Hello There.mp3"
   },
   "0244": {
-    "file": "C/Cheap Trick/Cheap Trick - [1977] In Color/02 - Big Eyes.mp3"
+    "file": "C/Cheap Trick/Cheap Trick - [1977] In Color/02 - Big Eyes.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0245": {
-    "file": "C/Cheap Trick/Cheap Trick - [1977] In Color/03 - Downed.mp3"
+    "file": "C/Cheap Trick/Cheap Trick - [1977] In Color/03 - Downed.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0246": {
     "file": "C/Cheap Trick/Cheap Trick - [1978] Heaven Tonight/01 - Surrender.mp3"
@@ -873,7 +1048,10 @@
     "file": "C/Cheap Trick/Cheap Trick - [1979] Dream Police/01 - Dream Police.mp3"
   },
   "0248": {
-    "file": "C/Cheap Trick/Cheap Trick - [1980] All Shook Up/03 - Baby Loves To Rock.mp3"
+    "file": "C/Cheap Trick/Cheap Trick - [1980] All Shook Up/03 - Baby Loves To Rock.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0249": {
     "file": "C/Cheap Trick/Cheap Trick - [1982] One On One/06 - She's Tight.mp3"
@@ -903,7 +1081,10 @@
     "file": "C/Clutch/Clutch - [2015] Psychic Warfare/03 - Firebirds.mp3"
   },
   "0258": {
-    "file": "C/Clutch/Clutch - [2015] Psychic Warfare/04 - A Quick Death In Texas.mp3"
+    "file": "C/Clutch/Clutch - [2015] Psychic Warfare/04 - A Quick Death In Texas.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0259": {
     "file": "C/Clutch/Clutch - [2015] Psychic Warfare/05 - Sucker For The Witch.mp3"
@@ -912,13 +1093,22 @@
     "file": "C/Clutch/Clutch - [2010] From Beale Street To Oblivion/06 - Electric Worry.mp3"
   },
   "0262": {
-    "file": "C/Colin James/Colin James - [1998] Colin James/02 - Voodoo Thing.mp3"
+    "file": "C/Colin James/Colin James - [1998] Colin James/02 - Voodoo Thing.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0263": {
-    "file": "C/Colin James/Colin James - [1998] National Steel/03 - National Steel.mp3"
+    "file": "C/Colin James/Colin James - [1998] National Steel/03 - National Steel.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0264": {
-    "file": "C/Counting Crows/Counting Crows - [1993] August and Everything After/07 - Rain King.mp3"
+    "file": "C/Counting Crows/Counting Crows - [1993] August and Everything After/07 - Rain King.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0265": {
     "file": "D/Def Leppard/Def Leppard - [1981] High 'n' Dry/09 - Mirror, Mirror (Look Into My Eyes).mp3",
@@ -933,7 +1123,10 @@
     }
   },
   "0267": {
-    "file": "D/Def Leppard/Def Leppard - [1987] Hysteria/05 - Pour Some Sugar On Me.mp3"
+    "file": "D/Def Leppard/Def Leppard - [1987] Hysteria/05 - Pour Some Sugar On Me.mp3",
+    "settings": {
+      "volume": 0.65
+    }
   },
   "0268": {
     "file": "D/Def Leppard/Def Leppard - [1987] Hysteria/06 - Armageddon It.mp3",
@@ -1142,7 +1335,10 @@
     "file": "G/Guns N' Roses/Guns N' Roses - [1993] The Spaghetti Incident/09 - Attitude.mp3"
   },
   "0329": {
-    "file": "H/Heaven And Hell/Heaven And Hell - [2009] The Devil You Know/03 - Bible Black.mp3"
+    "file": "H/Heaven And Hell/Heaven And Hell - [2009] The Devil You Know/03 - Bible Black.mp3",
+    "settings": {
+      "volume": 0.55
+    }
   },
   "0330": {
     "file": "H/Helmet/Helmet - [1992] Meantime/04 - Unsung.mp3"
@@ -1376,7 +1572,10 @@
     "file": "Y/Y & T/Y & T - [1985] Down For The Count/06 - Summertime Girls (Studio Version).mp3"
   },
   "0404": {
-    "file": "Y/Y & T/Y & T - [1987] Contagious/01 - Contagious.mp3"
+    "file": "Y/Y & T/Y & T - [1987] Contagious/01 - Contagious.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0405": {
     "file": "R/Rush/Rush - [1974] Rush/06 - In The Mood.mp3",
@@ -1385,13 +1584,22 @@
     }
   },
   "0406": {
-    "file": "R/Rush/Rush - [1974] Rush/08 - Working Man.mp3"
+    "file": "R/Rush/Rush - [1974] Rush/08 - Working Man.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0407": {
-    "file": "R/Rush/Rush - [1976] 2112/02 - A Passage to Bangkok.mp3"
+    "file": "R/Rush/Rush - [1976] 2112/02 - A Passage to Bangkok.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0408": {
-    "file": "R/Rush/Rush - [1977] A Farewell To Kings/01 - A Farewell To Kings.mp3"
+    "file": "R/Rush/Rush - [1977] A Farewell To Kings/01 - A Farewell To Kings.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0409": {
     "file": "R/Rush/Rush - [1978] Hemispheres/03 - The Trees.mp3"
@@ -1410,5 +1618,406 @@
   },
   "0413": {
     "file": "U/UFO/UFO - [1974] Phenomenon/03 - Doctor Doctor.mp3"
+  },
+  "0414": {
+    "file": "M/Motley Crue/Motley Crue - [1989] Dr. Feelgood/02 - Dr. Feelgood.mp3"
+  },
+  "0415": {
+    "file": "M/Motley Crue/Motley Crue - [1989] Dr. Feelgood/10 - Don't Go Away Mad (Just Go Away).mp3"
+  },
+  "0416": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/01 - Live Wire.mp3",
+    "settings": {
+      "volume": 1
+    }
+  },
+  "0417": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/06 - Smokin' In The Boys Room.mp3"
+  },
+  "0418": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/07 - Girls, Girls, Girls.mp3"
+  },
+  "0419": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/08 - Wild Side.mp3"
+  },
+  "0420": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/13 - Primal Scream.mp3",
+    "settings": {
+      "volume": 0.7
+    }
+  },
+  "0421": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/02 - Piece Of Your Action.mp3"
+  },
+  "0422": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/04 - Looks That Kill.mp3"
+  },
+  "0423": {
+    "file": "M/Motley Crue/Motley Crue - [1991] Decade Of Decadence/03 - Shout At The Devil.mp3"
+  },
+  "0424": {
+    "file": "M/Misfits/Misfits - [1997] American Psycho/02 - American Psycho.mp3"
+  },
+  "0425": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/01 - I Don't Know.mp3"
+  },
+  "0426": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/02 - Crazy Train.mp3"
+  },
+  "0427": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/03 - Goodbye to Romance.mp3"
+  },
+  "0428": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/04 - Dee.mp3"
+  },
+  "0429": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/05 - Suicide Solution.mp3"
+  },
+  "0430": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/06 - Mr. Crowley.mp3"
+  },
+  "0431": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/07 - No Bone Movies.mp3"
+  },
+  "0432": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/08 - Revelation (Mother Earth).mp3"
+  },
+  "0433": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1980] Blizzard Of Ozz (Remastered)/09 - Steal Away (The Night).mp3"
+  },
+  "0434": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1981] Diary Of A Madman (Remastered)/01 - Over The Mountain.mp3"
+  },
+  "0435": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1981] Diary Of A Madman (Remastered)/02 - Flying High Again.mp3"
+  },
+  "0436": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1981] Diary Of A Madman (Remastered)/07 - S A T O .mp3"
+  },
+  "0437": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1981] Diary Of A Madman (Remastered)/08 - Diary Of A Madman.mp3"
+  },
+  "0438": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1983] Bark At The Moon/01 - Bark At The Moon.mp3"
+  },
+  "0439": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1986] Ultimate Sin/01 - The Ultimate Sin.mp3"
+  },
+  "0440": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1986] Ultimate Sin/02 - Secret Loser.mp3"
+  },
+  "0441": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1986] Ultimate Sin/07 - Killer Of Giants.mp3"
+  },
+  "0442": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1986] Ultimate Sin/09 - Shot In The Dark.mp3"
+  },
+  "0443": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1988] No Rest For The Wicked/01 - Miracle Man.mp3"
+  },
+  "0444": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1988] No Rest For The Wicked/03 - Crazy Babies.mp3"
+  },
+  "0445": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1988] No Rest For The Wicked/05 - Bloodbath In Paradise.mp3"
+  },
+  "0446": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1991] No More Tears/01 - Mr Tinkertrain.mp3"
+  },
+  "0447": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1991] No More Tears/03 - Mama, I'm Coming Home.mp3"
+  },
+  "0448": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1991] No More Tears/05 - No More Tears.mp3"
+  },
+  "0449": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1991] No More Tears/07 - Hellraiser.mp3"
+  },
+  "0450": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [1995] Ozzmosis/01 - Perry Mason.mp3"
+  },
+  "0451": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [2007] Black Rain/01 - Not Going Away.mp3"
+  },
+  "0452": {
+    "file": "O/Ozzy Osbourne/Ozzy Osbourne - [2007] Black Rain/02 - I Don't Wanna Stop.mp3"
+  },
+  "0453": {
+    "file": "P/Pantera/Pantera - [1990] Cowboys From Hell/01 - Cowboys From Hell.mp3"
+  },
+  "0454": {
+    "file": "P/Pantera/Pantera - [1990] Cowboys From Hell/06 - Domination.mp3"
+  },
+  "0455": {
+    "file": "P/Pantera/Pantera - [1990] Cowboys From Hell/05 - Cementery Gates.mp3"
+  },
+  "0456": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/01 - Mouth For War.mp3"
+  },
+  "0457": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/03 - Walk.mp3"
+  },
+  "0458": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/04 - Fucking Hostile.mp3"
+  },
+  "0459": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/05 - This Love.mp3"
+  },
+  "0460": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/06 - Rise.mp3"
+  },
+  "0461": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/09 - Regular People Conceit.mp3"
+  },
+  "0462": {
+    "file": "P/Pantera/Pantera - [1992] Vulgar Display Of Power/10 - By Demons Be Driven.mp3"
+  },
+  "0463": {
+    "file": "P/Pantera/Pantera - [1994] Far Beyond Driven/03 - 5 Minutes Alone.mp3"
+  },
+  "0464": {
+    "file": "P/Pantera/Pantera - [1994] Far Beyond Driven/04 - I'm Broken.mp3"
+  },
+  "0465": {
+    "file": "P/Pearl Jam/Pearl Jam - [1991] Ten/02 - Even Flow.mp3"
+  },
+  "0466": {
+    "file": "P/Pearl Jam/Pearl Jam - [1991] Ten/03 - Alive.mp3"
+  },
+  "0467": {
+    "file": "P/Pennywise/Pennywise - [1993] Unknown Road (Remastered)/01 - Unknown Road.mp3"
+  },
+  "0468": {
+    "file": "P/Pennywise/Pennywise - [1995] About Time (Remastered)/03 - Perfect People.mp3"
+  },
+  "0469": {
+    "file": "P/Pennywise/Pennywise - [1997] Full Circle/01 - Fight Till You Die.mp3"
+  },
+  "0470": {
+    "file": "P/Pennywise/Pennywise - [1997] Full Circle/03 - Get A Life.mp3"
+  },
+  "0471": {
+    "file": "P/Pennywise/Pennywise - [1997] Full Circle/10 - Nowhere Fast.mp3"
+  },
+  "0472": {
+    "file": "P/Poison/Poison - [1996] Poison's Greatest Hits - 1986-1996/01 - Nothin' But A Good Time.mp3"
+  },
+  "0473": {
+    "file": "P/Poison/Poison - [1996] Poison's Greatest Hits - 1986-1996/02 - Talk Dirty To Me.mp3",
+    "loops": [
+      {
+        "id": "b0d6c024-8d08-4d9e-8e0c-9b053750f03b",
+        "loopA": 136.410556,
+        "loopB": 172.937147,
+        "label": "Loop 1"
+      }
+    ],
+    "settings": {
+      "volume": 0.35
+    }
+  },
+  "0474": {
+    "file": "Q/Queen/Queen - [1975] A Night At the Opera/11 - Bohemian Rhapsody.mp3"
+  },
+  "0475": {
+    "file": "Q/Queen/Queen - [1976] A Day At the Races/01 - Tie Your Mother Down.mp3"
+  },
+  "0476": {
+    "file": "Q/Queen/Queen - [1977] News Of The World/10 - It's Late.mp3"
+  },
+  "0477": {
+    "file": "Q/Queen/Queen - [1978] Jazz/02 - Fat Bottomed Girls.mp3"
+  },
+  "0478": {
+    "file": "Q/Quiet Riot/Quiet Riot - [1983] Metal Health/02 - Cum On Feel The Noize.mp3"
+  },
+  "0479": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/01 - Bombtrack.mp3"
+  },
+  "0480": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/02 - Killing in the name.mp3"
+  },
+  "0481": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/05 - Bullet in the head.mp3"
+  },
+  "0482": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/06 - Know your enemy.mp3"
+  },
+  "0483": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/07 - Wake up.mp3"
+  },
+  "0484": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/09 - Township rebellion.mp3"
+  },
+  "0485": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1992] Rage Against The Machine/10 - Freedom.mp3"
+  },
+  "0486": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1999] Battle Of Los Angeles/01 - Testify.mp3"
+  },
+  "0487": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1999] Battle Of Los Angeles/02 - Guerilla Radio.mp3"
+  },
+  "0488": {
+    "file": "R/Rage Against The Machine/Rage Against The Machine - [1999] Battle Of Los Angeles/05 - Sleep Now In The Fire.mp3"
+  },
+  "0489": {
+    "file": "R/Rainbow/Rainbow - [1982] Straight Between The Eyes/01 - Death Alley Driver.mp3"
+  },
+  "0490": {
+    "file": "R/Rainbow/Rainbow - [2013] Rainbow - The Collection/04 - Man On The Silver Mountain.mp3"
+  },
+  "0491": {
+    "file": "R/Rainbow/Rainbow - [2013] Rainbow - The Collection/07 - Long Live Rock 'n' Roll.mp3"
+  },
+  "0492": {
+    "file": "R/Rolling Stones/Rolling Stones - [2002] Forty Licks/17 - Paint It Black.mp3"
+  },
+  "0493": {
+    "file": "R/Rolling Stones/Rolling Stones - [2002] Forty Licks/18 - Honky Tonk Women.mp3"
+  },
+  "0494": {
+    "file": "R/Ruts, The/The Ruts - [2003] The Crack-Grin And Bear It/04 - Something That I Said.mp3"
+  },
+  "0495": {
+    "file": "S/Sammy Hagar/Sammy Hagar - [1984] VOA/01 - I Can't Drive 55.mp3"
+  },
+  "0496": {
+    "file": "S/Sammy Hagar/Sammy Hagar - [2004] Essential Red Collection/06 - Heavy Metal.mp3"
+  },
+  "0497": {
+    "file": "S/Sammy Hagar/Sammy Hagar - [2004] Essential Red Collection/20 - Mas Tequila.mp3"
+  },
+  "0498": {
+    "file": "S/Slash/Slash - [2014] World On Fire/01 - World On Fire.mp3"
+  },
+  "0499": {
+    "file": "S/Slayer/Slayer - [1990] Seasons In The Abyss/05 - Dead Skin Mask.mp3"
+  },
+  "0500": {
+    "file": "S/SNFU/SNFU - [1984] ...And No One Else Wanted To Play/07 - Cannibal Cafe.mp3"
+  },
+  "0501": {
+    "file": "S/SNFU/SNFU - [1984] ...And No One Else Wanted To Play/06 - Seein' Life through the Bottom Of A Bottle.mp3"
+  },
+  "0502": {
+    "file": "S/SNFU/SNFU - [1984] ...And No One Else Wanted To Play/13 - Loser At Life, Loser At Death.mp3"
+  },
+  "0503": {
+    "file": "S/SNFU/SNFU - [1993] Something Green And Leafy This Way Comes/06 - Painful Reminder.mp3"
+  },
+  "0504": {
+    "file": "S/SNFU/SNFU - [1993] Something Green And Leafy This Way Comes/16 - The Watering Hole.mp3"
+  },
+  "0505": {
+    "file": "S/SNFU/SNFU - [1995] The One Voted Most Likely To Succeed/08 - Eric's Had A Bad Day.mp3"
+  },
+  "0506": {
+    "file": "S/SNFU/SNFU - [2004] In The Meantime And In Between Time/04 - Head Smashed In Buffalo Jump.mp3"
+  },
+  "0507": {
+    "file": "S/Soundgarden/Soundgarden - [1992] Badmotorfinger/02 - Outshined.mp3"
+  },
+  "0508": {
+    "file": "S/Soundgarden/Soundgarden - [1992] Badmotorfinger/04 - Jesus Christ Pose.mp3"
+  },
+  "0509": {
+    "file": "S/Soundgarden/Soundgarden - [1994] Superunknown/08 - Spoonman.mp3"
+  },
+  "0510": {
+    "file": "T/Tenacious D/Tenacious D - [2006] The Pick Of Destiny/15 - The Metal.mp3"
+  },
+  "0511": {
+    "file": "T/Thin Lizzy/Thin Lizzy - [1976] Jailbreak/01 - Jailbreak.mp3"
+  },
+  "0512": {
+    "file": "T/Thin Lizzy/Thin Lizzy - [1976] Jailbreak/06 - The Boys Are Back In Town.mp3"
+  },
+  "0513": {
+    "file": "T/Thin Lizzy/Thin Lizzy - [1976] Jailbreak/09 - Emerald.mp3"
+  },
+  "0514": {
+    "file": "T/Thin Lizzy/Thin Lizzy - [2007] Greatest Hits/13 - Cold Sweat.mp3"
+  },
+  "0515": {
+    "file": "T/Thin Lizzy/Thin Lizzy - [2007] Greatest Hits/24 - Bad Reputation.mp3"
+  },
+  "0516": {
+    "file": "T/Trivium/Trivium - [2006] The Crusade/04 - Anthem (We Are The Fire).mp3"
+  },
+  "0517": {
+    "file": "T/Trivium/Trivium - [2006] The Crusade/05 - Unrepentant.mp3"
+  },
+  "0518": {
+    "file": "T/Trivium/Trivium - [2005] Ascendancy/15 - Master Of Puppets.mp3"
+  },
+  "0519": {
+    "file": "Z/ZZ Top/ZZ Top - [1972] Rio Grande Mud/02 - Just Got Paid.mp3"
+  },
+  "0520": {
+    "file": "Z/ZZ Top/ZZ Top - [1973] Tres Hombres/01 - Waitin' For The Bus.mp3"
+  },
+  "0521": {
+    "file": "Z/ZZ Top/ZZ Top - [1973] Tres Hombres/02 - Jesus Just Left Chicago.mp3"
+  },
+  "0522": {
+    "file": "Z/ZZ Top/ZZ Top - [1973] Tres Hombres/03 - Beer Drinkers & Hell Raisers.mp3"
+  },
+  "0523": {
+    "file": "Z/ZZ Top/ZZ Top - [1973] Tres Hombres/08 - La Grange.mp3"
+  },
+  "0524": {
+    "file": "Z/ZZ Top/ZZ Top - [1975] Fandango/08 - Heard It On The X.mp3"
+  },
+  "0525": {
+    "file": "Z/ZZ Top/ZZ Top - [1975] Fandango/09 - Tush.mp3"
+  },
+  "0526": {
+    "file": "Z/ZZ Top/ZZ Top - [1977] Tejas/02 - Arrested For Driving While Blind.mp3"
+  },
+  "0527": {
+    "file": "Z/ZZ Top/ZZ Top - [1979] Degüello/03 - I'm Bad, I'm Nationwide.mp3"
+  },
+  "0528": {
+    "file": "Z/ZZ Top/ZZ Top - [1979] Degüello/09 - Cheap Sunglasses.mp3"
+  },
+  "0529": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/02 - Got Me Under Pressure.mp3"
+  },
+  "0530": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/01 - Gimme All Your Lovin.mp3"
+  },
+  "0531": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/03 - Sharp Dressed Man.mp3"
+  },
+  "0532": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/05 - I Got The Six.mp3"
+  },
+  "0533": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/11 - Bad Girl.mp3"
+  },
+  "0534": {
+    "file": "Z/ZZ Top/ZZ Top - [1985] Afterburner/06 - Planet Of Women.mp3"
+  },
+  "0535": {
+    "file": "Z/ZZ Top/ZZ Top - [1990] Recycler/05 - My Head's In Mississippi.mp3"
+  },
+  "0536": {
+    "file": "Z/ZZ Top/ZZ Top - [1990] Recycler/10 - Doubleback.mp3"
+  },
+  "0537": {
+    "file": "Z/ZZ Top/ZZ Top - [1983] Eliminator/06 - Legs.mp3"
+  },
+  "0538": {
+    "file": "Z/ZZ Top/ZZ Top - [2012] La Futura/01 - I Gotsta Get Paid.mp3"
+  },
+  "0539": {
+    "file": "Z/ZZ Top/ZZ Top - [2012] La Futura/02 - Chartreuse.mp3"
+  },
+  "0540": {
+    "file": "Z/ZZ Top/ZZ Top - [2012] La Futura/03 - Consumption.mp3"
+  },
+  "0541": {
+    "file": "Z/ZZ Top/ZZ Top - [2012] La Futura/07 - Flyin High.mp3"
   }
 }

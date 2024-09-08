@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Slider } from "@mui/material";
 import { formatSeconds } from "../../../../utils/format-seconds";
 import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
 import {
@@ -22,13 +21,16 @@ import {
   UpdateTimeDetail,
 } from "../../../../types/events";
 import SwitchButton from "./components/switch-button/SwitchButton";
-import { Track, Rail, Thumb } from "./components/playback/playback.styles";
 import Playback from "./components/playback/Playback";
+
+const MAX_RETRY = 10;
 
 const Player = () => {
   const { disableShortcuts, song, riffTimes, dispatchSong, dispatchSongs } =
     useAppContext();
   const ref = useRef<HTMLAudioElement | null>(null);
+
+  const [errorRetryAttempts, setErrorRetryAttempts] = useState(0);
 
   const [volume, setVolume] = useState<number>(0.5);
   const [loop, setLoop] = useState<[number, number?] | null>(null);
@@ -56,13 +58,21 @@ const Player = () => {
 
   const updateVolume = useCallback((value: number) => {
     setVolume(value);
-    if (ref.current) ref.current.volume = value;
+    if (ref.current) {
+      ref.current.volume = value;
+
+      dispatchSong({
+        type: "volume",
+        volume: ref.current.volume,
+      });
+    }
   }, []);
 
   useKeyboardShortcuts(ref, cycleLoop, updateVolume, disableShortcuts);
 
   // When the file changes, reset anything that shouldn't hold over from the previous song
   useEffect(() => {
+    setErrorRetryAttempts(0);
     song && updateVolume(song.settings.volume);
     setLoop(null);
     refresh();
@@ -88,12 +98,24 @@ const Player = () => {
 
   return song ? (
     <div>
-      {song.file && !ref.current?.error ? (
+      {song.file && errorRetryAttempts < MAX_RETRY ? (
         <>
           <audio
             ref={ref}
             src={`http://localhost:8001/${song.file}`}
-            onError={refresh}
+            onError={(event) => {
+              console.log("ERROR", event.currentTarget.error);
+              // Suddenly started having an issue where the file won't load the first time about 75% of the time but if I click it again it works.
+              // Can't figure out if its a network problem but when it happens I get the "Unable to load file" view like the NAS is not connected.
+              // This seems to work to just mindlessly retry it. Would be nice to figure out what's going on.
+              if (errorRetryAttempts < MAX_RETRY) {
+                setTimeout(() => {
+                  console.log("RETRY", errorRetryAttempts);
+                  setErrorRetryAttempts(errorRetryAttempts + 1);
+                  ref.current?.load();
+                }, 100);
+              }
+            }}
             //autoPlay
             onPlay={(e) => {
               // When a track starts, set its volume to the player's volume
@@ -127,10 +149,13 @@ const Player = () => {
                   })
                 );
             }}
-            style={{ width: "100%" }}
+            style={{
+              width: "100%",
+            }}
           />
 
-          {ref.current && (
+          {/* Don't show the player until the song was actually successfully loaded. This could be used to show a loading state. I could also make sure there's a proper height placeholder so it doesn't jump around. */}
+          {ref.current && !isNaN(ref.current?.duration ?? NaN) && (
             <PlayerBase>
               {/* Paused is undefined if the track has not started, boolean afterwards. */}
               {!ref.current.paused ? (
@@ -282,19 +307,7 @@ const Player = () => {
                 />
               </AmpLabel>
               <AmpLabel>Speed %</AmpLabel>
-              <AmpLabel>
-                <div>Volume</div>
-                <DigitalSaveButton
-                  onClick={() => {
-                    if (ref.current) {
-                      dispatchSong({
-                        type: "volume",
-                        volume: ref.current.volume,
-                      });
-                    }
-                  }}
-                />
-              </AmpLabel>
+              <AmpLabel>Volume</AmpLabel>
               <AmpLabel>Sync</AmpLabel>
             </PlayerBase>
           )}
