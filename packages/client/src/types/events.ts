@@ -11,7 +11,11 @@ export enum CustomEvents {
   "PLAY_SAVED_LOOP" = "playSavedLoop",
 }
 
-export type UpdateTimeDetail = { currentTime: number };
+export type UpdateTimeDetail = {
+  currentTime: number;
+  totalTime: number;
+  percentPlayed: number;
+};
 export type PlaySavedLoopDetail = {
   label: string;
   loopA: number;

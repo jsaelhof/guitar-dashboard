@@ -32,7 +32,7 @@
     "artist": "Metallica",
     "file": "M/Metallica/Studio Albums/Metallica - [2016] Hardwired...To Self-Destruct (Limited Deluxe Edition) CD3/01 - Hardwired.mp3",
     "settings": {
-      "volume": 0.5
+      "volume": 0.7
     }
   },
   "0006": {
@@ -420,7 +420,10 @@
   },
   "0090": {
     "artist": "Metallica",
-    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/02 - Master of Puppets.mp3"
+    "file": "M/Metallica/Studio Albums/Metallica - [1986] Master Of Puppets/02 - Master of Puppets.mp3",
+    "settings": {
+      "volume": 0.95
+    }
   },
   "0091": {
     "artist": "Metallica",
@@ -790,10 +793,16 @@
     }
   },
   "0164": {
-    "file": "A/Alice Cooper/Alice Cooper - [1991] Hey Stoopid/01 - Hey Stoopid.mp3"
+    "file": "A/Alice Cooper/Alice Cooper - [1991] Hey Stoopid/01 - Hey Stoopid.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0166": {
-    "file": "A/Anthrax/Anthrax - [1985] Spreading the Disease/01 - A.I.R..mp3"
+    "file": "A/Anthrax/Anthrax - [1985] Spreading the Disease/01 - A.I.R..mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0167": {
     "file": "A/Anthrax/Anthrax - [1985] Spreading the Disease/07 - Armed And Dangerous.mp3"
@@ -871,7 +880,10 @@
     "file": "B/Bad Religion/Bad Religion - [1994] Stranger Than Fiction/10 - Hooray For Me.mp3"
   },
   "0192": {
-    "file": "B/Bad Religion/Bad Religion - [1994] Stranger Than Fiction/15 - 21st Century (digital boy).mp3"
+    "file": "B/Bad Religion/Bad Religion - [1994] Stranger Than Fiction/15 - 21st Century (digital boy).mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0193": {
     "file": "B/Bad Religion/Bad Religion - [1996] The Gray Race/03 - A Walk.mp3"
@@ -973,7 +985,10 @@
     "file": "B/Black Sabbath/Black Sabbath - [1971] Master Of Reality/01 - Sweet Leaf.mp3"
   },
   "0226": {
-    "file": "B/Black Sabbath/Black Sabbath - [1971] Master Of Reality/04 - Children Of The Grave.mp3"
+    "file": "B/Black Sabbath/Black Sabbath - [1971] Master Of Reality/04 - Children Of The Grave.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0227": {
     "file": "B/Black Sabbath/Black Sabbath - [1972] Black Sabbath, Vol.4/05 - Supernaut.mp3"
@@ -991,7 +1006,10 @@
     "file": "B/Black Sabbath/Black Sabbath - [1981] Mob Rules/05 - The Mob Rules.mp3"
   },
   "0233": {
-    "file": "B/Black Sabbath/Black Sabbath - [1992] Dehumanizer/03 - TV Crimes.mp3"
+    "file": "B/Black Sabbath/Black Sabbath - [1992] Dehumanizer/03 - TV Crimes.mp3",
+    "settings": {
+      "volume": 0.75
+    }
   },
   "0234": {
     "file": "B/Black Sabbath/Black Sabbath - [1992] Dehumanizer/06 - Time Machine.mp3"
@@ -1057,22 +1075,37 @@
     "file": "C/Cheap Trick/Cheap Trick - [1982] One On One/06 - She's Tight.mp3"
   },
   "0250": {
-    "file": "C/Chickenfoot/Chickenfoot - [2009] Chickenfoot/04 - Oh Yeah.mp3"
+    "file": "C/Chickenfoot/Chickenfoot - [2009] Chickenfoot/04 - Oh Yeah.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0251": {
-    "file": "C/Chickenfoot/Chickenfoot - [2011] Chickenfoot III/08 - Big Foot.mp3"
+    "file": "C/Chickenfoot/Chickenfoot - [2011] Chickenfoot III/08 - Big Foot.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0252": {
-    "file": "C/Children Of Bodom/Children Of Bodom - [2003] Hate Crew Deathroll/01 - Needled 247.mp3"
+    "file": "C/Children Of Bodom/Children Of Bodom - [2003] Hate Crew Deathroll/01 - Needled 247.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0253": {
     "file": "C/Chris Stapleton/Chris Stapleton - [2015] Traveller/05 - Whiskey And You.mp3"
   },
   "0254": {
-    "file": "C/Chris Stapleton/Chris Stapleton - [2017] From A Room Volume 2/02 - Hard Livin'.mp3"
+    "file": "C/Chris Stapleton/Chris Stapleton - [2017] From A Room Volume 2/02 - Hard Livin'.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0255": {
-    "file": "C/Chris Stapleton/Chris Stapleton - [2017] From A Room Volume 2/07 - Midnight Train To Memphis.mp3"
+    "file": "C/Chris Stapleton/Chris Stapleton - [2017] From A Room Volume 2/07 - Midnight Train To Memphis.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0256": {
     "file": "C/Clutch/Clutch - [2015] Psychic Warfare/02 - X-Ray Visions.mp3"
@@ -1141,7 +1174,10 @@
     "file": "D/Dio/Dio - [1983] Holy Diver/01 - Stand Up and Shout.mp3"
   },
   "0271": {
-    "file": "D/Dio/Dio - [1983] Holy Diver/02 - Holy Diver.mp3"
+    "file": "D/Dio/Dio - [1983] Holy Diver/02 - Holy Diver.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0272": {
     "file": "D/Dio/Dio - [1983] Holy Diver/08 - Rainbow in the Dark.mp3"
@@ -1192,7 +1228,10 @@
     "file": "G/Ghost/Ghost - [2015] Meliora/02 - From The Pinnacle To The Pit.mp3"
   },
   "0288": {
-    "file": "G/Ghost/Ghost - [2015] Meliora/03 - Cirice.mp3"
+    "file": "G/Ghost/Ghost - [2015] Meliora/03 - Cirice.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0289": {
     "file": "G/Ghost/Ghost - [2015] Meliora/05 - He Is.mp3"
@@ -1201,7 +1240,10 @@
     "file": "G/Ghost/Ghost - [2015] Meliora/06 - Mummy Dust.mp3"
   },
   "0291": {
-    "file": "G/Ghost/Ghost - [2015] Meliora/09 - Absolution.mp3"
+    "file": "G/Ghost/Ghost - [2015] Meliora/09 - Absolution.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0292": {
     "file": "G/Ghost/Ghost - [2015] Meliora/10 - Deus In Absentia.mp3"
@@ -1230,7 +1272,10 @@
     ]
   },
   "0295": {
-    "file": "G/Ghost/Ghost - [2018] Prequelle/06 - Dance Macabre.mp3"
+    "file": "G/Ghost/Ghost - [2018] Prequelle/06 - Dance Macabre.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0296": {
     "file": "G/Ghost/Ghost - [2018] Prequelle/08 - Witch Image.mp3"
@@ -1251,7 +1296,10 @@
     "file": "G/Ghost/Ghost - [2022] Impera/09 - Darkness At The Heart Of My Love.mp3"
   },
   "0301": {
-    "file": "G/Ghost/Ghost - [2022] Impera/10 - Griftwood.mp3"
+    "file": "G/Ghost/Ghost - [2022] Impera/10 - Griftwood.mp3",
+    "settings": {
+      "volume": 0.5
+    }
   },
   "0302": {
     "file": "G/Ghost/Ghost - [2023] Phantomime/04 - Phantom Of The Opera.mp3"

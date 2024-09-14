@@ -145,7 +145,12 @@ const Player = () => {
               sync &&
                 document.dispatchEvent(
                   new CustomEvent<UpdateTimeDetail>(CustomEvents.UPDATE_TIME, {
-                    detail: { currentTime: e.currentTarget.currentTime },
+                    detail: {
+                      currentTime: e.currentTarget.currentTime,
+                      totalTime: e.currentTarget.duration,
+                      percentPlayed:
+                        e.currentTarget.currentTime / e.currentTarget.duration,
+                    },
                   })
                 );
             }}

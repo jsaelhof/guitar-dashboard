@@ -1,5 +1,6 @@
 import { useActionState, useEffect } from "react";
 import { Song } from "../../types";
+import { debounce } from "@mui/material";
 
 type FetchSongResponse = {
   data: { song: Song };
@@ -34,5 +35,7 @@ export const useSong = (songId?: string) => {
     dispatch({ type: "get" });
   }, [songId]);
 
-  return { song, dispatch };
+  // Debounce the dispatch function.
+  // In case like rapidly changing the volume, this prevents overlaping fetches that cause the page to crash.
+  return { song, dispatch: debounce(dispatch) };
 };

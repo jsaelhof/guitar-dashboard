@@ -49,7 +49,7 @@ const Riffs = () => {
     time: number;
   } | null>(null);
 
-  const ref = useRef<number>(0);
+  const currentTimeRef = useRef<number>(0);
 
   // Sort the riffs by time (0) mapped to riff index (1)
   const timeMap = useMemo(
@@ -72,7 +72,7 @@ const Riffs = () => {
       detail: { currentTime },
     }: CustomEvent<UpdateTimeDetail>) => {
       if (currentTime) {
-        ref.current = Math.round(currentTime);
+        currentTimeRef.current = Math.round(currentTime);
 
         const currentRiffIndex =
           timeMap.findLast(([time]) => time < currentTime)?.[1] ?? -1;
@@ -90,7 +90,7 @@ const Riffs = () => {
 
   // This useEffect resets anything that should be cleared from the previous song.
   useEffect(() => {
-    ref.current = 0;
+    currentTimeRef.current = 0;
     setActiveTimeMark(null);
   }, [song?.id]);
 
@@ -175,7 +175,7 @@ const Riffs = () => {
                           time:
                             riffs[index].time === undefined ||
                             riffs[index].time === activeTimeMark.time
-                              ? ref.current
+                              ? currentTimeRef.current
                               : riffs[index].time ?? 0,
                         });
                       }}
@@ -247,7 +247,7 @@ const Riffs = () => {
                         ? null
                         : {
                             index,
-                            time: riffs[index].time ?? ref.current,
+                            time: riffs[index].time ?? currentTimeRef.current,
                           }
                     );
                   }}
