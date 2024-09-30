@@ -18,6 +18,7 @@ declare module "@mui/material/styles" {
         880: string;
       }
     >;
+    darkSecondary: Color;
   }
 
   interface Theme {
@@ -48,6 +49,9 @@ declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     blueLights: true;
   }
+  interface ButtonPropsColorOverrides {
+    blueLights: true;
+  }
 }
 
 export const theme = createTheme({
@@ -62,6 +66,9 @@ export const theme = createTheme({
     "0 0 6px #79c4e7",
   ],
   palette: {
+    secondary: {
+      main: "#424242",
+    },
     blueLights: {
       300: "#97e0ff",
       400: "#84d9fd",
@@ -89,10 +96,10 @@ export const theme = createTheme({
       880: "#111111",
       900: "#0d0d0d",
     },
+    darkSecondary: {
+      main: "#ddd",
+    },
   },
-  //   status: {
-  //     danger: orange[500],
-  //   },
 
   components: {
     MuiIconButton: {
@@ -110,6 +117,35 @@ export const theme = createTheme({
                   "&:hover": {
                     filter: `drop-shadow(${textGlows[6]})`,
                   },
+                },
+              };
+            default:
+              return;
+          }
+        },
+      },
+    },
+
+    MuiButton: {
+      variants: [
+        {
+          props: { size: "xsmall" },
+          style: { fontSize: 10, padding: "4px 6px", minWidth: 50 },
+        },
+      ],
+      styleOverrides: {
+        root: ({ ownerState, theme: { palette, textGlows } }) => {
+          switch (ownerState.color) {
+            case "darkSecondary":
+              return {
+                "&.Mui-disabled": {
+                  color: "#444",
+                  borderColor: "#242424",
+                },
+                ":hover": {
+                  color: palette.blueLights[300],
+                  textShadow: textGlows[1],
+                  borderColor: palette.blueLights[800],
                 },
               };
             default:

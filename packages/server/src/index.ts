@@ -1,11 +1,18 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import {
+  createReadStream,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "fs";
 import cors from "cors";
 import db from "../db/db.json";
 import { polyfillSong } from "./utils/polyfill-song";
-import { Songs, SongsByArtist } from "./types";
+import { Loop, Songs, SongsByArtist } from "./types";
 import { v4 as uuid } from "uuid";
+import { execSync } from "child_process";
 
 dotenv.config();
 
@@ -166,7 +173,7 @@ app.post("/song/:songId/loop", (req: Request, res: Response) => {
   const loopB = parseFloat(req.body.loopB);
   const { label } = req.body;
 
-  if (songId && loopA && loopB && label) {
+  if (songId && loopA != null && loopB != null && label) {
     db[songId].loops = db[songId].loops ?? [];
     db[songId].loops.push({
       id: uuid(),
@@ -181,6 +188,76 @@ app.post("/song/:songId/loop", (req: Request, res: Response) => {
       error: false,
       scope: "song",
       type: "loop",
+      data: {
+        song: polyfillSong(songId, db[songId]),
+      },
+    });
+  } else {
+    res.send({
+      error: true,
+      scope: "song",
+      type: "loop",
+    });
+  }
+});
+
+app.post("/song/:songId/updateloop", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const loopA = parseFloat(req.body.loopA);
+  const loopB = parseFloat(req.body.loopB);
+  const { id, label } = req.body;
+
+  if (
+    songId &&
+    id &&
+    loopA != null &&
+    loopB != null &&
+    label &&
+    db[songId].loops
+  ) {
+    db[songId].loops = db[songId].loops.map((loop: Loop) =>
+      loop.id === id
+        ? {
+            ...loop,
+            loopA,
+            loopB,
+            label,
+          }
+        : loop
+    );
+
+    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+
+    res.send({
+      error: false,
+      scope: "song",
+      type: "updateloop",
+      data: {
+        song: polyfillSong(songId, db[songId]),
+      },
+    });
+  } else {
+    res.send({
+      error: true,
+      scope: "song",
+      type: "loop",
+    });
+  }
+});
+
+app.post("/song/:songId/deleteloop", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const { id } = req.body;
+
+  if (songId && id && db[songId].loops) {
+    db[songId].loops = db[songId].loops.filter((loop: Loop) => loop.id !== id);
+
+    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+
+    res.send({
+      error: false,
+      scope: "song",
+      type: "deleteloop",
       data: {
         song: polyfillSong(songId, db[songId]),
       },
@@ -339,6 +416,91 @@ app.post("/riffs/:songId/order", (req: Request, res: Response) => {
     res.send({ error: true, scope: "riffs", type: "order" });
   }
 });
+
+app.get("/tab/:songId", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  let tabUris;
+
+  try {
+    tabUris = JSON.parse(
+      readFileSync(`public/assets/${songId}/tab.json`).toString()
+    );
+  } catch (ex) {}
+
+  try {
+    res.send({
+      error: false,
+      scope: "tab",
+      type: "init",
+      data: {
+        songId,
+        tab: [...(tabUris ? tabUris : [])],
+      },
+    });
+  } catch (ex) {
+    res.send({
+      error: true,
+      scope: "tab",
+      type: "init",
+    });
+  }
+});
+
+app.post("/tab/:songId/add", (req: Request, res: Response) => {
+  const { songId } = req.params;
+  const tab = req.body;
+
+  try {
+    const tabDir = `./public/assets/${songId}`;
+    const tabFile = `${tabDir}/tab.json`;
+
+    let tabData = [];
+
+    if (existsSync(tabFile)) {
+      tabData = JSON.parse(readFileSync(tabFile, { encoding: "utf-8" }));
+    } else if (!existsSync(tabDir)) {
+      mkdirSync(tabDir);
+    }
+
+    tabData.push(tab);
+    writeFileSync(tabFile, JSON.stringify(tabData, null, 2), "utf8");
+
+    res.send({
+      error: false,
+      scope: "tab",
+      type: "add",
+      data: {
+        songId,
+        tab: tabData,
+      },
+    });
+  } catch (ex) {
+    res.send({ error: true, scope: "tab", type: "add" });
+  }
+});
+
+/*
+This route was an attempt to load UG in an iframe. It works for the first page but any link on that page then fails to connect the same way iframing the page directly does.
+
+const fetchWebsite = (url: string) => {
+  execSync(`curl -o site.html -L "${url}"`, (error, stdout, stderr) => {
+    // execSync(`wget -q -O - ${url} > site.html`, (error, stdout, stderr) => {
+    if (error !== null) {
+      console.log(error);
+      return false;
+    }
+  });
+};
+
+app.get("/search/ug", async (req, res) => {
+  console.log("SEARCH UG");
+  writeFileSync("site.html", "", () => console.log("Created site.html"));
+  createReadStream("site.html").pipe(res);
+  fetchWebsite(
+    "https://www.ultimate-guitar.com/search.php?search_type=title&value=Black%20Diamond"
+  );
+});
+*/
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

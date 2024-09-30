@@ -8,12 +8,14 @@ export type Song = {
   settings: {
     volume: number;
   };
-  loops?: {
-    id: string;
-    loopA: number;
-    loopB: number;
-    label: string;
-  }[];
+  loops?: Loop[];
+};
+
+export type Loop = {
+  id: string;
+  loopA: number;
+  loopB: number;
+  label: string;
 };
 
 export type SongsByArtist = {
@@ -32,6 +34,13 @@ export type Riff = {
   src?: string;
   uri?: string[];
   time?: number;
+};
+
+export type Tab = {
+  id: string;
+  label: string;
+  labelDesc?: string;
+  uri?: string[];
 };
 
 export type RecentSong = Pick<Song, "id" | "title" | "artist">;

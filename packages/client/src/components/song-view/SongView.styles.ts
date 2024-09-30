@@ -8,6 +8,13 @@ export const Header = styled("div")(() => ({
 
 export const Content = styled("div")(() => ({
   gridArea: "content",
+  display: "grid",
+  gridTemplateColumns: "auto 1fr",
+  gap: 16,
+  minHeight: 0,
+}));
+
+export const TabPanel = styled("div")(() => ({
   padding: "0 16px 16px",
   overflowY: "scroll",
 }));

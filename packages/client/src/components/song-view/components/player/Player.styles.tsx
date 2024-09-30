@@ -1,8 +1,8 @@
-import { ArrowLeft, ArrowRight, BookmarkBorder } from "@mui/icons-material";
+import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { IconButton, styled } from "@mui/material";
-import { ReactElement } from "react";
 
 export const PlayerBase = styled("div")(({ theme: { palette } }) => ({
+  height: 120,
   fontSize: 14,
   color: palette.lightGrey[200],
   display: "grid",
@@ -14,9 +14,6 @@ export const PlayerBase = styled("div")(({ theme: { palette } }) => ({
   columnGap: 32,
   rowGap: 8,
   background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
-  //backgroundImage: "url('ui/gold.jpeg')",
-  //backgroundPositionY: "30%",
-  //backgroundSize: "cover",
   padding: "20px 20px",
   borderRadius: 8,
   border: "2px solid #141414",
@@ -111,14 +108,6 @@ export const Light = styled("div")(
 export const DigitalButton = styled((props) => (
   <IconButton {...props} color="blueLights" />
 ))({});
-
-export const DigitalSaveButton = styled((props) => (
-  <DigitalButton {...props} size="small">
-    <BookmarkBorder />
-  </DigitalButton>
-))(() => ({
-  transform: "scale(0.75)",
-}));
 
 export const LeftButton = styled(ArrowLeft)(
   ({ theme: { palette, textGlows } }) => ({

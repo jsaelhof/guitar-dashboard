@@ -12,20 +12,18 @@ export type PlaybackProps = {
 
 const Playback = ({ loop, audioRef, marks }: PlaybackProps) => (
   <Slider
-    // size="small"
     defaultValue={0}
     max={1}
     step={0.01}
     value={
+      // If there is a complete loop, configure the slider for the loop.
+      // Otherwise render the full song state.
       loop?.[1] != null
         ? [
             audioRef.currentTime / audioRef.duration,
             loop[0] / audioRef.duration,
             loop[1] / audioRef.duration,
           ]
-        : // Duration is NaN if the file doesn't load, even though it doesn't get rendered. I think it happens on first render when it's trying to load before audio.error becomes true.
-        isNaN(audioRef.duration)
-        ? 0
         : audioRef.currentTime / audioRef.duration
     }
     // Override the thumb component with a custom one.
@@ -37,13 +35,12 @@ const Playback = ({ loop, audioRef, marks }: PlaybackProps) => (
       },
     }}
     marks={marks}
-    onChange={(e, value) => {
-      if (typeof value === "number" && audioRef) {
-        audioRef.currentTime = audioRef.duration * value;
-      }
-    }}
-    onChangeCommitted={(e, value) => {
-      if (typeof value === "number" && audioRef) {
+    onChange={(e, value, activeThumb) => {
+      if (value instanceof Array) {
+        // Loop
+        audioRef.currentTime = audioRef.duration * value[activeThumb];
+      } else {
+        // No Loop
         audioRef.currentTime = audioRef.duration * value;
       }
     }}

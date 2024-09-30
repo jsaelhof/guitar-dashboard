@@ -13,6 +13,14 @@ export const useSong = (songId?: string) => {
     | { type: "get" }
     | { type: "volume"; volume: number }
     | { type: "loop"; loopA: number; loopB: number; label: string }
+    | {
+        type: "updateloop";
+        id: string;
+        loopA: number;
+        loopB: number;
+        label: string;
+      }
+    | { type: "deleteloop"; id: string }
   >(async (_, { type, ...body }) => {
     const response = await fetch(
       `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,
@@ -37,5 +45,5 @@ export const useSong = (songId?: string) => {
 
   // Debounce the dispatch function.
   // In case like rapidly changing the volume, this prevents overlaping fetches that cause the page to crash.
-  return { song, dispatch: debounce(dispatch) };
+  return { song, dispatch: debounce(dispatch), isPending };
 };

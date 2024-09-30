@@ -1,4 +1,4 @@
-import { PlayArrow, QueueMusic } from "@mui/icons-material";
+import { PlayArrow, Search } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useAppContext } from "../../../../context/AppContext";
@@ -30,16 +30,16 @@ const SongControls = () => {
         disabled={!song.file}
         onClick={() => play(song.id)}
       >
-        Play Song
+        Play on Desktop
       </Button>
 
       <Button
         variant="contained"
-        startIcon={<QueueMusic />}
+        startIcon={<Search />}
         onClick={() => window.open(song.tab, "guitarTab")}
         disabled={!song.tab}
       >
-        Full Tab
+        Search Tab
       </Button>
     </div>
   ) : null;

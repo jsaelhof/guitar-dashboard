@@ -16,9 +16,8 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
-  LoopList,
   OrderLayout,
   RiffList,
   ListItem,
@@ -109,30 +108,9 @@ const Riffs = () => {
             </ListItem>
           ))}
         </RiffList>
-
-        <LoopList>
-          {(song.loops ?? []).map((loopData) => (
-            <ListItem
-              key={loopData.id}
-              onClick={() => {
-                document.dispatchEvent(
-                  new CustomEvent<PlaySavedLoopDetail>(
-                    CustomEvents.PLAY_SAVED_LOOP,
-                    {
-                      detail: loopData,
-                    }
-                  )
-                );
-              }}
-            >
-              {loopData.label} : ({formatSeconds(Math.round(loopData.loopA))}-
-              {formatSeconds(Math.round(loopData.loopB))})
-            </ListItem>
-          ))}
-        </LoopList>
       </Shortcuts>
 
-      {(riffs || []).map(({ id, label, labelDesc, src, uri, time }, index) => (
+      {riffs.map(({ id, label, labelDesc, src, uri, time }, index) => (
         <Accordion
           key={id}
           expanded={
@@ -257,7 +235,7 @@ const Riffs = () => {
 
                 <OrderLayout>
                   <RiffOrderUp
-                    onClick={(e) => {
+                    onClick={(e: MouseEvent<HTMLDivElement>) => {
                       e.stopPropagation();
 
                       if (index > 0) {
@@ -274,7 +252,7 @@ const Riffs = () => {
                     </svg>
                   </RiffOrderUp>
                   <RiffOrderDown
-                    onClick={(e) => {
+                    onClick={(e: MouseEvent<HTMLDivElement>) => {
                       e.stopPropagation();
 
                       if (index < riffs.length - 1) {

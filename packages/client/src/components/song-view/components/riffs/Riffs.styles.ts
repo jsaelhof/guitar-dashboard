@@ -11,12 +11,6 @@ export const RiffList = styled("ul")(() => ({
   padding: 0,
 }));
 
-export const LoopList = styled("ul")(() => ({
-  display: "flex",
-  gap: 32,
-  padding: 0,
-}));
-
 export const ListItem = styled("li")(({ theme: { palette } }) => ({
   listStyle: "none",
   fontSize: 12,
@@ -35,7 +29,10 @@ export const SectionSummary = styled("div")(() => ({
   gap: 16,
 }));
 
-export const UriTablature = styled("img")(() => ({ width: 750 }));
+export const UriTablature = styled("img")(() => ({
+  width: 750,
+  marginBottom: -24,
+}));
 
 export const OrderLayout = styled("div")(() => ({
   display: "grid",

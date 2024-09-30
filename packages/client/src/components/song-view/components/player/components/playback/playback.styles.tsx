@@ -30,5 +30,6 @@ export const Thumb = styled((props) => <SliderThumb {...props} />)(
         }
       : {
           width: 0,
+          pointerEvents: "none",
         }
 );

@@ -2,10 +2,14 @@ import { AmpKnob, AmpKnobBarrel } from "./SwitchButton.styles";
 
 const SwitchButton = ({
   on,
+  size = "large",
   ...props
-}: React.HTMLAttributes<HTMLDivElement> & { on: boolean }) => {
+}: React.HTMLAttributes<HTMLDivElement> & {
+  on: boolean;
+  size?: "small" | "large";
+}) => {
   return (
-    <AmpKnob {...props}>
+    <AmpKnob {...props} $size={size}>
       <AmpKnobBarrel $on={on} />
     </AmpKnob>
   );

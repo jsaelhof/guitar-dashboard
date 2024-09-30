@@ -1,13 +1,17 @@
 import { styled } from "@mui/material";
 
-export const AmpKnob = styled("div")(() => ({
-  width: 16,
-  height: 16,
-  display: "grid",
-  alignItems: "center",
-  justifyContent: "center",
-  justifyItems: "center",
-}));
+export const AmpKnob = styled("div")(
+  ({ $size = "large" }: { $size: "small" | "large" }) => ({
+    width: 28,
+    height: 28,
+    display: "grid",
+    alignItems: "center",
+    justifyContent: "center",
+    justifyItems: "center",
+
+    ...($size === "small" && { transform: "scale(0.6)" }),
+  })
+);
 
 export const AmpKnobBarrel = styled("div")(
   ({ theme: { palette, glows }, $on }: { $on: boolean }) => ({
@@ -19,6 +23,7 @@ export const AmpKnobBarrel = styled("div")(
     width: 16,
     height: 16,
     boxShadow: "2px 3px 5px #000000DD",
+    cursor: "pointer",
 
     "&:after": {
       content: '""',

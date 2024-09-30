@@ -82,5 +82,5 @@ export const useRiffs = (songId: string) => {
 
   useEffect(() => dispatch({ type: "get" }), [songId]);
 
-  return { riffs, riffTimes, dispatch };
+  return { riffs, riffTimes, dispatch, isPending };
 };
