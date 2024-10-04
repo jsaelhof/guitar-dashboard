@@ -1,23 +1,50 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
-import {
-  createReadStream,
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  writeFileSync,
-} from "fs";
 import cors from "cors";
-import db from "../db/db.json";
-import { polyfillSong } from "./utils/polyfill-song";
-import { Loop, Songs, SongsByArtist } from "./types";
+import { polyfillSong } from "./utils/polyfill-song.js";
 import { v4 as uuid } from "uuid";
-import { execSync } from "child_process";
+import mongodb from "./db/db.js";
+import childProcess from "child_process";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
+
+const polyfillSongStages = [
+  // For each song, apply the regex to the file path to create a field called "formFile" whose value is an array of [ artist, song title ].
+  {
+    $set: {
+      fromFile: {
+        $regexFind: {
+          input: "$file",
+          regex: /.*\/(.*)\/.*\/\d* - (.*)\.mp3$/,
+        },
+      },
+    },
+  },
+  // For each song, set the artist and title fields conditionally. If they exist as direct fields, just use those. Otherwise use the values from the regex match.
+  {
+    $project: {
+      _id: 0,
+      id: 1,
+      artist: {
+        $cond: {
+          if: "$artist",
+          then: "$artist",
+          else: { $arrayElemAt: ["$fromFile.captures", 0] }, // Need a nested condition to handle the captures not being found
+        },
+      },
+      title: {
+        $cond: {
+          if: "$title",
+          then: "$title",
+          else: { $arrayElemAt: ["$fromFile.captures", 1] }, // Need a nested condition to handle the captures not being found
+        },
+      },
+    },
+  },
+];
 
 app.use(
   cors({
@@ -30,11 +57,16 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.static("public"));
 app.use(express.static("/Volumes/Public/Music"));
 
-app.post("/play/:songId", (req: Request, res: Response) => {
-  const { file } = db[req.params.songId];
+app.post("/play/:songId", async (req: Request, res: Response) => {
+  const { songId } = req.params;
 
-  var cp = require("child_process");
-  cp.exec(
+  // TODO: Handle songData = null;
+  const songData = await mongodb
+    .collection("songs")
+    ?.findOne({ id: songId }, { projection: { file: 1 } });
+  const { file } = songData;
+
+  childProcess.exec(
     `open -a "iina" "/Volumes/Public/Music/${file}"`,
     (error, stdout, stderr) => {
       console.log(error);
@@ -47,115 +79,142 @@ app.post("/play/:songId", (req: Request, res: Response) => {
   });
 });
 
-app.get("/songs", (req: Request, res: Response) => {
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
-  const recentSongIds: string[] = JSON.parse(recents);
+app.get("/songs", async (req: Request, res: Response) => {
+  const recentSongs = await mongodb
+    .collection("recentSongs")
+    ?.aggregate([
+      // For each id, find the matching document in the songs collection.
+      // There will only be one match in the array set as the value of "as" which will be picked out by $first and used to replace the root.
+      {
+        $lookup: {
+          from: "songs",
+          localField: "id",
+          foreignField: "id",
+          pipeline: [{ $project: { id: 1, artist: 1, title: 1, file: 1 } }],
+          as: "songs",
+        },
+      },
+      { $sort: { id: -1 } },
+      { $replaceRoot: { newRoot: { $first: "$songs" } } },
+      ...polyfillSongStages,
+    ])
+    .toArray();
 
-  const songsByArtist = Object.entries(db as Songs).reduce<SongsByArtist>(
-    (acc, [songId, data]) => {
-      const song = polyfillSong(songId, data);
-
-      // While iterating all the songs, create an unsorted structure grouped by artist
-      if (!acc[song.artist]) acc[song.artist] = [];
-      acc[song.artist].push({
-        id: song.id,
-        title: song.title,
-      });
-
-      return acc;
-    },
-    {}
-  );
+  // Execute the aggregation, send the returned cursor to an array and then reduce it.
+  // This turns each { _id: <artist>, songs: [ "Song 1", "Song 2", ... ] } into { artist: ["Song 1", "Song 2", ...] }
+  const songsByArtist = (
+    await mongodb
+      .collection("songs")
+      ?.aggregate([
+        ...polyfillSongStages,
+        // Sort the songs alphabetically by title.
+        { $sort: { title: 1 } },
+        // Group all the songs by artist. The songs array will be sorted alphabetically b/c it respects the order of the sort in the previous stage.
+        {
+          $group: {
+            _id: "$artist",
+            songs: { $push: { id: "$id", title: "$title" } },
+          },
+        },
+        // Now that the songs are grouped by artist, sort the list of artists alphabetically.
+        { $sort: { _id: 1 } },
+      ])
+      .toArray()
+  ).reduce((acc, { _id, songs }) => {
+    acc[_id] = songs;
+    return acc;
+  }, {});
 
   res.send({
     error: false,
     scope: "songs",
     type: "init",
     data: {
-      // Sort by artist name, and within each artist, by song title
-      songsByArtist: Object.keys(songsByArtist)
-        .toSorted()
-        .reduce<SongsByArtist>((acc, artist) => {
-          acc[artist] = songsByArtist[artist].toSorted((a, b) =>
-            a.title < b.title ? -1 : 1
-          );
-          return acc;
-        }, {}),
-
-      recentSongs: recentSongIds.map((id) => {
-        const { artist, title } = polyfillSong(id, db[id]);
-        return {
-          id,
-          title,
-          artist,
-        };
-      }),
+      songsByArtist,
+      recentSongs,
     },
   });
 });
 
-app.post("/songs/recent", (req: Request, res: Response) => {
+app.post("/songs/recent", async (req: Request, res: Response) => {
   const { songId } = req.body;
 
-  const recents = readFileSync("./db/recent.json", { encoding: "utf-8" });
+  await mongodb.collection("recentSongs")?.insertOne({ id: songId });
 
-  const recentSongIds = [
-    songId,
-    ...JSON.parse(recents)
-      .filter((id) => id !== songId)
-      .slice(0, 30),
-  ];
-
-  writeFileSync(
-    "./db/recent.json",
-    JSON.stringify(recentSongIds, null, 2),
-    "utf8"
-  );
+  // THIS IS COMPLETELY DUPLICATED FROM /songs
+  const recentSongs = await mongodb
+    .collection("recentSongs")
+    ?.aggregate([
+      // For each id, find the matching document in the songs collection.
+      // There will only be one match in the array set as the value of "as" which will be picked out by $first and used to replace the root.
+      {
+        $lookup: {
+          from: "songs",
+          localField: "id",
+          foreignField: "id",
+          pipeline: [{ $project: { id: 1, artist: 1, title: 1, file: 1 } }],
+          as: "songs",
+        },
+      },
+      { $sort: { id: -1 } },
+      { $replaceRoot: { newRoot: { $first: "$songs" } } },
+      ...polyfillSongStages,
+    ])
+    .toArray();
 
   res.send({
     error: false,
     scope: "recent",
     type: "add",
     data: {
-      recentSongs: recentSongIds.map((id) => {
-        const { artist, title } = polyfillSong(id, db[id]);
-        return {
-          id,
-          title,
-          artist,
-        };
-      }),
+      recentSongs,
     },
   });
 });
 
-app.get("/song/:songId", (req: Request, res: Response) => {
-  res.send({
-    error: false,
-    scope: "song",
-    type: "init",
-    data: {
-      song: polyfillSong(req.params.songId, db[req.params.songId]),
-    },
-  });
+app.get("/song/:songId", async (req: Request, res: Response) => {
+  const { songId } = req.params;
+
+  const songData = await mongodb.collection("songs")?.findOne({ id: songId });
+
+  if (songData) {
+    res.send({
+      error: false,
+      scope: "song",
+      type: "init",
+      data: {
+        song: polyfillSong(songId, songData), // TODO: I don't want to maintain a polyfill here AND in mongo aggregation. Same thing, different code. Pick one, or, migrate existing data and start doing the polyfill when a song is added.
+      },
+    });
+  } else {
+    res.send({
+      error: true,
+      scope: "song",
+      type: "get",
+    });
+  }
 });
 
-app.post("/song/:songId/volume", (req: Request, res: Response) => {
+app.post("/song/:songId/volume", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const volume = parseFloat(req.body.volume);
 
   if (songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
-    db[songId].settings = db[songId].settings ?? {};
-    db[songId].settings.volume = volume;
-
-    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+    // TODO: Handle songData = null;
+    const songData = await mongodb
+      .collection("songs")
+      ?.findOneAndUpdate(
+        { id: songId },
+        { $set: { "settings.volume": volume } },
+        { returnDocument: "after" }
+      );
 
     res.send({
       error: false,
       scope: "song",
       type: "volume",
       data: {
-        song: polyfillSong(songId, db[songId]),
+        song: polyfillSong(songId, songData),
       },
     });
   } else {
@@ -167,29 +226,35 @@ app.post("/song/:songId/volume", (req: Request, res: Response) => {
   }
 });
 
-app.post("/song/:songId/loop", (req: Request, res: Response) => {
+app.post("/song/:songId/loop", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const loopA = parseFloat(req.body.loopA);
   const loopB = parseFloat(req.body.loopB);
   const { label } = req.body;
 
   if (songId && loopA != null && loopB != null && label) {
-    db[songId].loops = db[songId].loops ?? [];
-    db[songId].loops.push({
-      id: uuid(),
-      loopA,
-      loopB,
-      label,
-    });
-
-    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+    // TODO: Handle songData = null;
+    const songData = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId },
+      {
+        $push: {
+          loops: {
+            id: uuid(),
+            loopA,
+            loopB,
+            label,
+          },
+        },
+      },
+      { returnDocument: "after" }
+    );
 
     res.send({
       error: false,
       scope: "song",
       type: "loop",
       data: {
-        song: polyfillSong(songId, db[songId]),
+        song: polyfillSong(songId, songData),
       },
     });
   } else {
@@ -201,39 +266,32 @@ app.post("/song/:songId/loop", (req: Request, res: Response) => {
   }
 });
 
-app.post("/song/:songId/updateloop", (req: Request, res: Response) => {
+app.post("/song/:songId/updateloop", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const loopA = parseFloat(req.body.loopA);
   const loopB = parseFloat(req.body.loopB);
   const { id, label } = req.body;
 
-  if (
-    songId &&
-    id &&
-    loopA != null &&
-    loopB != null &&
-    label &&
-    db[songId].loops
-  ) {
-    db[songId].loops = db[songId].loops.map((loop: Loop) =>
-      loop.id === id
-        ? {
-            ...loop,
-            loopA,
-            loopB,
-            label,
-          }
-        : loop
+  if (songId && id && loopA != null && loopB != null && label) {
+    // TODO: Handle songData = null;
+    const songData = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId, "loops.id": id },
+      {
+        $set: {
+          "loops.$.label": label,
+          "loops.$.loopA": loopA,
+          "loops.$.loopB": loopB,
+        },
+      },
+      { returnDocument: "after" }
     );
-
-    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
 
     res.send({
       error: false,
       scope: "song",
       type: "updateloop",
       data: {
-        song: polyfillSong(songId, db[songId]),
+        song: polyfillSong(songId, songData),
       },
     });
   } else {
@@ -245,21 +303,30 @@ app.post("/song/:songId/updateloop", (req: Request, res: Response) => {
   }
 });
 
-app.post("/song/:songId/deleteloop", (req: Request, res: Response) => {
+app.post("/song/:songId/deleteloop", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const { id } = req.body;
 
-  if (songId && id && db[songId].loops) {
-    db[songId].loops = db[songId].loops.filter((loop: Loop) => loop.id !== id);
-
-    writeFileSync("./db/db.json", JSON.stringify(db, null, 2), "utf8");
+  if (songId && id) {
+    // TODO: Handle songData = null;
+    const songData = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId },
+      {
+        $pull: {
+          loops: {
+            id,
+          },
+        },
+      },
+      { returnDocument: "after" }
+    );
 
     res.send({
       error: false,
       scope: "song",
       type: "deleteloop",
       data: {
-        song: polyfillSong(songId, db[songId]),
+        song: polyfillSong(songId, songData),
       },
     });
   } else {
@@ -271,29 +338,12 @@ app.post("/song/:songId/deleteloop", (req: Request, res: Response) => {
   }
 });
 
-app.get("/riffs/:songId", (req: Request, res: Response) => {
+app.get("/riffs/:songId", async (req: Request, res: Response) => {
   const { songId } = req.params;
-  let /*riffImages,*/ riffUris;
 
-  // TODO: Need to integrate actual image files with the riffs.json file so that order, time etc work.
-  // try {
-  //   riffImages = readdirSync(`public/assets/${songId}/riffs`).map((file) => {
-  //     const [, label, ...labelDesc] = path.parse(file).name.split("_");
-  //     return {
-  //       label: label.split("-").join(" "),
-  //       ...(labelDesc.length && {
-  //         labelDesc: labelDesc.join(" "),
-  //       }),
-  //       src: `assets/${songId}/riffs/${file}`,
-  //     };
-  //   });
-  // } catch (ex) {}
-
-  try {
-    riffUris = JSON.parse(
-      readFileSync(`public/assets/${songId}/riffs.json`).toString()
-    );
-  } catch (ex) {}
+  const { riffs } = await mongodb
+    .collection("songs")
+    ?.findOne({ id: songId }, { projection: { _id: 0, riffs: 1 } });
 
   try {
     res.send({
@@ -302,10 +352,7 @@ app.get("/riffs/:songId", (req: Request, res: Response) => {
       type: "init",
       data: {
         songId,
-        riffs: [
-          //...(riffImages ? riffImages : []),
-          ...(riffUris ? riffUris : []),
-        ],
+        riffs: riffs ?? [],
       },
     });
   } catch (ex) {
@@ -317,56 +364,51 @@ app.get("/riffs/:songId", (req: Request, res: Response) => {
   }
 });
 
-app.post("/riffs/:songId/time", (req: Request, res: Response) => {
+app.post("/riffs/:songId/time", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const { riffId } = req.body;
   const seconds = parseInt(req.body.seconds);
 
   if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
-    const riffFile = `./public/assets/${songId}/riffs.json`;
-    if (existsSync(riffFile)) {
-      const riffData = JSON.parse(
-        readFileSync(riffFile, { encoding: "utf-8" })
-      );
-      const riffIndex = riffData.findIndex(({ id }) => id === riffId);
-      riffData[riffIndex].time = seconds;
-      writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
-
-      res.send({
-        error: false,
-        scope: "riffs",
-        type: "time",
-        data: {
-          songId,
-          riffs: riffData,
+    // TODO: Handle songData = null;
+    const { riffs } = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId, "riffs.id": riffId },
+      {
+        $set: {
+          "riffs.$.time": seconds,
         },
-      });
-    } else {
-      res.send({ error: true, scope: "riffs", type: "time" });
-    }
+      },
+      { returnDocument: "after", projection: { _id: 0, riffs: 1 } }
+    );
+
+    res.send({
+      error: false,
+      scope: "riffs",
+      type: "time",
+      data: {
+        songId,
+        riffs,
+      },
+    });
   } else {
     res.send({ error: true, scope: "riffs", type: "time" });
   }
 });
 
-app.post("/riffs/:songId/add", (req: Request, res: Response) => {
+app.post("/riffs/:songId/add", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const riff = req.body;
 
-  try {
-    const riffDir = `./public/assets/${songId}`;
-    const riffFile = `${riffDir}/riffs.json`;
-
-    let riffData = [];
-
-    if (existsSync(riffFile)) {
-      riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
-    } else if (!existsSync(riffDir)) {
-      mkdirSync(riffDir);
-    }
-
-    riffData.push(riff);
-    writeFileSync(riffFile, JSON.stringify(riffData, null, 2), "utf8");
+  if (songId && riff) {
+    const { riffs } = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId },
+      {
+        $push: {
+          riffs: riff,
+        },
+      },
+      { returnDocument: "after", projection: { _id: 0, riffs: 1 } }
+    );
 
     res.send({
       error: false,
@@ -374,58 +416,68 @@ app.post("/riffs/:songId/add", (req: Request, res: Response) => {
       type: "add",
       data: {
         songId,
-        riffs: riffData,
+        riffs,
       },
     });
-  } catch (ex) {
+  } else {
     res.send({ error: true, scope: "riffs", type: "add" });
   }
 });
 
-app.post("/riffs/:songId/order", (req: Request, res: Response) => {
+app.post("/riffs/:songId/order", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const { riffId, order } = req.body;
 
-  try {
-    const riffDir = `./public/assets/${songId}`;
-    const riffFile = `${riffDir}/riffs.json`;
+  if (songId && riffId && order != null) {
+    // TODO: I think this might be able to be done in mongo directly with some combo of pull and push (using $each and $position) but I haven't figured out how to capture the pulled riff to use in the push.
+    // This pull worked to remove an item: mongodb.collection("songs").findOneAndUpdate({ id: '0252' }, { $pull: { riffs: { id: "fc650b5b-f3cd-4b61-944a-891e9c725a26" } } })
 
-    let riffData = [];
+    // Get all the riffs
+    const { riffs } = await mongodb
+      .collection("songs")
+      ?.findOne({ id: songId }, { projection: { _id: 0, riffs: 1 } });
 
-    if (existsSync(riffFile)) {
-      riffData = JSON.parse(readFileSync(riffFile, { encoding: "utf-8" }));
-      const riff = riffData.find(({ id }) => riffId === id);
-      const update = riffData
-        .filter(({ id }) => riffId !== id)
-        .toSpliced(order, 0, riff);
-      writeFileSync(riffFile, JSON.stringify(update, null, 2), "utf8");
+    // Find the riff being moved
+    const riff = riffs.find(({ id }) => riffId === id);
 
-      res.send({
-        error: false,
-        scope: "riffs",
-        type: "order",
-        data: {
-          songId,
-          riffs: update,
+    // Update the riffs array by removing the riff and then splicing it in.
+    const update = (riffs ?? [])
+      .filter(({ id }) => riffId !== id)
+      .toSpliced(order, 0, riff);
+
+    // Overwrite the whole array with the update.
+    const { riffs: updatedRiffs } = await mongodb
+      .collection("songs")
+      ?.findOneAndUpdate(
+        { id: songId },
+        {
+          $set: {
+            riffs: update,
+          },
         },
-      });
-    } else {
-      res.send({ error: true, scope: "riffs", type: "order" });
-    }
-  } catch (ex) {
+        { returnDocument: "after", projection: { _id: 0, riffs: 1 } }
+      );
+
+    res.send({
+      error: false,
+      scope: "riffs",
+      type: "order",
+      data: {
+        songId,
+        riffs: updatedRiffs,
+      },
+    });
+  } else {
     res.send({ error: true, scope: "riffs", type: "order" });
   }
 });
 
-app.get("/tab/:songId", (req: Request, res: Response) => {
+app.get("/tab/:songId", async (req: Request, res: Response) => {
   const { songId } = req.params;
-  let tabUris;
 
-  try {
-    tabUris = JSON.parse(
-      readFileSync(`public/assets/${songId}/tab.json`).toString()
-    );
-  } catch (ex) {}
+  const { tablature } = await mongodb
+    .collection("songs")
+    ?.findOne({ id: songId }, { projection: { _id: 0, tablature: 1 } });
 
   try {
     res.send({
@@ -434,7 +486,7 @@ app.get("/tab/:songId", (req: Request, res: Response) => {
       type: "init",
       data: {
         songId,
-        tab: [...(tabUris ? tabUris : [])],
+        tab: tablature ?? [],
       },
     });
   } catch (ex) {
@@ -446,24 +498,20 @@ app.get("/tab/:songId", (req: Request, res: Response) => {
   }
 });
 
-app.post("/tab/:songId/add", (req: Request, res: Response) => {
+app.post("/tab/:songId/add", async (req: Request, res: Response) => {
   const { songId } = req.params;
   const tab = req.body;
 
-  try {
-    const tabDir = `./public/assets/${songId}`;
-    const tabFile = `${tabDir}/tab.json`;
-
-    let tabData = [];
-
-    if (existsSync(tabFile)) {
-      tabData = JSON.parse(readFileSync(tabFile, { encoding: "utf-8" }));
-    } else if (!existsSync(tabDir)) {
-      mkdirSync(tabDir);
-    }
-
-    tabData.push(tab);
-    writeFileSync(tabFile, JSON.stringify(tabData, null, 2), "utf8");
+  if (songId && tab) {
+    const { tablature } = await mongodb.collection("songs")?.findOneAndUpdate(
+      { id: songId },
+      {
+        $push: {
+          tablature: tab,
+        },
+      },
+      { returnDocument: "after", projection: { _id: 0, tablature: 1 } }
+    );
 
     res.send({
       error: false,
@@ -471,10 +519,10 @@ app.post("/tab/:songId/add", (req: Request, res: Response) => {
       type: "add",
       data: {
         songId,
-        tab: tabData,
+        tab: tablature,
       },
     });
-  } catch (ex) {
+  } else {
     res.send({ error: true, scope: "tab", type: "add" });
   }
 });

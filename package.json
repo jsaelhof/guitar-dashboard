@@ -7,7 +7,9 @@
     "packages/server"
   ],
   "scripts": {
-    "dev": "yarn workspaces foreach -vpi run dev"
+    "predev": "mongod --dbpath .mongodb/db --logpath .mongodb/logs/mongodb.log --fork",
+    "postdev": "kill %%",
+    "dev": "yarn run predev && yarn workspaces foreach -vpi run dev && echo STOPPED"
   },
   "resolutions": {
     "@types/react": "npm:types-react@beta",
