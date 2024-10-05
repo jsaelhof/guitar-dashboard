@@ -1369,6 +1369,7 @@ __metadata:
     "@types/react-dom": "npm:types-react-dom@beta"
     "@types/uuid": ^9.0.8
     "@vitejs/plugin-react": ^3.1.0
+    deepmerge-ts: ^7.1.1
     react: beta
     react-dom: beta
     react-router-dom: ^6.10.0
@@ -1572,6 +1573,13 @@ __metadata:
   dependencies:
     ms: ^2.1.1
   checksum: b3d8c5940799914d30314b7c3304a43305fd0715581a919dacb8b3176d024a782062368405b47491516d2091d6462d4d11f2f4974a405048094f8bfebfa3071c
+  languageName: node
+  linkType: hard
+
+"deepmerge-ts@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "deepmerge-ts@npm:7.1.1"
+  checksum: 1fca242c73c350e8ef8397c5c2d9487ab0b948d934fde67408c0a1491c993097d6d39e2100dcfca9ba0df0d13786ff26a9a4923a9a90b6b3d2fecf2ea84deeb1
   languageName: node
   linkType: hard
 
@@ -2273,6 +2281,15 @@ __metadata:
   bin:
     jsesc: bin/jsesc
   checksum: 4dc190771129e12023f729ce20e1e0bfceac84d73a85bc3119f7f938843fe25a4aeccb54b6494dce26fcf263d815f5f31acdefac7cc9329efb8422a4f4d9fa9d
+  languageName: node
+  linkType: hard
+
+"jsmediatags@npm:^3.9.7":
+  version: 3.9.7
+  resolution: "jsmediatags@npm:3.9.7"
+  dependencies:
+    xhr2: ^0.1.4
+  checksum: 592315f2fa27cb505bc3ba3abe655a9f57b4a4b3445643fb27fb71fe03d50dbc2ffb62159cebcb7fc01f803c94c2bede6d56b1a72219e10549a7d19eb2c23ed6
   languageName: node
   linkType: hard
 
@@ -3192,6 +3209,7 @@ __metadata:
     cors: ^2.8.5
     dotenv: ^16.0.3
     express: ^4.18.2
+    jsmediatags: ^3.9.7
     mongodb: ^6.9.0
     nodemon: ^2.0.21
     typescript: ^4.9.5
@@ -3660,6 +3678,13 @@ __metadata:
   version: 1.0.2
   resolution: "wrappy@npm:1.0.2"
   checksum: 159da4805f7e84a3d003d8841557196034155008f817172d4e986bd591f74aa82aa7db55929a54222309e01079a65a92a9e6414da5a6aa4b01ee44a511ac3ee5
+  languageName: node
+  linkType: hard
+
+"xhr2@npm:^0.1.4":
+  version: 0.1.4
+  resolution: "xhr2@npm:0.1.4"
+  checksum: ac40a02163fdc34d4d511c687f7cece1ee993f43a0aff4a2173d99fcbc119d96c587edce691c194c2c5962d56b843357d1cb2e2c5ac2a24fd01836efff1a080a
   languageName: node
   linkType: hard
 

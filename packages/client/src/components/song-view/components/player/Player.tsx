@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { formatSeconds } from "../../../../utils/format-seconds";
 import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
 import {
+  AlbumCover,
   AmpDisplay,
   AmpLabel,
   DigitalButton,
@@ -163,6 +164,8 @@ const Player = () => {
           <PlayerBase>
             {ref.current && !isNaN(ref.current?.duration ?? NaN) && (
               <>
+                {song?.cover && <AlbumCover $cover={song.cover} />}
+
                 {/* 
                 Paused is undefined if the track has not started, boolean afterwards. 
                 This looks a bit weird to show "play" when paused is undefined but I'm trying to show the player at all times even when the song isn't loaded.

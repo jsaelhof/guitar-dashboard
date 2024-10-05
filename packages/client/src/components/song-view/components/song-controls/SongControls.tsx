@@ -36,8 +36,16 @@ const SongControls = () => {
       <Button
         variant="contained"
         startIcon={<Search />}
-        onClick={() => window.open(song.tab, "guitarTab")}
-        disabled={!song.tab}
+        onClick={() =>
+          song.title || song.artist
+            ? window.open(
+                `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(
+                  `${song.title} ${song.artist}`
+                )}`,
+                "guitarTab"
+              )
+            : "https://www.ultimate-guitar.com"
+        }
       >
         Search Tab
       </Button>

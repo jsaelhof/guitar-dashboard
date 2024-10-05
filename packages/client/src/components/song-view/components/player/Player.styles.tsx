@@ -7,7 +7,7 @@ export const PlayerBase = styled("div")(({ theme: { palette } }) => ({
   color: palette.lightGrey[200],
   display: "grid",
   gridTemplateColumns:
-    "max-content max-content 1fr 90px 110px max-content max-content max-content",
+    "auto max-content max-content 1fr 90px 110px max-content max-content max-content",
   // Play Seek Playback Time Loop Speed Volume Sync
   alignItems: "center",
   justifyItems: "center",
@@ -134,4 +134,15 @@ export const RightButton = styled(ArrowRight)(
 export const TimeDisplay = styled("div")(({ theme: { palette } }) => ({
   fontFamily: "Circular",
   color: palette.blueLights[500],
+}));
+
+export const AlbumCover = styled("div")(({ $cover }) => ({
+  gridRow: "span 2",
+  width: 120,
+  height: 120,
+  backgroundImage: `url(${$cover})`,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "contain",
+  borderRadius: 6,
+  overflow: "hidden",
 }));

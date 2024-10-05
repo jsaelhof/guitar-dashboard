@@ -1,50 +1,15 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { polyfillSong } from "./utils/polyfill-song.js";
 import { v4 as uuid } from "uuid";
 import mongodb from "./db/db.js";
 import childProcess from "child_process";
+import jsmediatags from "jsmediatags";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT;
-
-const polyfillSongStages = [
-  // For each song, apply the regex to the file path to create a field called "formFile" whose value is an array of [ artist, song title ].
-  {
-    $set: {
-      fromFile: {
-        $regexFind: {
-          input: "$file",
-          regex: /.*\/(.*)\/.*\/\d* - (.*)\.mp3$/,
-        },
-      },
-    },
-  },
-  // For each song, set the artist and title fields conditionally. If they exist as direct fields, just use those. Otherwise use the values from the regex match.
-  {
-    $project: {
-      _id: 0,
-      id: 1,
-      artist: {
-        $cond: {
-          if: "$artist",
-          then: "$artist",
-          else: { $arrayElemAt: ["$fromFile.captures", 0] }, // Need a nested condition to handle the captures not being found
-        },
-      },
-      title: {
-        $cond: {
-          if: "$title",
-          then: "$title",
-          else: { $arrayElemAt: ["$fromFile.captures", 1] }, // Need a nested condition to handle the captures not being found
-        },
-      },
-    },
-  },
-];
 
 app.use(
   cors({
@@ -96,7 +61,6 @@ app.get("/songs", async (req: Request, res: Response) => {
       },
       { $sort: { id: -1 } },
       { $replaceRoot: { newRoot: { $first: "$songs" } } },
-      ...polyfillSongStages,
     ])
     .toArray();
 
@@ -106,7 +70,6 @@ app.get("/songs", async (req: Request, res: Response) => {
     await mongodb
       .collection("songs")
       ?.aggregate([
-        ...polyfillSongStages,
         // Sort the songs alphabetically by title.
         { $sort: { title: 1 } },
         // Group all the songs by artist. The songs array will be sorted alphabetically b/c it respects the order of the sort in the previous stage.
@@ -158,7 +121,6 @@ app.post("/songs/recent", async (req: Request, res: Response) => {
       },
       { $sort: { id: -1 } },
       { $replaceRoot: { newRoot: { $first: "$songs" } } },
-      ...polyfillSongStages,
     ])
     .toArray();
 
@@ -177,13 +139,31 @@ app.get("/song/:songId", async (req: Request, res: Response) => {
 
   const songData = await mongodb.collection("songs")?.findOne({ id: songId });
 
+  const cover = await new Promise((resolve, reject) => {
+    jsmediatags.read(`/Volumes/Public/Music/${songData.file}`, {
+      onSuccess: ({ tags }) => {
+        if (tags?.picture) {
+          const { data, format } = tags.picture;
+          const base64String = Buffer.from(data, "binary").toString("base64");
+          resolve(`data:${format};base64,${base64String}`);
+        } else {
+          resolve(undefined);
+        }
+      },
+      onError: reject,
+    });
+  });
+
   if (songData) {
     res.send({
       error: false,
       scope: "song",
       type: "init",
       data: {
-        song: polyfillSong(songId, songData), // TODO: I don't want to maintain a polyfill here AND in mongo aggregation. Same thing, different code. Pick one, or, migrate existing data and start doing the polyfill when a song is added.
+        song: {
+          ...songData,
+          cover,
+        },
       },
     });
   } else {
@@ -214,7 +194,7 @@ app.post("/song/:songId/volume", async (req: Request, res: Response) => {
       scope: "song",
       type: "volume",
       data: {
-        song: polyfillSong(songId, songData),
+        song: songData,
       },
     });
   } else {
@@ -254,7 +234,7 @@ app.post("/song/:songId/loop", async (req: Request, res: Response) => {
       scope: "song",
       type: "loop",
       data: {
-        song: polyfillSong(songId, songData),
+        song: songData,
       },
     });
   } else {
@@ -291,7 +271,7 @@ app.post("/song/:songId/updateloop", async (req: Request, res: Response) => {
       scope: "song",
       type: "updateloop",
       data: {
-        song: polyfillSong(songId, songData),
+        song: songData,
       },
     });
   } else {
@@ -326,7 +306,7 @@ app.post("/song/:songId/deleteloop", async (req: Request, res: Response) => {
       scope: "song",
       type: "deleteloop",
       data: {
-        song: polyfillSong(songId, songData),
+        song: songData,
       },
     });
   } else {

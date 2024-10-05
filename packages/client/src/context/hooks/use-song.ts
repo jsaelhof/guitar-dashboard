@@ -1,6 +1,7 @@
 import { useActionState, useEffect } from "react";
 import { Song } from "../../types";
 import { debounce } from "@mui/material";
+import { deepmerge } from "deepmerge-ts";
 
 type FetchSongResponse = {
   data: { song: Song };
@@ -21,7 +22,7 @@ export const useSong = (songId?: string) => {
         label: string;
       }
     | { type: "deleteloop"; id: string }
-  >(async (_, { type, ...body }) => {
+  >(async (currentState, { type, ...body }) => {
     const response = await fetch(
       `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,
       {
@@ -36,7 +37,14 @@ export const useSong = (songId?: string) => {
     );
     const { data } = (await response.json()) as FetchSongResponse;
 
-    return data.song;
+    // Return the current state, overlayed with the newest data.
+    // I'm doing this because the cover is only returned on the get action the first time.
+    // Later requests to update the song in the BE return data without it.
+    // When the song changes, ignore any existing state.
+    // TODO: I could make the BE start returning less data on updates (i.e. just the new volume setting) now that I am doing this.
+    return currentState?.id === data.song.id
+      ? deepmerge(currentState, data.song)
+      : data.song;
   }, undefined);
 
   useEffect(() => {
