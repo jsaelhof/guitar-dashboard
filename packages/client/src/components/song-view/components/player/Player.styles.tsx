@@ -1,24 +1,27 @@
 import { ArrowLeft, ArrowRight } from "@mui/icons-material";
 import { IconButton, styled } from "@mui/material";
 
-export const PlayerBase = styled("div")(({ theme: { palette } }) => ({
-  height: 120,
-  fontSize: 14,
-  color: palette.lightGrey[200],
-  display: "grid",
-  gridTemplateColumns:
-    "auto max-content max-content 1fr 90px 110px max-content max-content max-content",
-  // Play Seek Playback Time Loop Speed Volume Sync
-  alignItems: "center",
-  justifyItems: "center",
-  columnGap: 32,
-  rowGap: 8,
-  background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
-  padding: "20px 20px",
-  borderRadius: 8,
-  border: "2px solid #141414",
-  boxShadow: "inset 0 5px 15px #00000099",
-}));
+export const PlayerBase = styled("div")(
+  ({ $hasCover, theme: { palette } }) => ({
+    height: 120,
+    fontSize: 14,
+    color: palette.lightGrey[200],
+    display: "grid",
+    gridTemplateColumns: `${
+      $hasCover ? "auto " : ""
+    }max-content max-content 1fr 90px 110px max-content max-content max-content`,
+    // Play Seek Playback Time Loop Speed Volume Sync
+    alignItems: "center",
+    justifyItems: "center",
+    columnGap: 32,
+    rowGap: 8,
+    background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
+    padding: "20px 20px",
+    borderRadius: 8,
+    border: "2px solid #141414",
+    boxShadow: "inset 0 5px 15px #00000099",
+  })
+);
 
 export const AmpLabel = styled("div")(
   ({ theme: { palette }, small }: { small?: boolean }) => ({
@@ -143,6 +146,7 @@ export const AlbumCover = styled("div")(({ $cover }) => ({
   backgroundImage: `url(${$cover})`,
   backgroundRepeat: "no-repeat",
   backgroundSize: "contain",
+  backgroundPosition: "center center",
   borderRadius: 6,
   overflow: "hidden",
 }));

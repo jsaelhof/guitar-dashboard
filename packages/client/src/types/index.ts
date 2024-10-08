@@ -1,8 +1,10 @@
 export type Song = {
   id: string;
-  title: string;
-  artist: string;
-  cover?: string;
+  title: string; // DB field, but could be from tags
+  artist: string; // DB field, but could be from tags
+  cover?: string; // Tags
+  album?: string; // Tags
+  year?: string; // Tags
   tab: string;
   file?: string;
   pdf?: string;
@@ -10,6 +12,9 @@ export type Song = {
     volume: number;
   };
   loops?: Loop[];
+  metrics?: {
+    plays?: number;
+  };
 };
 
 export type Loop = {

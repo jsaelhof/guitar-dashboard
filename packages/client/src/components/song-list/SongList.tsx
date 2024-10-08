@@ -62,7 +62,7 @@ const SongList = () => {
                       primary={
                         <div>
                           <div>{title}</div>
-                          <div style={{ fontSize: "0.8em", opacity: 0.66 }}>
+                          <div style={{ fontSize: "0.9em", opacity: 0.66 }}>
                             {artist}
                           </div>
                         </div>

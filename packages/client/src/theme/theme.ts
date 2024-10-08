@@ -55,6 +55,9 @@ declare module "@mui/material/IconButton" {
 }
 
 export const theme = createTheme({
+  typography: {
+    fontFamily: "Circular, Roboto, sans-serif",
+  },
   glows: ["none", "0 0 6px 0.5px #79c4e7", "0 0 6px 1px #79c4e7"],
   textGlows: [
     "none",

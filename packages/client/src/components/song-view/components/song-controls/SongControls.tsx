@@ -1,5 +1,5 @@
 import { PlayArrow, Search } from "@mui/icons-material";
-import { Button, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useAppContext } from "../../../../context/AppContext";
 
@@ -12,17 +12,27 @@ const SongControls = () => {
 
   return song ? (
     <div
+      // TODO: CLEAN UP ALL THE SX AND INLINE STYLES HERE
       style={{
         display: "grid",
         gridTemplateColumns: "1fr auto auto",
         alignItems: "center",
         gap: "16px",
-        marginBottom: "24px",
+        marginBottom: "16px",
       }}
     >
-      <Typography variant="h5" sx={{ ml: 1 }}>
-        {song.title}
-      </Typography>
+      <Box sx={{ ml: 1 }}>
+        <Typography variant="h5" sx={{ lineHeight: 1.2 }}>
+          {song.title}
+        </Typography>
+        <Typography
+          sx={{ fontSize: 10 }}
+          textTransform="uppercase"
+          color={"GrayText"}
+        >
+          {`${song.album} - ${song.year}`}
+        </Typography>
+      </Box>
       <Button
         variant="contained"
         color="success"

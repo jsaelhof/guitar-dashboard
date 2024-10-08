@@ -161,10 +161,10 @@ const Player = () => {
             />
           )}
 
-          <PlayerBase>
+          <PlayerBase $hasCover={!!song?.cover}>
             {ref.current && !isNaN(ref.current?.duration ?? NaN) && (
               <>
-                {song?.cover && <AlbumCover $cover={song.cover} />}
+                {song?.cover && <AlbumCover $cover={song?.cover} />}
 
                 {/* 
                 Paused is undefined if the track has not started, boolean afterwards. 
