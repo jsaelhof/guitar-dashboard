@@ -310,10 +310,7 @@ const Player = () => {
                 <AmpDial
                   value={volume}
                   divisions="20"
-                  onAdjustValue={(newVal: number) => {
-                    console.log({ newVal });
-                    updateVolume(newVal);
-                  }}
+                  onAdjustValue={(newVal: number) => updateVolume(newVal)}
                 />
 
                 <SwitchButton on={sync} onClick={() => setSync(!sync)} />
@@ -333,7 +330,6 @@ const Player = () => {
                   />
                   <div>Loop</div>
 
-                  {console.log({ loop, song })}
                   <LoopList
                     disabled={
                       // Disable the loop list if the song has no loops and there's no pending loop set.

@@ -1,7 +1,7 @@
 import { useActionState, useEffect } from "react";
 import { Song } from "../../types";
 import { debounce } from "@mui/material";
-import { deepmerge } from "deepmerge-ts";
+import deepmerge from "deepmerge";
 
 type FetchSongResponse = {
   data: { song: Song };
@@ -43,7 +43,10 @@ export const useSong = (songId?: string) => {
     // When the song changes, ignore any existing state.
     // TODO: I could make the BE start returning less data on updates (i.e. just the new volume setting) now that I am doing this.
     return currentState?.id === data.song.id
-      ? deepmerge(currentState, data.song)
+      ? deepmerge(currentState, data.song, {
+          // This tells deepmerge how to merge two arrays. Currently, I'm always overwriting the old array (i.e. the loops etc) with the new one.
+          arrayMerge: (target, source, options) => source,
+        })
       : data.song;
   }, undefined);
 
