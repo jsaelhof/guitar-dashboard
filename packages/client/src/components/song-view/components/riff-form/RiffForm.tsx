@@ -5,14 +5,15 @@ import {
   Layout,
   RiffInput,
   RiffList,
-  GuitarButtonLayout,
-  GuitarTabInputLayout,
+  GuitarTabButtonLayout,
+  GuitarTabSectionLayout,
 } from "./RiffForm.styles";
-import { Button, IconButton, TextField } from "@mui/material";
+import { Button, IconButton, TextField, Typography } from "@mui/material";
 import { AddBox, Close } from "@mui/icons-material";
 import Preview from "./components/preview/Preview";
 import { v4 as uuid } from "uuid";
 import { useAppContext } from "../../../../context/AppContext";
+import { TUNINGS, Tuning } from "../../../../types";
 
 export type RiffFormProps = {
   mode: "tab" | "riffs";
@@ -30,6 +31,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
   );
   const [label, setLabel] = useState<string>("");
   const [labelDesc, setLabelDesc] = useState<string>("");
+  const [tuning, setTuning] = useState<Tuning>("E");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(() => {
@@ -88,7 +90,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
           )}
 
           {mode === "tab" && (
-            <GuitarTabInputLayout>
+            <GuitarTabSectionLayout>
               <Info
                 id="instrument"
                 label="Guitar"
@@ -100,7 +102,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
                   setLabel(e.target.value);
                 }}
               />
-              <GuitarButtonLayout>
+              <GuitarTabButtonLayout>
                 {["Rhythm", "Lead", "Solo", "Clean"].map((guitar) => (
                   <Button
                     key={guitar}
@@ -112,9 +114,32 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
                     {guitar}
                   </Button>
                 ))}
-              </GuitarButtonLayout>
-            </GuitarTabInputLayout>
+              </GuitarTabButtonLayout>
+            </GuitarTabSectionLayout>
           )}
+
+          <GuitarTabSectionLayout>
+            <Typography variant="subtitle2">Tuning</Typography>
+            <GuitarTabButtonLayout>
+              {TUNINGS.map((tuningOption) => (
+                <Button
+                  key={tuningOption}
+                  size="xsmall"
+                  {...(tuning === tuningOption && {
+                    color: "primary",
+                    variant: "contained",
+                  })}
+                  {...(tuning !== tuningOption && {
+                    color: "secondary",
+                    variant: "outlined",
+                  })}
+                  onClick={() => setTuning(tuningOption)}
+                >
+                  {tuningOption}
+                </Button>
+              ))}
+            </GuitarTabButtonLayout>
+          </GuitarTabSectionLayout>
 
           <RiffList>
             {tabs.map((tabId, i) => (
@@ -240,6 +265,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
                   id: uuid(),
                   label,
                   labelDesc,
+                  tuning,
                   uri: tabs.map((tabId) => tabsRef.current[tabId]),
                 });
               }}

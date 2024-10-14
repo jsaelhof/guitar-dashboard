@@ -62,7 +62,7 @@ const SongView = () => {
             <div>
               {navTabId === 0 &&
                 (tablatureTabId < tab.length ? (
-                  <Tablature uris={tab[tablatureTabId].uri} />
+                  <Tablature tablature={tab[tablatureTabId]} />
                 ) : (
                   <AddRiff mode="tab" />
                 ))}

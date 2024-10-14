@@ -12,6 +12,8 @@ export type Song = {
     volume: number;
   };
   loops?: Loop[];
+  tablature?: Tablature[];
+  riffs?: Riff[];
   metrics?: {
     plays?: number;
   };
@@ -42,11 +44,15 @@ export type Riff = {
   time?: number;
 };
 
-export type Tab = {
+export type Tablature = {
   id: string;
   label: string;
   labelDesc?: string;
-  uri?: string[];
+  tuning?: Tuning;
+  uri: string[];
 };
 
 export type RecentSong = Pick<Song, "id" | "title" | "artist">;
+
+export const TUNINGS = ["E", "E♭", "D", "Drop D", "C", "Drop C"] as const;
+export type Tuning = (typeof TUNINGS)[number];

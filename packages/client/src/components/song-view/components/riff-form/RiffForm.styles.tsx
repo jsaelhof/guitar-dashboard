@@ -26,13 +26,14 @@ export const Controls = styled("div")(() => ({
   gap: 16,
 }));
 
-export const GuitarTabInputLayout = styled("div")(() => ({
+export const GuitarTabSectionLayout = styled("div")(() => ({
   display: "flex",
   flexDirection: "column",
   gap: 8,
+  marginBottom: 8,
 }));
 
-export const GuitarButtonLayout = styled("div")(() => ({
+export const GuitarTabButtonLayout = styled("div")(() => ({
   display: "flex",
   gap: 8,
   alignItems: "center",

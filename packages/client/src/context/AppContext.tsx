@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { RecentSong, Riff, Song, SongsByArtist, Tab } from "../types";
+import { RecentSong, Riff, Song, SongsByArtist, Tablature } from "../types";
 import { useParams } from "react-router-dom";
 import { useRiffs } from "./hooks/use-riffs";
 import { useSong } from "./hooks/use-song";
@@ -19,7 +19,7 @@ export type AppContextType = {
   riffs: Riff[];
   riffsIsPending: boolean;
   riffTimes: number[] | null;
-  tab: Tab[];
+  tab: Tablature[];
   tabIsPending: boolean;
   recentSongs: RecentSong[];
   disableShortcuts: boolean;

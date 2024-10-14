@@ -1,15 +1,29 @@
-import { Tab } from "../../../../types";
+import { Typography } from "@mui/material";
+import { Song } from "../../../../types";
 import { UriTablature } from "./Tablature.styles";
 
 export type TablatureProps = {
-  uris: Tab["uri"];
+  tablature: NonNullable<Song["tablature"]>[number];
 };
 
-const Tablature = ({ uris }: TablatureProps) => (
+const Tablature = ({ tablature: { tuning, uri } }: TablatureProps) => (
   <div>
-    {uris
-      ? uris.map((imageUri, i) => <UriTablature key={i} src={imageUri} />)
-      : "No tab found"}
+    {uri ? (
+      <div>
+        {tuning && tuning !== "E" && (
+          <Typography variant="subtitle2">
+            Tuning: <span style={{ fontFamily: "system-ui" }}>{tuning}</span>
+          </Typography>
+        )}
+        <div>
+          {uri.map((imageUri, i) => (
+            <UriTablature key={i} src={imageUri} />
+          ))}
+        </div>
+      </div>
+    ) : (
+      "No tab found"
+    )}
   </div>
 );
 

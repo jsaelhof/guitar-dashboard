@@ -1,12 +1,12 @@
 import { useActionState, useEffect } from "react";
-import { Tab } from "../../types";
+import { Tablature, Tuning as Tuning } from "../../types";
 
-type FetchTabResponse = { data: { tab: Tab[] } };
+type FetchTabResponse = { data: { tab: Tablature[] } };
 
 export const useTab = (songId: string) => {
   const [{ tab }, dispatch, isPending] = useActionState<
     {
-      tab: Tab[];
+      tab: Tablature[];
     },
     | {
         type: "get";
@@ -16,6 +16,7 @@ export const useTab = (songId: string) => {
         id: string;
         label: string;
         labelDesc?: string;
+        tuning?: Tuning;
         uri: string[];
       }
   >(

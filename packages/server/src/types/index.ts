@@ -14,8 +14,8 @@ export type Song = {
     volume: number;
   };
   loops?: Loop[];
-  riffs?: TablatureSegment[];
-  tablature?: TablatureSegment[];
+  riffs?: Tablature[];
+  tablature?: Tablature[];
 };
 
 export type Loop = {
@@ -25,10 +25,11 @@ export type Loop = {
   label: string;
 };
 
-export type TablatureSegment = {
+export type Tablature = {
   id: string;
   label: string;
-  labelDesc: string;
+  labelDesc?: string;
+  tuning?: string;
   uri: string[];
 };
 
