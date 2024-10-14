@@ -919,6 +919,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jsmediatags@npm:^3.9.6":
+  version: 3.9.6
+  resolution: "@types/jsmediatags@npm:3.9.6"
+  checksum: c6392031d3d60087127cba2dd69544ee6422f9d76f5fbadf535e8abef0d92ce9ee9b08c8b086228e2b8ec3b02a58e9ca07d120009e5cc28be5def86f6adb20d1
+  languageName: node
+  linkType: hard
+
 "@types/mime@npm:*":
   version: 3.0.1
   resolution: "@types/mime@npm:3.0.1"
@@ -3204,6 +3211,7 @@ __metadata:
   dependencies:
     "@types/cors": ^2.8.13
     "@types/express": ^4.17.17
+    "@types/jsmediatags": ^3.9.6
     "@types/node": ^18.15.0
     concurrently: ^7.6.0
     cors: ^2.8.5

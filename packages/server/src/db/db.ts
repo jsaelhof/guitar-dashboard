@@ -1,16 +1,21 @@
 import { Db, MongoClient } from "mongodb";
 
-const connectionString = "mongodb://localhost:27017/guitar";
-const client = new MongoClient(connectionString);
+let dbConn: Db | null = null;
 
-let conn: MongoClient;
-let db: Db;
+const db = async (): Promise<Db> => {
+  try {
+    if (!dbConn) {
+      const connectionString = "mongodb://localhost:27017/guitar";
+      const client = new MongoClient(connectionString);
+      const conn: MongoClient = await client.connect();
+      dbConn = conn.db("guitar");
+    }
 
-try {
-  conn = await client.connect();
-  db = conn.db("guitar");
-} catch (e) {
-  console.error(e);
-}
+    return dbConn;
+  } catch (e) {
+    console.error(e);
+    throw "Couldn't connect to DB";
+  }
+};
 
 export default db;
