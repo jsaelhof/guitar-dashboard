@@ -1,5 +1,5 @@
+import { Tablature } from "guitar-dashboard-types";
 import { useActionState, useEffect } from "react";
-import { Tablature, Tuning as Tuning } from "../../types";
 
 type FetchTabResponse = { data: { tab: Tablature[] } };
 
@@ -11,14 +11,9 @@ export const useTab = (songId: string) => {
     | {
         type: "get";
       }
-    | {
+    | ({
         type: "add";
-        id: string;
-        label: string;
-        labelDesc?: string;
-        tuning?: Tuning;
-        uri: string[];
-      }
+      } & Tablature)
   >(
     async (_, { type, ...body }) => {
       const response = await fetch(

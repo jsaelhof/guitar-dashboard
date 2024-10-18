@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import DB from "../../db/db.js";
 import { getRecentSongs } from "./utils/get-recent-songs.js";
-import { Song, SongsByArtist, SongTitleList } from "../../types/index.js";
+import { Song, SongTitleList, SongsByArtist } from "guitar-dashboard-types";
 
 export const getSongs = async (req: Request, res: Response) => {
   const db = await DB();

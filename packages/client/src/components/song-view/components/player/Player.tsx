@@ -19,8 +19,8 @@ import { CustomEvents, UpdateTimeDetail } from "../../../../types/events";
 import SwitchButton from "./components/switch-button/SwitchButton";
 import Playback from "./components/playback/Playback";
 import LoopList from "./components/loop-list/LoopList";
-import { Loop } from "../../../../types";
 import { NEW_LOOP_ID } from "./constants";
+import { Loop } from "guitar-dashboard-types";
 
 const MAX_RETRY = 10;
 

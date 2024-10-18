@@ -1,5 +1,5 @@
 import { PlaylistAdd } from "@mui/icons-material";
-import { Button, Divider, Tab, Tabs } from "@mui/material";
+import { Divider, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
 import { useAppContext } from "../../context/AppContext";
 import { Content, Header, TabPanel } from "./SongView.styles";

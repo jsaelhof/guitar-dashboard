@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { v4 as uuid } from "uuid";
-import { Song } from "../../../types/index.js";
+import { Song } from "guitar-dashboard-types";
 
 export const insertLoop = async (req: Request, res: Response) => {
   const db = await DB();

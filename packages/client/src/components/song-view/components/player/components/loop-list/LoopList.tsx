@@ -9,9 +9,9 @@ import {
 } from "./LoopList.styles";
 import { ArrowDropDown, Check, Close, Delete, Edit } from "@mui/icons-material";
 import { formatSeconds } from "../../../../../../utils/format-seconds";
-import { Loop } from "../../../../../../types";
 import { Fragment, MouseEvent, useCallback, useMemo, useState } from "react";
 import { NEW_LOOP_ID } from "../../constants";
+import { Loop } from "guitar-dashboard-types";
 
 export type LoopListProps = {
   disabled: boolean;

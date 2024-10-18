@@ -4,12 +4,13 @@
   "packageManager": "yarn@3.2.2",
   "workspaces": [
     "packages/client",
-    "packages/server"
+    "packages/server",
+    "packages/types"
   ],
   "scripts": {
     "predev": "mongod --dbpath .mongodb/db --logpath .mongodb/logs/mongodb.log --fork",
-    "postdev": "kill %%",
-    "dev": "yarn run predev && yarn workspaces foreach -vpi run dev && echo STOPPED"
+    "dev": "yarn run predev && yarn workspaces foreach -vpi run dev && echo STOPPED",
+    "stop": "pgrep mongod | xargs kill"
   },
   "resolutions": {
     "@types/react": "npm:types-react@beta",

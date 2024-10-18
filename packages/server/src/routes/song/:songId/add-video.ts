@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
-import { Song } from "../../../types/index.js";
+import { Song } from "guitar-dashboard-types";
 import { v4 as uuid } from "uuid";
 
 export const addVideo = async (req: Request, res: Response) => {

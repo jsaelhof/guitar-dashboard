@@ -5,12 +5,18 @@ import {
   useMemo,
   useState,
 } from "react";
-import { RecentSong, Riff, Song, SongsByArtist, Tablature } from "../types";
 import { useParams } from "react-router-dom";
 import { useRiffs } from "./hooks/use-riffs";
 import { useSong } from "./hooks/use-song";
 import { useSongs } from "./hooks/use-songs";
 import { useTab } from "./hooks/use-tab";
+import {
+  RecentSong,
+  Riff,
+  Song,
+  SongsByArtist,
+  Tablature,
+} from "guitar-dashboard-types";
 
 export type AppContextType = {
   song?: Song;

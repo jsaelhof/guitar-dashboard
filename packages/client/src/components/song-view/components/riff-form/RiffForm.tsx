@@ -13,7 +13,8 @@ import { AddBox, Close } from "@mui/icons-material";
 import Preview from "./components/preview/Preview";
 import { v4 as uuid } from "uuid";
 import { useAppContext } from "../../../../context/AppContext";
-import { TUNINGS, Tuning } from "../../../../types";
+import { TUNINGS } from "../../../../contstants";
+import { Tuning } from "guitar-dashboard-types";
 
 export type RiffFormProps = {
   mode: "tab" | "riffs";
@@ -31,7 +32,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
   );
   const [label, setLabel] = useState<string>("");
   const [labelDesc, setLabelDesc] = useState<string>("");
-  const [tuning, setTuning] = useState<Tuning>("E");
+  const [tuning, setTuning] = useState<Tuning>(Tuning.E);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(() => {

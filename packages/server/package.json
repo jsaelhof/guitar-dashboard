@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "guitar-dashboard-server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -26,6 +26,7 @@
     "@types/jsmediatags": "^3.9.6",
     "@types/node": "^18.15.0",
     "concurrently": "^7.6.0",
+    "guitar-dashboard-types": "*",
     "nodemon": "^2.0.21",
     "typescript": "^4.9.5"
   }

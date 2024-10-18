@@ -1,16 +1,16 @@
 import { Typography } from "@mui/material";
-import { Song } from "../../../../types";
 import { UriTablature } from "./Tablature.styles";
+import { Tablature as TablatureType, Tuning } from "guitar-dashboard-types";
 
 export type TablatureProps = {
-  tablature: NonNullable<Song["tablature"]>[number];
+  tablature: TablatureType;
 };
 
 const Tablature = ({ tablature: { tuning, uri } }: TablatureProps) => (
   <div>
     {uri ? (
       <div>
-        {tuning && tuning !== "E" && (
+        {tuning && tuning !== Tuning.E && (
           <Typography variant="subtitle2">
             Tuning: <span style={{ fontFamily: "system-ui" }}>{tuning}</span>
           </Typography>

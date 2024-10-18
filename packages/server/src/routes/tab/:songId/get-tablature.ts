@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
-import { Song } from "../../../types/index.js";
+import { Song } from "guitar-dashboard-types";
 
 export const getTablature = async (req: Request, res: Response) => {
   const db = await DB();

@@ -1,5 +1,5 @@
+import { Riff } from "guitar-dashboard-types";
 import { useActionState, useEffect } from "react";
-import { Riff } from "../../types";
 
 type FetchRiffsResponse = { data: { riffs: Riff[] } };
 

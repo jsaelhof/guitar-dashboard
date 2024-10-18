@@ -1,7 +1,7 @@
 import { useActionState, useEffect } from "react";
-import { Song } from "../../types";
 import { debounce } from "@mui/material";
 import deepmerge from "deepmerge";
+import { Song } from "guitar-dashboard-types";
 
 type FetchSongResponse = {
   data: { song: Song };

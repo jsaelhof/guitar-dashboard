@@ -1,5 +1,6 @@
 import DB from "../../../db/db.js";
-import { RecentSong, RecentSongRecord } from "../../../types/index.js";
+import { RecentSong } from "guitar-dashboard-types";
+import { RecentSongRecord } from "../../../types/index.js";
 
 export const getRecentSongs = async () => {
   const db = await DB();

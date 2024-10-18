@@ -1,5 +1,5 @@
 import { useActionState, useEffect } from "react";
-import { RecentSong, SongsByArtist } from "../../types";
+import { RecentSong, SongsByArtist } from "guitar-dashboard-types";
 
 type FetchSongsResponse = {
   data: { songsByArtist: SongsByArtist; recentSongs: RecentSong[] };

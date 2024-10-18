@@ -1,5 +1,4 @@
 import { ChangeEvent, useRef, useState } from "react";
-import { VideoResource } from "../../../../types";
 import {
   UrlInput,
   InputLayout,
@@ -11,6 +10,7 @@ import {
 import { Button, Divider, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppContext } from "../../../../context/AppContext";
+import { VideoResource } from "guitar-dashboard-types";
 
 // This gets the youtube video id from the regular video liknk (which can't be embedded)
 const getYouTubeId = (url: string) => {
