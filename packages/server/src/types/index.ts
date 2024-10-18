@@ -16,6 +16,7 @@ export type Song = {
   loops?: Loop[];
   riffs?: Tablature[];
   tablature?: Tablature[];
+  videos?: VideoResource[];
 };
 
 export type Loop = {
@@ -31,6 +32,12 @@ export type Tablature = {
   labelDesc?: string;
   tuning?: string;
   uri: string[];
+};
+
+export type VideoResource = {
+  id: string;
+  desc?: string;
+  url: string;
 };
 
 export type SongTitleList = Pick<Song, "id" | "title">[];

@@ -22,6 +22,8 @@ export const useSong = (songId?: string) => {
         label: string;
       }
     | { type: "deleteloop"; id: string }
+    | { type: "addvideo"; url: string; desc: string }
+    | { type: "deletevideo"; id: string }
   >(async (currentState, { type, ...body }) => {
     const response = await fetch(
       `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,

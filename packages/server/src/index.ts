@@ -15,6 +15,8 @@ import { addRiff } from "./routes/riffs/:songId/add-riff.js";
 import { updateRiffOrder } from "./routes/riffs/:songId/update-riff-order.js";
 import { getTablature } from "./routes/tab/:songId/get-tablature.js";
 import { addTablature } from "./routes/tab/:songId/add-tablature.js";
+import { addVideo } from "./routes/song/:songId/add-video.js";
+import { deleteVideo } from "./routes/song/:songId/delete-video.js";
 
 dotenv.config();
 
@@ -44,6 +46,8 @@ app.post("/song/:songId/volume", updateVolumeSetting);
 app.post("/song/:songId/loop", insertLoop);
 app.post("/song/:songId/updateloop", updateLoop);
 app.post("/song/:songId/deleteloop", deleteLoop);
+app.post("/song/:songId/addvideo", addVideo);
+app.post("/song/:songId/deletevideo", deleteVideo);
 
 // /riffs/*
 app.get("/riffs/:songId", getRiffs);

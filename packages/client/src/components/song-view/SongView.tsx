@@ -11,6 +11,7 @@ import Riffs from "./components/riffs/Riffs";
 import SongControls from "./components/song-controls/SongControls";
 import Tablature from "./components/tablature/Tablature";
 import TablatureTab from "./components/tablature-tab/TablatureTab";
+import Video from "./components/video/Video";
 
 const SongView = () => {
   const { tab, song } = useAppContext();
@@ -39,6 +40,7 @@ const SongView = () => {
             >
               <Tab label="Tab" />
               <Tab label="Riffs" />
+              <Tab label="Video" />
             </Tabs>
 
             {/* Only show the secondary tabs if this is the "tablature" tab and there is at least one tablature set up. */}
@@ -73,6 +75,8 @@ const SongView = () => {
                   <AddRiffCard mode="riffs" />
                 </>
               )}
+
+              {navTabId === 2 && <Video videos={song.videos} />}
             </div>
 
             <PDF />

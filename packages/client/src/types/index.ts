@@ -14,6 +14,7 @@ export type Song = {
   loops?: Loop[];
   tablature?: Tablature[];
   riffs?: Riff[];
+  videos?: VideoResource[];
   metrics?: {
     plays?: number;
   };
@@ -50,6 +51,12 @@ export type Tablature = {
   labelDesc?: string;
   tuning?: Tuning;
   uri: string[];
+};
+
+export type VideoResource = {
+  id: string;
+  desc?: string;
+  url: string;
 };
 
 export type RecentSong = Pick<Song, "id" | "title" | "artist">;
