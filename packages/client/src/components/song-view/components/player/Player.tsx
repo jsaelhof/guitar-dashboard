@@ -104,6 +104,7 @@ const Player = () => {
           {song?.id && (
             <audio
               ref={ref}
+              crossOrigin="anonymous"
               src={`http://localhost:8001/${song.file}`}
               //src={"/04 Rock Believer.mp3"}
               onError={(event) => {

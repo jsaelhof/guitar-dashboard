@@ -32,7 +32,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
   );
   const [label, setLabel] = useState<string>("");
   const [labelDesc, setLabelDesc] = useState<string>("");
-  const [tuning, setTuning] = useState<Tuning>(Tuning.E);
+  const [tuning, setTuning] = useState<Tuning>();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const reset = useCallback(() => {
@@ -122,7 +122,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
           <GuitarTabSectionLayout>
             <Typography variant="subtitle2">Tuning</Typography>
             <GuitarTabButtonLayout>
-              {TUNINGS.map((tuningOption) => (
+              {(Object.keys(TUNINGS) as Array<Tuning>).map((tuningOption) => (
                 <Button
                   key={tuningOption}
                   size="xsmall"
@@ -136,7 +136,7 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
                   })}
                   onClick={() => setTuning(tuningOption)}
                 >
-                  {tuningOption}
+                  {TUNINGS[tuningOption]}
                 </Button>
               ))}
             </GuitarTabButtonLayout>

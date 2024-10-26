@@ -1,10 +1,10 @@
 export enum Tuning {
-  "E",
-  "E♭",
-  "Drop D",
-  "D",
-  "Drop C",
-  "C",
+  "E" = "E",
+  "E_FLAT" = "E_FLAT",
+  "DROP_D" = "DROP_D",
+  "D" = "D",
+  "DROP_C" = "DROP_C",
+  "C" = "C",
 }
 
 export type Song = {
