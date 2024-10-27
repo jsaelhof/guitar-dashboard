@@ -13,6 +13,7 @@ export const useSong = (songId?: string) => {
     Song | undefined,
     | { type: "get" }
     | { type: "volume"; volume: number }
+    | { type: "pitch"; pitch: number }
     | { type: "loop"; loopA: number; loopB: number; label: string }
     | {
         type: "updateloop";

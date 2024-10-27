@@ -17,6 +17,7 @@ import { getTablature } from "./routes/tab/:songId/get-tablature.js";
 import { addTablature } from "./routes/tab/:songId/add-tablature.js";
 import { addVideo } from "./routes/song/:songId/add-video.js";
 import { deleteVideo } from "./routes/song/:songId/delete-video.js";
+import { updatePitchSetting } from "./routes/song/:songId/update-pitch-setting.js";
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.post("/songs/recent", updateRecentSongs);
 // /song/*
 app.get("/song/:songId", getSong);
 app.post("/song/:songId/volume", updateVolumeSetting);
+app.post("/song/:songId/pitch", updatePitchSetting);
 app.post("/song/:songId/loop", insertLoop);
 app.post("/song/:songId/updateloop", updateLoop);
 app.post("/song/:songId/deleteloop", deleteLoop);

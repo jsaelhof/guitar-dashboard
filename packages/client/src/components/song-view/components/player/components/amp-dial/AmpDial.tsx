@@ -3,7 +3,6 @@ import {
   AmpKnob,
   AmpKnobBarrel,
   AmpKnobMark,
-  AmpKnobSurface,
   AmpNumbers,
 } from "./AmpDial.styles";
 

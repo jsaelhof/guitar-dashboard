@@ -1,4 +1,9 @@
-import { ArrowLeft, ArrowRight } from "@mui/icons-material";
+import {
+  ArrowDropDown,
+  ArrowDropUp,
+  ArrowLeft,
+  ArrowRight,
+} from "@mui/icons-material";
 import { IconButton, styled } from "@mui/material";
 
 export const PlayerBase = styled("div")(
@@ -9,8 +14,8 @@ export const PlayerBase = styled("div")(
     display: "grid",
     gridTemplateColumns: `${
       $hasCover ? "auto " : ""
-    }max-content max-content 1fr 90px 110px max-content max-content max-content`,
-    // Play Seek Playback Time Loop Speed Volume Sync
+    }max-content max-content 1fr 90px 110px max-content max-content max-content max-content`,
+    // Play Seek Playback Time Loop Pitch Speed Volume Sync
     alignItems: "center",
     justifyItems: "center",
     columnGap: 32,
@@ -45,6 +50,7 @@ export const AmpDisplay = styled("div")(
   ({ theme: { palette }, $on }: { $on: boolean }) => ({
     fontFamily: "Circular",
     fontSize: 12,
+    minWidth: 50,
     height: 20,
     display: "flex",
     alignItems: "center",
@@ -134,6 +140,28 @@ export const RightButton = styled(ArrowRight)(
   })
 );
 
+export const UpButton = styled(ArrowDropUp)(
+  ({ theme: { palette, textGlows } }) => ({
+    cursor: "pointer",
+
+    "&:hover": {
+      color: palette.blueLights[500],
+      filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
+    },
+  })
+);
+
+export const DownButton = styled(ArrowDropDown)(
+  ({ theme: { palette, textGlows } }) => ({
+    cursor: "pointer",
+
+    "&:hover": {
+      color: palette.blueLights[500],
+      filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
+    },
+  })
+);
+
 export const TimeDisplay = styled("div")(({ theme: { palette } }) => ({
   fontFamily: "Circular",
   color: palette.blueLights[500],
@@ -149,4 +177,9 @@ export const AlbumCover = styled("div")(({ $cover }) => ({
   backgroundPosition: "center center",
   borderRadius: 6,
   overflow: "hidden",
+}));
+
+export const PitchLayout = styled("div")(() => ({
+  display: "grid",
+  justifyItems: "center",
 }));

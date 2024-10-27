@@ -6,11 +6,14 @@ import {
   AmpDisplay,
   AmpLabel,
   DigitalButton,
+  DownButton,
   LeftButton,
   Light,
+  PitchLayout,
   PlayerBase,
   RightButton,
   TimeDisplay,
+  UpButton,
 } from "./Player.styles";
 import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
@@ -42,6 +45,7 @@ const Player = () => {
   const [appliedLoop, setAppliedLoop] = useState<Loop | null>(null);
   const [loop, setLoop] = useState<[number, number?] | null>(null);
   const [sync, setSync] = useState(true);
+  const [pitch, setPitch] = useState<number>(0);
 
   // The state of everything related to the audio is in the ref.
   // Rather than storing copies of pieces of data that the UI relies on in useState vars, this just forces a re-render whenever I need.
@@ -76,9 +80,19 @@ const Player = () => {
     }
   }, []);
 
+  const updatePitch = useCallback((value: number) => {
+    setPitch(value);
+
+    dispatchSong({
+      type: "pitch",
+      pitch: value,
+    });
+  }, []);
+
   // Initialize any settings when the file changes
   useEffect(() => {
     song && updateVolume(song.settings.volume);
+    song && setPitch(song.settings.pitch);
     refresh();
   }, [song?.file]);
 
@@ -300,6 +314,29 @@ const Player = () => {
                   </div>
                 </div>
 
+                <PitchLayout>
+                  {/* Pitch is undefined if its never been set for a song. */}
+                  <UpButton
+                    onClick={() => updatePitch(Math.min((pitch ?? 0) + 1, 100))}
+                  />
+                  <AmpDisplay $on={pitch !== undefined}>
+                    <div>
+                      {pitch !== undefined
+                        ? pitch === 0
+                          ? pitch
+                          : pitch < 0
+                          ? `${pitch} ♭`
+                          : `+${pitch} ♯`
+                        : ""}
+                    </div>
+                  </AmpDisplay>
+                  <DownButton
+                    onClick={() =>
+                      updatePitch(Math.max((pitch ?? 0) - 1, -100))
+                    }
+                  />
+                </PitchLayout>
+
                 <AmpDial
                   value={ref.current?.playbackRate ?? 1}
                   percent
@@ -418,6 +455,7 @@ const Player = () => {
                     }}
                   /> */}
                 </AmpLabel>
+                <AmpLabel>Pitch</AmpLabel>
                 <AmpLabel>Speed %</AmpLabel>
                 <AmpLabel>Volume</AmpLabel>
                 <AmpLabel>Sync</AmpLabel>

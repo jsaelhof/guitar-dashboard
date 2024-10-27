@@ -18,6 +18,7 @@ export type Song = {
   pdf?: string; // The path to a PDF of the tablature
   settings: {
     volume: number;
+    pitch: number;
   };
   loops?: Loop[];
   tablature?: Tablature[];
