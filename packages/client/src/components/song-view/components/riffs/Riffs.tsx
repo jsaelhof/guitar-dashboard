@@ -28,16 +28,17 @@ import {
   UriTablature,
 } from "./Riffs.styles";
 import { formatSeconds } from "../../../../utils/format-seconds";
-import { useAppContext } from "../../../../context/AppContext";
-import {
-  CustomEvents,
-  PlaySavedLoopDetail,
-  UpdateTimeDetail,
-} from "../../../../types/events";
+import { CustomEvents, UpdateTimeDetail } from "../../../../types/events";
+import { SongAction } from "../../hooks/use-song";
+import { Song } from "guitar-dashboard-types";
 
-const Riffs = () => {
-  const { song, riffs, dispatchRiffs } = useAppContext();
+export type RiffsProps = {
+  songId: Song["id"];
+  riffs: Song["riffs"];
+  dispatchSong: (action: SongAction) => void;
+};
 
+const Riffs = ({ songId, riffs, dispatchSong }: RiffsProps) => {
   const allRiffs = useMemo(
     () => [...Array((riffs ?? []).length).keys()],
     [riffs]
@@ -53,7 +54,7 @@ const Riffs = () => {
   // Sort the riffs by time (0) mapped to riff index (1)
   const timeMap = useMemo(
     () =>
-      riffs
+      (riffs ?? [])
         .reduce<[number, number][]>((acc, riff, index) => {
           if (riff.time !== undefined) {
             acc.push([riff.time, index]);
@@ -91,9 +92,9 @@ const Riffs = () => {
   useEffect(() => {
     currentTimeRef.current = 0;
     setActiveTimeMark(null);
-  }, [song?.id]);
+  }, [songId]);
 
-  return song ? (
+  return riffs ? (
     <div>
       {/* This should maybe move out to its own component */}
       <Shortcuts>
@@ -148,14 +149,15 @@ const Riffs = () => {
                       onClick={(e) => {
                         e.stopPropagation();
 
-                        setActiveTimeMark({
-                          ...activeTimeMark,
-                          time:
-                            riffs[index].time === undefined ||
-                            riffs[index].time === activeTimeMark.time
-                              ? currentTimeRef.current
-                              : riffs[index].time ?? 0,
-                        });
+                        riffs &&
+                          setActiveTimeMark({
+                            ...activeTimeMark,
+                            time:
+                              riffs[index].time === undefined ||
+                              riffs[index].time === activeTimeMark.time
+                                ? currentTimeRef.current
+                                : riffs[index].time ?? 0,
+                          });
                       }}
                     >
                       <Update />
@@ -197,8 +199,8 @@ const Riffs = () => {
                       onClick={async (e) => {
                         e.stopPropagation();
 
-                        dispatchRiffs({
-                          type: "time",
+                        dispatchSong({
+                          type: "rifftime",
                           riffId: id,
                           seconds: activeTimeMark.time,
                         });
@@ -220,14 +222,15 @@ const Riffs = () => {
                 <IconButton
                   onClick={(e) => {
                     e.stopPropagation();
-                    setActiveTimeMark(
-                      activeTimeMark?.index === index
-                        ? null
-                        : {
-                            index,
-                            time: riffs[index].time ?? currentTimeRef.current,
-                          }
-                    );
+                    riffs &&
+                      setActiveTimeMark(
+                        activeTimeMark?.index === index
+                          ? null
+                          : {
+                              index,
+                              time: riffs[index].time ?? currentTimeRef.current,
+                            }
+                      );
                   }}
                 >
                   {activeTimeMark?.index === index ? <Close /> : <Alarm />}
@@ -239,8 +242,8 @@ const Riffs = () => {
                       e.stopPropagation();
 
                       if (index > 0) {
-                        dispatchRiffs({
-                          type: "order",
+                        dispatchSong({
+                          type: "rifforder",
                           riffId: id,
                           order: Math.max(index - 1, 0),
                         });
@@ -255,9 +258,9 @@ const Riffs = () => {
                     onClick={(e: MouseEvent<HTMLDivElement>) => {
                       e.stopPropagation();
 
-                      if (index < riffs.length - 1) {
-                        dispatchRiffs({
-                          type: "order",
+                      if (riffs && index < riffs.length - 1) {
+                        dispatchSong({
+                          type: "rifforder",
                           riffId: id,
                           order: Math.min(index + 1, riffs.length - 1),
                         });

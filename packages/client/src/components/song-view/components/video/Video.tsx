@@ -11,6 +11,7 @@ import { Button, Divider, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import { useAppContext } from "../../../../context/AppContext";
 import { VideoResource } from "guitar-dashboard-types";
+import { SongAction } from "../../hooks/use-song";
 
 // This gets the youtube video id from the regular video liknk (which can't be embedded)
 const getYouTubeId = (url: string) => {
@@ -21,11 +22,12 @@ const getYouTubeId = (url: string) => {
 
 export type VideoProps = {
   videos?: VideoResource[];
+  dispatchSong: (action: SongAction) => void;
 };
 
-const Video = ({ videos }: VideoProps) => {
+const Video = ({ videos, dispatchSong }: VideoProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const { dispatchSong, setDisableShortcuts } = useAppContext();
+  const { setDisableShortcuts } = useAppContext();
   const [url, setUrl] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
 

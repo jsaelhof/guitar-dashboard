@@ -9,12 +9,13 @@ import {
 } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppContext } from "../../context/AppContext";
+import { useSongs } from "../../hooks/use-songs";
 
-const SongList = () => {
+export type SongListProps = ReturnType<typeof useSongs>;
+
+const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
   const navigate = useNavigate();
   const { songId = "" } = useParams();
-  const { songsByArtist, recentSongs } = useAppContext();
 
   const currentArtist = useMemo(
     () =>

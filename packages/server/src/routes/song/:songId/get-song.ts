@@ -3,6 +3,34 @@ import DB from "../../../db/db.js";
 import jsmediatags from "jsmediatags";
 import { Song } from "guitar-dashboard-types";
 
+const processRiffs = (song: Song): Pick<Song, "riffs" | "riffTimes"> => {
+  // If this riff clones another, find it and overlay this data over the cloned data.
+  // This allows a riff to clone another one and just change the label/time
+  const riffs = song.riffs ?? [];
+  const processedRiffData = riffs.map((riff) =>
+    riff.clones
+      ? { ...riffs.find(({ id }) => riff.clones === id), ...riff }
+      : riff
+  );
+
+  // Find the times associated with each riff.
+  const riffTimes = processedRiffData.reduce<number[] | undefined>(
+    (acc, riff) => {
+      if (riff.time !== undefined) {
+        if (!acc) acc = [];
+        acc.push(riff.time);
+      }
+      return acc;
+    },
+    undefined
+  );
+
+  return {
+    riffs,
+    riffTimes,
+  };
+};
+
 export const getSong = async (req: Request, res: Response) => {
   const db = await DB();
   const { songId } = req.params;
@@ -42,6 +70,7 @@ export const getSong = async (req: Request, res: Response) => {
       data: {
         song: {
           ...songData,
+          ...processRiffs(songData),
           ...metaData,
         },
       },

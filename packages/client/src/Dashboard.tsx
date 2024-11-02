@@ -8,16 +8,19 @@ import { ThemeProvider } from "@mui/material";
 import { theme } from "./theme/theme";
 import { AppProvider } from "./context/AppContext";
 import { Outlet } from "react-router-dom";
+import { useSongs } from "./hooks/use-songs";
 
 function Dashboard() {
+  const songs = useSongs();
+
   return (
     <AppProvider>
       <ThemeProvider theme={theme}>
         <DashboardLayout>
           <LeftColumn>
-            <SongList />
+            <SongList {...songs} />
           </LeftColumn>
-          <Outlet />
+          <Outlet context={{ dispatchSongs: songs.dispatch }} />
         </DashboardLayout>
       </ThemeProvider>
     </AppProvider>

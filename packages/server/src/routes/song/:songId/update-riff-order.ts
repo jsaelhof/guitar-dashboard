@@ -37,17 +37,16 @@ export const updateRiffOrder = async (req: Request, res: Response) => {
                   riffs: update,
                 },
               },
-              { returnDocument: "after", projection: { _id: 0, riffs: 1 } }
+              { returnDocument: "after", projection: { _id: 0 } }
             );
 
           if (updatedSong?.riffs) {
             res.send({
               error: false,
-              scope: "riffs",
+              scope: "song",
               type: "order",
               data: {
-                songId,
-                riffs: updatedSong.riffs,
+                song: updatedSong,
               },
             });
           } else {
@@ -63,6 +62,6 @@ export const updateRiffOrder = async (req: Request, res: Response) => {
       throw "Missing required params";
     }
   } catch (err) {
-    res.send({ error: true, scope: "riffs", type: "order" });
+    res.send({ error: true, scope: "song", type: "order" });
   }
 };

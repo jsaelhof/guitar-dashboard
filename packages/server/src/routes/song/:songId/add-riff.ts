@@ -2,32 +2,31 @@ import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { Song } from "guitar-dashboard-types";
 
-export const addTablature = async (req: Request, res: Response) => {
+export const addRiff = async (req: Request, res: Response) => {
   const db = await DB();
 
   const { songId } = req.params;
-  const tab = req.body;
+  const riff = req.body;
 
   try {
-    if (songId && tab) {
+    if (songId && riff) {
       const songData = await db.collection<Song>("songs").findOneAndUpdate(
         { id: songId },
         {
           $push: {
-            tablature: tab,
+            riffs: riff,
           },
         },
-        { returnDocument: "after", projection: { _id: 0, tablature: 1 } }
+        { returnDocument: "after", projection: { _id: 0 } }
       );
 
-      if (songData?.tablature) {
+      if (songData) {
         res.send({
           error: false,
-          scope: "tab",
-          type: "add",
+          scope: "song",
+          type: "addriff",
           data: {
-            songId,
-            tab: songData.tablature,
+            song: songData,
           },
         });
       } else {
@@ -37,6 +36,6 @@ export const addTablature = async (req: Request, res: Response) => {
       throw "Missing required params";
     }
   } catch (err) {
-    res.send({ error: true, scope: "tab", type: "add" });
+    res.send({ error: true, scope: "song", type: "add" });
   }
 };

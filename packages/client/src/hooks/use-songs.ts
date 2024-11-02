@@ -5,14 +5,15 @@ type FetchSongsResponse = {
   data: { songsByArtist: SongsByArtist; recentSongs: RecentSong[] };
 };
 
+export type SongsAction = { type: "recent"; songId: string } | { type: "get" };
+
 export const useSongs = () => {
   const [{ songsByArtist, recentSongs }, dispatch, isPending] = useActionState<
     {
       songsByArtist: SongsByArtist;
       recentSongs: RecentSong[];
     },
-    // Types that can be submitted
-    { type: "recent"; songId: string } | { type: "get" }
+    SongsAction
   >(
     async (prevState, { type, ...body }) => {
       const response = await fetch(

@@ -1,30 +1,52 @@
 import { useActionState, useEffect } from "react";
 import { debounce } from "@mui/material";
 import deepmerge from "deepmerge";
-import { Song } from "guitar-dashboard-types";
+import { Song, Tablature } from "guitar-dashboard-types";
 
 type FetchSongResponse = {
   data: { song: Song };
 };
-// TODO: This whole hook could potentially be combined with riffs, even if they keep separate data on the BE.
-// This could easily fetch twice or have the BE pull together the two sources into one response.
+
+export type SongAction =
+  | { type: "get" }
+  | { type: "volume"; volume: number }
+  | { type: "pitch"; pitch: number }
+  | { type: "loop"; loopA: number; loopB: number; label: string }
+  | {
+      type: "updateloop";
+      id: string;
+      loopA: number;
+      loopB: number;
+      label: string;
+    }
+  | { type: "deleteloop"; id: string }
+  | { type: "addvideo"; url: string; desc: string }
+  | { type: "deletevideo"; id: string }
+  | {
+      type: "addriff";
+      id: string;
+      label: string;
+      labelDesc?: string;
+      uri: string[];
+    }
+  | {
+      type: "rifftime";
+      riffId: string;
+      seconds: number;
+    }
+  | {
+      type: "rifforder";
+      riffId: string;
+      order: number;
+    }
+  | ({
+      type: "addtablature";
+    } & Tablature);
+
 export const useSong = (songId?: string) => {
   const [song, dispatch, isPending] = useActionState<
     Song | undefined,
-    | { type: "get" }
-    | { type: "volume"; volume: number }
-    | { type: "pitch"; pitch: number }
-    | { type: "loop"; loopA: number; loopB: number; label: string }
-    | {
-        type: "updateloop";
-        id: string;
-        loopA: number;
-        loopB: number;
-        label: string;
-      }
-    | { type: "deleteloop"; id: string }
-    | { type: "addvideo"; url: string; desc: string }
-    | { type: "deletevideo"; id: string }
+    SongAction
   >(async (currentState, { type, ...body }) => {
     const response = await fetch(
       `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,

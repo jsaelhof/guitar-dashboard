@@ -1,7 +1,6 @@
 import { PlaylistAdd } from "@mui/icons-material";
 import { Divider, Tab, Tabs } from "@mui/material";
 import { useState } from "react";
-import { useAppContext } from "../../context/AppContext";
 import { Content, Header, TabPanel } from "./SongView.styles";
 import AddRiffCard from "./components/add-riff-card/AddRiffCard";
 import AddRiff from "./components/add-riff/AddRiff";
@@ -12,9 +11,22 @@ import SongControls from "./components/song-controls/SongControls";
 import Tablature from "./components/tablature/Tablature";
 import TablatureTab from "./components/tablature-tab/TablatureTab";
 import Video from "./components/video/Video";
+import { useSong } from "./hooks/use-song";
+import { useOutletContext, useParams } from "react-router-dom";
+import { SongsAction } from "../../hooks/use-songs";
 
 const SongView = () => {
-  const { tab, song } = useAppContext();
+  const { songId = "" } = useParams();
+
+  const {
+    song,
+    dispatch: dispatchSong,
+    isPending: songIsPending,
+  } = useSong(songId);
+
+  const { dispatchSongs } = useOutletContext<{
+    dispatchSongs: (action: SongsAction) => void;
+  }>();
 
   const [navTabId, setNavTabId] = useState(0);
   const onTabChange = (_, activeTab: number) => setNavTabId(activeTab);
@@ -27,8 +39,12 @@ const SongView = () => {
     song?.id && (
       <>
         <Header>
-          <SongControls />
-          <Player />
+          <SongControls song={song} />
+          <Player
+            song={song}
+            dispatchSong={dispatchSong}
+            dispatchSongs={dispatchSongs}
+          />
         </Header>
 
         <Content>
@@ -44,7 +60,7 @@ const SongView = () => {
             </Tabs>
 
             {/* Only show the secondary tabs if this is the "tablature" tab and there is at least one tablature set up. */}
-            {navTabId === 0 && tab.length > 0 && (
+            {navTabId === 0 && (song.tablature ?? []).length > 0 && (
               <>
                 <Divider variant="middle" style={{ margin: "24px" }} />
 
@@ -53,7 +69,7 @@ const SongView = () => {
                   orientation="vertical"
                   onChange={onTablatureTabChange}
                 >
-                  {tab.map(TablatureTab)}
+                  {(song.tablature ?? []).map(TablatureTab)}
                   <Tab label={<PlaylistAdd />} />
                 </Tabs>
               </>
@@ -63,23 +79,37 @@ const SongView = () => {
           <TabPanel>
             <div>
               {navTabId === 0 &&
-                (tablatureTabId < tab.length ? (
-                  <Tablature tablature={tab[tablatureTabId]} />
+                (song.tablature && tablatureTabId < song.tablature.length ? (
+                  <Tablature tablature={song.tablature[tablatureTabId]} />
                 ) : (
-                  <AddRiff mode="tab" />
+                  <AddRiff
+                    mode="tab"
+                    dispatchSong={dispatchSong}
+                    songIsPending={songIsPending}
+                  />
                 ))}
 
               {navTabId === 1 && (
                 <>
-                  <Riffs />
-                  <AddRiffCard mode="riffs" />
+                  <Riffs
+                    songId={song.id}
+                    riffs={song.riffs}
+                    dispatchSong={dispatchSong}
+                  />
+                  <AddRiffCard
+                    mode="riffs"
+                    dispatchSong={dispatchSong}
+                    songIsPending={songIsPending}
+                  />
                 </>
               )}
 
-              {navTabId === 2 && <Video videos={song.videos} />}
+              {navTabId === 2 && (
+                <Video videos={song.videos} dispatchSong={dispatchSong} />
+              )}
             </div>
 
-            <PDF />
+            <PDF pdf={song.pdf} />
           </TabPanel>
         </Content>
       </>

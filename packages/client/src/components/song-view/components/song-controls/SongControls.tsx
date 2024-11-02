@@ -1,11 +1,13 @@
 import { PlayArrow, Search } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { useCallback } from "react";
-import { useAppContext } from "../../../../context/AppContext";
+import { Song } from "guitar-dashboard-types";
 
-const SongControls = () => {
-  const { song } = useAppContext();
+type SongControlsProps = {
+  song: Song;
+};
 
+const SongControls = ({ song }: SongControlsProps) => {
   const play = useCallback((songId: string) => {
     fetch(`http://localhost:8001/play/${songId}`, { method: "post" });
   }, []);
@@ -25,13 +27,15 @@ const SongControls = () => {
         <Typography variant="h5" sx={{ lineHeight: 1.2 }}>
           {song.title}
         </Typography>
-        <Typography
-          sx={{ fontSize: 10 }}
-          textTransform="uppercase"
-          color={"GrayText"}
-        >
-          {`${song.album} - ${song.year}`}
-        </Typography>
+        {song.album && song.year && (
+          <Typography
+            sx={{ fontSize: 10 }}
+            textTransform="uppercase"
+            color={"GrayText"}
+          >
+            {`${song.album} - ${song.year}`}
+          </Typography>
+        )}
       </Box>
       <Button
         variant="contained"

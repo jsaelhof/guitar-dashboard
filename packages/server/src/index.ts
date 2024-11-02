@@ -9,12 +9,10 @@ import { updateVolumeSetting } from "./routes/song/:songId/update-volume-setting
 import { insertLoop } from "./routes/song/:songId/insert-loop.js";
 import { updateLoop } from "./routes/song/:songId/update-loop.js";
 import { deleteLoop } from "./routes/song/:songId/delete-loop.js";
-import { getRiffs } from "./routes/riffs/:songId/get-riffs.js";
-import { updateRiffTime } from "./routes/riffs/:songId/update-riff-time.js";
-import { addRiff } from "./routes/riffs/:songId/add-riff.js";
-import { updateRiffOrder } from "./routes/riffs/:songId/update-riff-order.js";
-import { getTablature } from "./routes/tab/:songId/get-tablature.js";
-import { addTablature } from "./routes/tab/:songId/add-tablature.js";
+import { updateRiffTime } from "./routes/song/:songId/update-riff-time.js";
+import { addRiff } from "./routes/song/:songId/add-riff.js";
+import { updateRiffOrder } from "./routes/song/:songId/update-riff-order.js";
+import { addTablature } from "./routes/song/:songId/add-tablature.js";
 import { addVideo } from "./routes/song/:songId/add-video.js";
 import { deleteVideo } from "./routes/song/:songId/delete-video.js";
 import { updatePitchSetting } from "./routes/song/:songId/update-pitch-setting.js";
@@ -50,16 +48,10 @@ app.post("/song/:songId/updateloop", updateLoop);
 app.post("/song/:songId/deleteloop", deleteLoop);
 app.post("/song/:songId/addvideo", addVideo);
 app.post("/song/:songId/deletevideo", deleteVideo);
-
-// /riffs/*
-app.get("/riffs/:songId", getRiffs);
-app.post("/riffs/:songId/time", updateRiffTime);
-app.post("/riffs/:songId/add", addRiff);
-app.post("/riffs/:songId/order", updateRiffOrder);
-
-// /tab/*
-app.get("/tab/:songId", getTablature);
-app.post("/tab/:songId/add", addTablature);
+app.post("/song/:songId/rifftime", updateRiffTime);
+app.post("/song/:songId/addriff", addRiff);
+app.post("/song/:songId/rifforder", updateRiffOrder);
+app.post("/song/:songId/addtablature", addTablature);
 
 /*
 This route was an attempt to load UG in an iframe. It works for the first page but any link on that page then fails to connect the same way iframing the page directly does.

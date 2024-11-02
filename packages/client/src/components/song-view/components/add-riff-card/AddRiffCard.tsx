@@ -1,19 +1,19 @@
 import { useRef } from "react";
 import { Layout } from "./AddRiffCard.styles";
-import { useAppContext } from "../../../../context/AppContext";
 import RiffForm, { RiffFormProps } from "../riff-form/RiffForm";
 
-export type AddRifCardProps = Pick<RiffFormProps, "mode">;
+export type AddRifCardProps = Pick<
+  RiffFormProps,
+  "mode" | "dispatchSong" | "songIsPending"
+>;
 
-const AddRiffCard = ({ mode }: AddRifCardProps) => {
-  const { song } = useAppContext();
-
+const AddRiffCard = (props: AddRifCardProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  return song ? (
+  return (
     <Layout>
       <RiffForm
-        mode={mode}
+        {...props}
         onChange={(count: number) => {
           count > 0 &&
             scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,7 +21,7 @@ const AddRiffCard = ({ mode }: AddRifCardProps) => {
       />
       <div ref={scrollRef} />
     </Layout>
-  ) : null;
+  );
 };
 
 export default AddRiffCard;

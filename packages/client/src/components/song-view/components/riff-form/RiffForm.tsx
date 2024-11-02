@@ -15,16 +15,24 @@ import { v4 as uuid } from "uuid";
 import { useAppContext } from "../../../../context/AppContext";
 import { TUNINGS } from "../../../../contstants";
 import { Tuning } from "guitar-dashboard-types";
+import { SongAction } from "../../hooks/use-song";
 
 export type RiffFormProps = {
   mode: "tab" | "riffs";
   requireOneRiff?: boolean;
   onChange?: (count: number) => void;
+  dispatchSong: (action: SongAction) => void;
+  songIsPending: boolean;
 };
 
-const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
-  const { setDisableShortcuts, dispatchRiffs, dispatchTab, tabIsPending } =
-    useAppContext();
+const RiffForm = ({
+  mode,
+  requireOneRiff,
+  onChange,
+  dispatchSong,
+  songIsPending,
+}: RiffFormProps) => {
+  const { setDisableShortcuts } = useAppContext();
 
   const [tabs, setTabs] = useState<string[]>(requireOneRiff ? ["0"] : []);
   const tabsRef = useRef<{ [id: string]: string }>(
@@ -255,20 +263,27 @@ const RiffForm = ({ mode, requireOneRiff, onChange }: RiffFormProps) => {
                 Object.values(tabsRef.current).some(
                   (tab) => tab.length === 0
                 ) ||
-                tabIsPending
+                songIsPending
               }
               onClick={async () => {
-                const dispatch = { riffs: dispatchRiffs, tab: dispatchTab }[
-                  mode
-                ];
-                dispatch({
-                  type: "add",
-                  id: uuid(),
-                  label,
-                  labelDesc,
-                  tuning,
-                  uri: tabs.map((tabId) => tabsRef.current[tabId]),
-                });
+                if (mode === "riffs") {
+                  dispatchSong({
+                    type: "addriff",
+                    id: uuid(),
+                    label,
+                    labelDesc,
+                    uri: tabs.map((tabId) => tabsRef.current[tabId]),
+                  });
+                } else if (mode === "tab") {
+                  dispatchSong({
+                    type: "addtablature",
+                    id: uuid(),
+                    label,
+                    labelDesc,
+                    tuning,
+                    uri: tabs.map((tabId) => tabsRef.current[tabId]),
+                  });
+                }
               }}
             >
               Save

@@ -19,17 +19,16 @@ export const updateRiffTime = async (req: Request, res: Response) => {
             "riffs.$.time": seconds,
           },
         },
-        { returnDocument: "after", projection: { _id: 0, riffs: 1 } }
+        { returnDocument: "after", projection: { _id: 0 } }
       );
 
       if (songData?.riffs) {
         res.send({
           error: false,
-          scope: "riffs",
+          scope: "song",
           type: "time",
           data: {
-            songId,
-            riffs: songData.riffs,
+            song: songData,
           },
         });
       } else {
@@ -39,6 +38,6 @@ export const updateRiffTime = async (req: Request, res: Response) => {
       throw "Missing required params";
     }
   } catch (err) {
-    res.send({ error: true, scope: "riffs", type: "time" });
+    res.send({ error: true, scope: "song", type: "time" });
   }
 };

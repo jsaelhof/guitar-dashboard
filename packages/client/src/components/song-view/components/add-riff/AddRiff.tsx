@@ -1,25 +1,25 @@
 import { Layout } from "./AddRiff.styles";
-import { useAppContext } from "../../../../context/AppContext";
 import RiffForm, { RiffFormProps } from "../riff-form/RiffForm";
 import TablatureEmptyState from "./components/tablature-empty-state/TablatureEmptyState";
 import { useState } from "react";
 
-export type AddRiffProps = Pick<RiffFormProps, "mode">;
+export type AddRiffProps = Pick<
+  RiffFormProps,
+  "mode" | "dispatchSong" | "songIsPending"
+>;
 
-const AddRiff = ({ mode }: AddRiffProps) => {
-  const { song } = useAppContext();
-
+const AddRiff = (props: AddRiffProps) => {
   const [showRiffForm, setShowRiffForm] = useState(false);
 
-  return song ? (
+  return (
     <Layout>
       {showRiffForm ? (
-        <RiffForm mode={mode} requireOneRiff />
+        <RiffForm {...props} requireOneRiff />
       ) : (
         <TablatureEmptyState onClick={setShowRiffForm} />
       )}
     </Layout>
-  ) : null;
+  );
 };
 
 export default AddRiff;

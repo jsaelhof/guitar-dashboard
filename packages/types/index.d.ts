@@ -23,6 +23,7 @@ export type Song = {
   loops?: Loop[];
   tablature?: Tablature[];
   riffs?: Riff[];
+  riffTimes?: number[];
   videos?: VideoResource[];
   metrics?: {
     plays?: number;

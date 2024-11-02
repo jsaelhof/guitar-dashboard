@@ -23,19 +23,20 @@ import SwitchButton from "./components/switch-button/SwitchButton";
 import Playback from "./components/playback/Playback";
 import LoopList from "./components/loop-list/LoopList";
 import { NEW_LOOP_ID } from "./constants";
-import { Loop } from "guitar-dashboard-types";
+import { Loop, Song } from "guitar-dashboard-types";
+import { SongAction } from "../../hooks/use-song";
+import { SongsAction } from "../../../../hooks/use-songs";
 
 const MAX_RETRY = 10;
 
-const Player = () => {
-  const {
-    disableShortcuts,
-    setDisableShortcuts,
-    song,
-    riffTimes,
-    dispatchSong,
-    dispatchSongs,
-  } = useAppContext();
+export type PlayerProps = {
+  song: Song;
+  dispatchSong: (action: SongAction) => void;
+  dispatchSongs: (action: SongsAction) => void;
+};
+
+const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
+  const { disableShortcuts, setDisableShortcuts } = useAppContext();
 
   const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -213,7 +214,7 @@ const Player = () => {
                 <Playback
                   audioRef={ref.current}
                   loop={loop}
-                  marks={(riffTimes ?? []).map((time) => ({
+                  marks={(song?.riffTimes ?? []).map((time) => ({
                     value: ref.current?.duration
                       ? time / ref.current.duration
                       : 0,
