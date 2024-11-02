@@ -16,6 +16,7 @@ import { addTablature } from "./routes/song/:songId/add-tablature.js";
 import { addVideo } from "./routes/song/:songId/add-video.js";
 import { deleteVideo } from "./routes/song/:songId/delete-video.js";
 import { updatePitchSetting } from "./routes/song/:songId/update-pitch-setting.js";
+import { amp } from "./routes/launch/amp.js";
 
 dotenv.config();
 
@@ -32,6 +33,9 @@ app.use(express.static("public"));
 app.use(express.static("/Volumes/Public/Music"));
 
 // --- Setup Routes ---
+// /launch/*
+app.post("/launch/amp", amp);
+
 // /play/*
 app.post("/play/:songId", playSong);
 

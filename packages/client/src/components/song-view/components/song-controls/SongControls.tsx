@@ -1,4 +1,4 @@
-import { PlayArrow, Search } from "@mui/icons-material";
+import { PlayArrow, Search, Speaker } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { Song } from "guitar-dashboard-types";
@@ -12,12 +12,16 @@ const SongControls = ({ song }: SongControlsProps) => {
     fetch(`http://localhost:8001/play/${songId}`, { method: "post" });
   }, []);
 
+  const launchAmp = useCallback(() => {
+    fetch("http://localhost:8001/launch/amp", { method: "post" });
+  }, []);
+
   return song ? (
     <div
       // TODO: CLEAN UP ALL THE SX AND INLINE STYLES HERE
       style={{
         display: "grid",
-        gridTemplateColumns: "1fr auto auto",
+        gridTemplateColumns: "1fr auto auto auto",
         alignItems: "center",
         gap: "16px",
         marginBottom: "16px",
@@ -37,6 +41,16 @@ const SongControls = ({ song }: SongControlsProps) => {
           </Typography>
         )}
       </Box>
+
+      <Button
+        variant="contained"
+        color="error"
+        startIcon={<Speaker />}
+        onClick={() => launchAmp()}
+      >
+        Guitar Rig
+      </Button>
+
       <Button
         variant="contained"
         color="success"
@@ -44,7 +58,7 @@ const SongControls = ({ song }: SongControlsProps) => {
         disabled={!song.file}
         onClick={() => play(song.id)}
       >
-        Play on Desktop
+        IINA
       </Button>
 
       <Button
