@@ -15,7 +15,7 @@ export const PlayerBase = styled("div")(
     gridTemplateColumns: `${
       $hasCover ? "auto " : ""
     }max-content max-content 1fr 90px 110px max-content max-content max-content max-content`,
-    // Play Seek Playback Time Loop Pitch Speed Volume Sync
+    // Cover? Play Seek Playback Time Loop Pitch Speed Volume Sync
     alignItems: "center",
     justifyItems: "center",
     columnGap: 32,
