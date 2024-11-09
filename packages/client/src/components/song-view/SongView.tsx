@@ -1,6 +1,6 @@
 import { PlaylistAdd } from "@mui/icons-material";
 import { Divider, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Content, Header, TabPanel } from "./SongView.styles";
 import AddRiffCard from "./components/add-riff-card/AddRiffCard";
 import AddRiff from "./components/add-riff/AddRiff";
@@ -37,7 +37,7 @@ const SongView = () => {
 
   return (
     song?.id && (
-      <>
+      <Fragment key={songId}>
         <Header>
           <SongControls song={song} />
           <Player
@@ -112,7 +112,7 @@ const SongView = () => {
             <PDF pdf={song.pdf} />
           </TabPanel>
         </Content>
-      </>
+      </Fragment>
     )
   );
 };
