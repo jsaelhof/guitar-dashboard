@@ -10,6 +10,7 @@ import { Amp } from "./SongControls.styles";
 import SwitchButton from "../player/components/switch-button/SwitchButton";
 import { AmpLabel, DigitalButton } from "../player/Player.styles";
 import { useDocumentVisibility } from "./hooks/use-document-visibility";
+import { searchTab } from "../../utils/search-tab";
 
 type SongControlsProps = {
   song: Song;
@@ -122,16 +123,7 @@ const SongControls = ({ song }: SongControlsProps) => {
         <Button
           variant="contained"
           startIcon={<Search />}
-          onClick={() =>
-            song.title || song.artist
-              ? window.open(
-                  `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(
-                    `${song.title} ${song.artist}`
-                  )}`,
-                  "guitarTab"
-                )
-              : "https://www.ultimate-guitar.com"
-          }
+          onClick={() => searchTab(song)}
         >
           Search Tab
         </Button>

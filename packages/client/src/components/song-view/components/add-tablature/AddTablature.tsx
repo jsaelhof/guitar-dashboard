@@ -1,14 +1,15 @@
-import { Layout } from "./AddRiff.styles";
+import { Layout } from "./AddTablature.styles";
 import RiffForm, { RiffFormProps } from "../riff-form/RiffForm";
 import TablatureEmptyState from "./components/tablature-empty-state/TablatureEmptyState";
 import { useState } from "react";
+import { Song } from "guitar-dashboard-types";
 
-export type AddRiffProps = Pick<
+export type AddTablatureProps = Pick<
   RiffFormProps,
   "mode" | "dispatchSong" | "songIsPending"
->;
+> & { song: Song };
 
-const AddRiff = (props: AddRiffProps) => {
+const AddTablature = ({ song, ...props }: AddTablatureProps) => {
   const [showRiffForm, setShowRiffForm] = useState(false);
 
   return (
@@ -16,10 +17,10 @@ const AddRiff = (props: AddRiffProps) => {
       {showRiffForm ? (
         <RiffForm {...props} requireOneRiff />
       ) : (
-        <TablatureEmptyState onClick={setShowRiffForm} />
+        <TablatureEmptyState onClick={setShowRiffForm} song={song} />
       )}
     </Layout>
   );
 };
 
-export default AddRiff;
+export default AddTablature;

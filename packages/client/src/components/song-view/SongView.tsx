@@ -3,7 +3,7 @@ import { Divider, Tab, Tabs } from "@mui/material";
 import { Fragment, useState } from "react";
 import { Content, Header, TabPanel } from "./SongView.styles";
 import AddRiffCard from "./components/add-riff-card/AddRiffCard";
-import AddRiff from "./components/add-riff/AddRiff";
+import AddTablature from "./components/add-tablature/AddTablature";
 import PDF from "./components/pdf/PDF";
 import Player from "./components/player/Player";
 import Riffs from "./components/riffs/Riffs";
@@ -82,8 +82,9 @@ const SongView = () => {
                 (song.tablature && tablatureTabId < song.tablature.length ? (
                   <Tablature tablature={song.tablature[tablatureTabId]} />
                 ) : (
-                  <AddRiff
+                  <AddTablature
                     mode="tab"
+                    song={song}
                     dispatchSong={dispatchSong}
                     songIsPending={songIsPending}
                   />
