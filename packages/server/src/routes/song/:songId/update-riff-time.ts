@@ -11,7 +11,6 @@ export const updateRiffTime = async (req: Request, res: Response) => {
 
   try {
     if (songId && !isNaN(seconds) && seconds >= 0 && riffId) {
-      // TODO: Handle songData = null;
       const songData = await db.collection<Song>("songs").findOneAndUpdate(
         { id: songId, "riffs.id": riffId },
         {

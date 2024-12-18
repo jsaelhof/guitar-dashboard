@@ -2,6 +2,9 @@ import { useActionState, useEffect } from "react";
 import { debounce } from "@mui/material";
 import deepmerge from "deepmerge";
 import { Song, Tablature } from "guitar-dashboard-types";
+import { useNavigate } from "react-router-dom";
+import { post } from "../../../utils/post";
+import { get } from "../../../utils/get";
 
 type FetchSongResponse = {
   data: { song: Song };
@@ -44,22 +47,22 @@ export type SongAction =
     } & Tablature);
 
 export const useSong = (songId?: string) => {
+  const navigate = useNavigate();
+
   const [song, dispatch, isPending] = useActionState<
     Song | undefined,
     SongAction
   >(async (currentState, { type, ...body }) => {
-    const response = await fetch(
-      `http://localhost:8001/song/${songId}${type !== "get" ? `/${type}` : ""}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        ...(type !== "get" && {
-          method: "POST",
-          body: JSON.stringify(body),
-        }),
-      }
-    );
+    const response =
+      type === "get"
+        ? await get(`/song/${songId}`)
+        : await post(`/song/${songId}/${type}`, JSON.stringify(body));
+
+    if (response.status === 401) {
+      navigate("/login");
+      return;
+    }
+
     const { data } = (await response.json()) as FetchSongResponse;
 
     // Return the current state, overlayed with the newest data.

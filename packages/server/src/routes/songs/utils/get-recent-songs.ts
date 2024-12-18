@@ -1,12 +1,16 @@
 import DB from "../../../db/db.js";
 import { RecentSong } from "guitar-dashboard-types";
 import { RecentSongRecord } from "../../../types/index.js";
+import { Request } from "express";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
-export const getRecentSongs = async () => {
+export const getRecentSongs = async (req: Request) => {
   const db = await DB();
 
+  const { userId } = getUserCookie(req);
+
   return await db
-    .collection<RecentSongRecord>("recentSongs")
+    .collection<RecentSongRecord>(`${userId}_recentSongs`)
     .aggregate<RecentSong>([
       // For each id, find the matching document in the songs collection.
       // There will only be one match in the array set as the value of "as" which will be picked out by $first and used to replace the root.

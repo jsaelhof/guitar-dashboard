@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import jsmediatags from "jsmediatags";
 import { Song } from "guitar-dashboard-types";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
 const processRiffs = (song: Song): Pick<Song, "riffs" | "riffTimes"> => {
   // If this riff clones another, find it and overlay this data over the cloned data.
@@ -33,16 +34,23 @@ const processRiffs = (song: Song): Pick<Song, "riffs" | "riffTimes"> => {
 
 export const getSong = async (req: Request, res: Response) => {
   const db = await DB();
+
+  const { userId } = getUserCookie(req);
+
   const { songId } = req.params;
 
   const songData = await db
     .collection<Song>("songs")
     .findOne<Song>({ id: songId });
 
+  const userSongData = userId
+    ? await db.collection<Song>(`${userId}_songs`).findOne<Song>({ id: songId })
+    : null;
+
   if (songData) {
     const metaData = await new Promise<Pick<Song, "album" | "year" | "cover">>(
       (resolve) => {
-        jsmediatags.read(`/Volumes/Public/Music/${songData.file}`, {
+        jsmediatags.read(`${process.env.MP3_LIB}/${songData.file}`, {
           onSuccess: (tagData) => {
             const { album, year, picture } = tagData.tags ?? {};
 
@@ -70,6 +78,7 @@ export const getSong = async (req: Request, res: Response) => {
       data: {
         song: {
           ...songData,
+          ...(userSongData ?? {}),
           ...processRiffs(songData),
           ...metaData,
         },

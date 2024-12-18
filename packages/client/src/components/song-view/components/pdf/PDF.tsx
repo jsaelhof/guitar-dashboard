@@ -9,7 +9,7 @@ const PDF = ({ pdf }: PDFProps) => {
   // Display any PDF. This is typically used for non-pro tabs (old style ascii) as any easier option than cropping images.
   return pdf ? (
     <embed
-      src={`http://localhost:8001/${song.pdf}`}
+      src={`${import.meta.env.VITE_SERVER_URL}/${pdf}`}
       width="100%"
       type="application/pdf"
       style={{

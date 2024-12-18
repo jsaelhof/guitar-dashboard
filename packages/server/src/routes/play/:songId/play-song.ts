@@ -16,7 +16,7 @@ export const playSong = async (req: Request, res: Response) => {
     const { file } = songData;
 
     exec(
-      `open -a "iina" "/Volumes/Public/Music/${file}"`,
+      `open -a "iina" "${process.env.MP3_LIB}/${file}"`,
       (error, stdout, stderr) => {
         console.log(error);
       }

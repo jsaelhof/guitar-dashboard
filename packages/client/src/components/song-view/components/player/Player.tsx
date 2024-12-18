@@ -120,7 +120,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
             <audio
               ref={ref}
               crossOrigin="anonymous"
-              src={`http://localhost:8001/${song.file}`}
+              src={`${import.meta.env.VITE_SERVER_URL}/${song.file}`}
               //src={"/04 Rock Believer.mp3"}
               onError={(event) => {
                 // Suddenly started having an issue where the file won't load the first time about 75% of the time but if I click it again it works.

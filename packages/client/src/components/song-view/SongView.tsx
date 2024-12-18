@@ -69,7 +69,9 @@ const SongView = () => {
                   orientation="vertical"
                   onChange={onTablatureTabChange}
                 >
-                  {(song.tablature ?? []).map(TablatureTab)}
+                  {(song.tablature ?? []).map((props) => (
+                    <TablatureTab key={props.id} {...props} />
+                  ))}
                   <Tab label={<PlaylistAdd />} />
                 </Tabs>
               </>

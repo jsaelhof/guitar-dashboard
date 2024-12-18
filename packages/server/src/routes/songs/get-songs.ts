@@ -6,7 +6,7 @@ import { Song, SongTitleList, SongsByArtist } from "guitar-dashboard-types";
 export const getSongs = async (req: Request, res: Response) => {
   const db = await DB();
 
-  const recentSongs = await getRecentSongs();
+  const recentSongs = await getRecentSongs(req);
 
   // Execute the aggregation, send the returned cursor to an array and then reduce it.
   // This turns each { _id: <artist>, songs: [ "Song 1", "Song 2", ... ] } into { artist: ["Song 1", "Song 2", ...] }

@@ -11,6 +11,7 @@ import SwitchButton from "../player/components/switch-button/SwitchButton";
 import { AmpLabel, DigitalButton } from "../player/Player.styles";
 import { useDocumentVisibility } from "./hooks/use-document-visibility";
 import { searchTab } from "../../utils/search-tab";
+import { post } from "../../../../utils/post";
 
 type SongControlsProps = {
   song: Song;
@@ -18,33 +19,25 @@ type SongControlsProps = {
 
 const SongControls = ({ song }: SongControlsProps) => {
   const play = useCallback((songId: string) => {
-    fetch(`http://localhost:8001/play/${songId}`, { method: "post" });
+    post(`/play/${songId}`);
   }, []);
 
   const ampOn = useCallback(async () => {
     setAmpState("on");
-    const response = await fetch("http://localhost:8001/amp/on", {
-      method: "post",
-    });
+    const response = await post("/amp/on");
     const { error } = (await response.json()) as { error: boolean };
-    console.log("on", { error });
     setAmpState(error ? "unknown" : "on");
   }, []);
 
   const ampOff = useCallback(async () => {
     setAmpState("off");
-    const response = await fetch("http://localhost:8001/amp/off", {
-      method: "post",
-    });
+    const response = await post("/amp/off");
     const { error } = (await response.json()) as { error: boolean };
-    console.log("off", { error });
     setAmpState(error ? "unknown" : "off");
   }, []);
 
   const updateAmpStatus = useCallback(async () => {
-    const response = await fetch("http://localhost:8001/amp/status", {
-      method: "post",
-    });
+    const response = await post("/amp/status");
     const state = ((await response.json()) as { state: boolean }).state;
     setAmpState(state ? "on" : "off");
   }, []);

@@ -2,9 +2,12 @@ import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { v4 as uuid } from "uuid";
 import { Song } from "guitar-dashboard-types";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
 export const insertLoop = async (req: Request, res: Response) => {
   const db = await DB();
+
+  const { userId } = getUserCookie(req);
 
   const { songId } = req.params;
   const loopA = parseFloat(req.body.loopA);
@@ -12,21 +15,23 @@ export const insertLoop = async (req: Request, res: Response) => {
   const { label } = req.body;
 
   try {
-    if (songId && loopA != null && loopB != null && label) {
-      const songData = await db.collection<Song>("songs").findOneAndUpdate(
-        { id: songId },
-        {
-          $push: {
-            loops: {
-              id: uuid(),
-              loopA,
-              loopB,
-              label,
+    if (userId && songId && loopA != null && loopB != null && label) {
+      const songData = await db
+        .collection<Song>(`${userId}_songs`)
+        .findOneAndUpdate(
+          { id: songId },
+          {
+            $push: {
+              loops: {
+                id: uuid(),
+                loopA,
+                loopB,
+                label,
+              },
             },
           },
-        },
-        { returnDocument: "after" }
-      );
+          { returnDocument: "after" }
+        );
 
       if (songData) {
         res.send({

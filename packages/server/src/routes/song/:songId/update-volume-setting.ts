@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { Song } from "guitar-dashboard-types";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
 export const updateVolumeSetting = async (req: Request, res: Response) => {
   const db = await DB();
+
+  const { userId } = getUserCookie(req);
 
   const { songId } = req.params;
   const volume = parseFloat(req.body.volume);
 
   try {
-    if (songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
+    if (userId && songId && !isNaN(volume) && volume >= 0 && volume <= 1) {
       const songData = await db
-        .collection<Song>("songs")
+        .collection<Song>(`${userId}_songs`)
         .findOneAndUpdate(
           { id: songId },
           { $set: { "settings.volume": volume } },

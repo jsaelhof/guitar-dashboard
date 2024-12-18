@@ -1,5 +1,8 @@
 import { useActionState, useEffect } from "react";
 import { RecentSong, SongsByArtist } from "guitar-dashboard-types";
+import { useNavigate } from "react-router-dom";
+import { post } from "../utils/post";
+import { get } from "../utils/get";
 
 type FetchSongsResponse = {
   data: { songsByArtist: SongsByArtist; recentSongs: RecentSong[] };
@@ -8,6 +11,8 @@ type FetchSongsResponse = {
 export type SongsAction = { type: "recent"; songId: string } | { type: "get" };
 
 export const useSongs = () => {
+  const navigate = useNavigate();
+
   const [{ songsByArtist, recentSongs }, dispatch, isPending] = useActionState<
     {
       songsByArtist: SongsByArtist;
@@ -16,18 +21,19 @@ export const useSongs = () => {
     SongsAction
   >(
     async (prevState, { type, ...body }) => {
-      const response = await fetch(
-        `http://localhost:8001/songs${type !== "get" ? `/${type}` : ""}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          ...(type !== "get" && {
-            method: "POST",
-            body: JSON.stringify(body),
-          }),
-        }
-      );
+      const response =
+        type === "get"
+          ? await get("/songs")
+          : await post(`/songs/${type}`, JSON.stringify(body));
+
+      if (response.status === 401) {
+        navigate("/login");
+        return {
+          songsByArtist: {},
+          recentSongs: [],
+        };
+      }
+
       const { data } = (await response.json()) as FetchSongsResponse;
 
       return {

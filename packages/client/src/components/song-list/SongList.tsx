@@ -55,7 +55,7 @@ const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
                     sx={{ py: 0 }}
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                      navigate(`/${id}`);
+                      navigate(`/song/${id}`);
                     }}
                     selected={id === songId}
                   >
@@ -88,7 +88,7 @@ const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
               <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
                 <ListItemButton
                   onClick={() => {
-                    navigate(`/${songs[0].id}`);
+                    navigate(`/song/${songs[0].id}`);
                   }}
                 >
                   {artist}
@@ -101,7 +101,7 @@ const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
                       sx={{ py: 0 }}
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                        navigate(`/${song.id}`);
+                        navigate(`/song/${song.id}`);
                       }}
                       selected={song.id === songId}
                     >

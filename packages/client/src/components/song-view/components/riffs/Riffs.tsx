@@ -276,7 +276,7 @@ const Riffs = ({ songId, riffs, dispatchSong }: RiffsProps) => {
             </SectionSummary>
           </AccordionSummary>
           <AccordionDetails>
-            {src && <img src={`http://localhost:8001/${src}`} />}
+            {src && <img src={`${import.meta.env.VITE_SERVER_URL}/${src}`} />}
 
             {uri &&
               uri.map((imageUri, i) => <UriTablature key={i} src={imageUri} />)}

@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import { getSongs } from "./routes/songs/get-songs.js";
 import { updateRecentSongs } from "./routes/songs/update-recent-songs.js";
 import { playSong as playSong } from "./routes/play/:songId/play-song.js";
@@ -19,22 +20,29 @@ import { updatePitchSetting } from "./routes/song/:songId/update-pitch-setting.j
 import { ampOn } from "./routes/launch/amp-on.js";
 import { ampOff } from "./routes/launch/amp-off.js";
 import { ampStatus } from "./routes/launch/amp-status.js";
+import { authorizedRoute } from "./utils/authorized-route.js";
+import { login } from "./routes/login/login.js";
 
 dotenv.config();
 
 // --- Set server ---
 const app: Express = express();
 const port = process.env.PORT;
+app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:8000",
+    origin: true,
+    credentials: true,
   })
 );
 app.use(express.json({ limit: "100mb" }));
 app.use(express.static("public"));
-app.use(express.static("/Volumes/Public/Music"));
+process.env.MP3_LIB && app.use(express.static(process.env.MP3_LIB));
 
 // --- Setup Routes ---
+// login
+app.post("/login", login);
+
 // /launch/*
 app.post("/amp/on", ampOn);
 app.post("/amp/off", ampOff);
@@ -44,22 +52,22 @@ app.post("/amp/status", ampStatus);
 app.post("/play/:songId", playSong);
 
 // /songs/*
-app.get("/songs", getSongs);
-app.post("/songs/recent", updateRecentSongs);
+app.get("/songs", authorizedRoute(getSongs));
+app.post("/songs/recent", authorizedRoute(updateRecentSongs));
 
 // /song/*
-app.get("/song/:songId", getSong);
-app.post("/song/:songId/volume", updateVolumeSetting);
-app.post("/song/:songId/pitch", updatePitchSetting);
-app.post("/song/:songId/loop", insertLoop);
-app.post("/song/:songId/updateloop", updateLoop);
-app.post("/song/:songId/deleteloop", deleteLoop);
-app.post("/song/:songId/addvideo", addVideo);
-app.post("/song/:songId/deletevideo", deleteVideo);
-app.post("/song/:songId/rifftime", updateRiffTime);
-app.post("/song/:songId/addriff", addRiff);
-app.post("/song/:songId/rifforder", updateRiffOrder);
-app.post("/song/:songId/addtablature", addTablature);
+app.get("/song/:songId", authorizedRoute(getSong));
+app.post("/song/:songId/volume", authorizedRoute(updateVolumeSetting));
+app.post("/song/:songId/pitch", authorizedRoute(updatePitchSetting));
+app.post("/song/:songId/loop", authorizedRoute(insertLoop));
+app.post("/song/:songId/updateloop", authorizedRoute(updateLoop));
+app.post("/song/:songId/deleteloop", authorizedRoute(deleteLoop));
+app.post("/song/:songId/addvideo", authorizedRoute(addVideo));
+app.post("/song/:songId/deletevideo", authorizedRoute(deleteVideo));
+app.post("/song/:songId/rifftime", authorizedRoute(updateRiffTime));
+app.post("/song/:songId/addriff", authorizedRoute(addRiff));
+app.post("/song/:songId/rifforder", authorizedRoute(updateRiffOrder));
+app.post("/song/:songId/addtablature", authorizedRoute(addTablature));
 
 /*
 This route was an attempt to load UG in an iframe. It works for the first page but any link on that page then fails to connect the same way iframing the page directly does.
@@ -86,5 +94,5 @@ app.get("/search/ug", async (req, res) => {
 
 // --- Start server ---
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+  console.log(`⚡️[server]: Server is running on port ${port}`);
 });

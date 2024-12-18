@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { Song } from "guitar-dashboard-types";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
 export const updateLoop = async (req: Request, res: Response) => {
   const db = await DB();
+
+  const { userId } = getUserCookie(req);
 
   const { songId } = req.params;
   const loopA = parseFloat(req.body.loopA);
@@ -11,19 +14,21 @@ export const updateLoop = async (req: Request, res: Response) => {
   const { id, label } = req.body;
 
   try {
-    if (songId && id && loopA != null && loopB != null && label) {
+    if (userId && songId && id && loopA != null && loopB != null && label) {
       // TODO: Handle songData = null;
-      const songData = await db.collection<Song>("songs").findOneAndUpdate(
-        { id: songId, "loops.id": id },
-        {
-          $set: {
-            "loops.$.label": label,
-            "loops.$.loopA": loopA,
-            "loops.$.loopB": loopB,
+      const songData = await db
+        .collection<Song>(`${userId}_songs`)
+        .findOneAndUpdate(
+          { id: songId, "loops.id": id },
+          {
+            $set: {
+              "loops.$.label": label,
+              "loops.$.loopA": loopA,
+              "loops.$.loopB": loopB,
+            },
           },
-        },
-        { returnDocument: "after" }
-      );
+          { returnDocument: "after" }
+        );
 
       if (songData) {
         res.send({

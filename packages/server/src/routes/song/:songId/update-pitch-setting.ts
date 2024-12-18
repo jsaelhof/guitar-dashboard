@@ -1,17 +1,20 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { Song } from "guitar-dashboard-types";
+import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
 export const updatePitchSetting = async (req: Request, res: Response) => {
   const db = await DB();
+
+  const { userId } = getUserCookie(req);
 
   const { songId } = req.params;
   const pitch = parseFloat(req.body.pitch);
 
   try {
-    if (songId && !isNaN(pitch) && pitch >= -100 && pitch <= 100) {
+    if (userId && songId && !isNaN(pitch) && pitch >= -100 && pitch <= 100) {
       const songData = await db
-        .collection<Song>("songs")
+        .collection<Song>(`${userId}_songs`)
         .findOneAndUpdate(
           { id: songId },
           { $set: { "settings.pitch": pitch } },
