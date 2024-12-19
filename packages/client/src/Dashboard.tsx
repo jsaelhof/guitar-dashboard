@@ -7,10 +7,11 @@ import { DashboardLayout, LeftColumn } from "./Dashboard.styles";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "./theme/theme";
 import { AppProvider } from "./context/AppContext";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import { useSongs } from "./hooks/use-songs";
 
 function Dashboard() {
+  const { songId } = useParams();
   const songs = useSongs();
 
   return (
@@ -20,7 +21,7 @@ function Dashboard() {
           <LeftColumn>
             <SongList {...songs} />
           </LeftColumn>
-          <Outlet context={{ dispatchSongs: songs.dispatch }} />
+          <Outlet key={songId} context={{ dispatchSongs: songs.dispatch }} />
         </DashboardLayout>
       </ThemeProvider>
     </AppProvider>
