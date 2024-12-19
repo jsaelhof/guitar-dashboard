@@ -27,6 +27,7 @@ export type Song = {
   videos?: VideoResource[];
   metrics?: {
     plays?: number;
+    lastPlayed?: number;
   };
 };
 

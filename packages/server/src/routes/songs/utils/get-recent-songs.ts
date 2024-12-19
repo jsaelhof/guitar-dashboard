@@ -1,6 +1,6 @@
 import DB from "../../../db/db.js";
 import { RecentSong } from "guitar-dashboard-types";
-import { RecentSongRecord } from "../../../types/index.js";
+import { UserSongData } from "../../../types/index.js";
 import { Request } from "express";
 import { getUserCookie } from "../../../utils/get-user-cookie.js";
 
@@ -10,8 +10,12 @@ export const getRecentSongs = async (req: Request) => {
   const { userId } = getUserCookie(req);
 
   return await db
-    .collection<RecentSongRecord>(`${userId}_recentSongs`)
+    .collection<UserSongData>(`${userId}_songs`)
     .aggregate<RecentSong>([
+      { $match: { "metrics.lastPlayed": { $ne: null } } },
+      { $sort: { "metrics.lastPlayed": -1 } },
+      { $limit: 30 },
+      // Join data from the user's data (play counts) with the song data from the songs collection.
       // For each id, find the matching document in the songs collection.
       // There will only be one match in the array set as the value of "as" which will be picked out by $first and used to replace the root.
       {
@@ -23,7 +27,6 @@ export const getRecentSongs = async (req: Request) => {
           as: "songs",
         },
       },
-      { $sort: { timestamp: -1 } },
       { $replaceRoot: { newRoot: { $first: "$songs" } } },
     ])
     .toArray();
