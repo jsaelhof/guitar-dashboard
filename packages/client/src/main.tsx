@@ -9,20 +9,13 @@ import "./index.css";
 import SongView from "./components/song-view/SongView";
 import WebAudioTest from "./WebAudioTest";
 import { Login } from "./components/login/Login";
+import { EmptySongView } from "./components/empty-song-view/EmptySongView";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate replace to="/login" />,
   },
-  // {
-  //   path: ":songId",
-  //   element: (
-  //     <AppProvider>
-  //       <Dashboard />
-  //     </AppProvider>
-  //   ),
-  // },
   {
     path: "/login",
     element: <Login />,
@@ -33,7 +26,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <div>INDEX</div>,
+        element: <EmptySongView />,
       },
       {
         path: ":songId",

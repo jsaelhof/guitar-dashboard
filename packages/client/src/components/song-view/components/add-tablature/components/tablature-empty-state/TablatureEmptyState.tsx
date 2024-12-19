@@ -17,7 +17,6 @@ const TablatureEmptyState = ({ song, onClick }: TablatureEmptyStateProps) => (
       startIcon={<Search />}
       onClick={() => {
         searchTab(song);
-        onClick(true);
       }}
     >
       Search Tablature
