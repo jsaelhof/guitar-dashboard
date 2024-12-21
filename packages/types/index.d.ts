@@ -45,6 +45,7 @@ export type Tablature = {
   labelDesc?: string;
   tuning?: Tuning;
   uri: string[];
+  format: "ug1" | "ug2";
 };
 
 // Defines a smaller section of tablature.

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
-import { Song } from "guitar-dashboard-types";
+import { Song, Tablature } from "guitar-dashboard-types";
 
 export const addTablature = async (req: Request, res: Response) => {
   const db = await DB();
 
   const { songId } = req.params;
-  const tab = req.body;
+  const tab = req.body as Tablature;
 
   try {
     if (songId && tab) {
@@ -14,7 +14,10 @@ export const addTablature = async (req: Request, res: Response) => {
         { id: songId },
         {
           $push: {
-            tablature: tab,
+            tablature: {
+              ...tab,
+              format: "ug2", // For now, I'm assuming all new tab being added is in the ug2 format.
+            },
           },
         },
         { returnDocument: "after", projection: { _id: 0 } }
