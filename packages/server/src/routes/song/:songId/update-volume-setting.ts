@@ -18,7 +18,7 @@ export const updateVolumeSetting = async (req: Request, res: Response) => {
         .findOneAndUpdate(
           { id: songId },
           { $set: { "settings.volume": volume } },
-          { returnDocument: "after" }
+          { returnDocument: "after", upsert: true }
         );
 
       if (songData) {
