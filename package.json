@@ -8,9 +8,9 @@
     "packages/types"
   ],
   "scripts": {
-    "predev": "mongod --dbpath .mongodb/db --logpath .mongodb/logs/mongodb.log --fork",
-    "dev": "yarn run predev && yarn workspaces foreach -vpi run dev && echo STOPPED",
-    "stop": "pgrep mongod | xargs kill"
+    "dev": "yarn workspaces foreach -vpi run dev && echo STOPPED",
+    "start_db": "mongod --dbpath .mongodb/db --logpath .mongodb/logs/mongodb.log --fork",
+    "stop_db": "pgrep mongod | xargs kill"
   },
   "resolutions": {
     "@types/react": "npm:types-react@beta",

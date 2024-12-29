@@ -68,3 +68,12 @@ export type RecentSong = Pick<Song, "id" | "title" | "artist" | "file">;
 export type SongTitleList = Pick<Song, "id" | "title">[];
 
 export type SongsByArtist = Record<string, SongTitleList>;
+
+export type Exercise = {
+  id: string;
+  title: string;
+  song: Song;
+  tablature: Tablature;
+  speed: number;
+  loop: Omit<Loop, "label">;
+};
