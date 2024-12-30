@@ -111,6 +111,12 @@ export const theme = createTheme({
 
   components: {
     MuiIconButton: {
+      variants: [
+        {
+          props: { size: "xsmall" },
+          style: { padding: 4, "& .MuiSvgIcon-root": { fontSize: 14 } },
+        },
+      ],
       styleOverrides: {
         root: ({ ownerState, theme: { palette, textGlows } }) => {
           switch (ownerState.color) {
