@@ -18,6 +18,7 @@
     "react": "beta",
     "react-dom": "beta",
     "react-router-dom": "^6.10.0",
+    "soundtouchjs": "^0.1.30",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
