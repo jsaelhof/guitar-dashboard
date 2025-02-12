@@ -11,7 +11,9 @@ import {
 import { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSongs } from "../../hooks/use-songs";
-import { FitnessCenter, History, Speed } from "@mui/icons-material";
+import { History, Speed } from "@mui/icons-material";
+import AddSong from "./components/add-song/AddSong";
+import Search from "./components/search/Search";
 
 export type SongListProps = ReturnType<typeof useSongs>;
 
@@ -39,6 +41,18 @@ const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
   return (
     <>
       <List dense>
+        <ListItem>
+          <Search />
+        </ListItem>
+
+        <Divider variant="middle" sx={{ my: 2 }} />
+
+        <ListItem>
+          <AddSong />
+        </ListItem>
+
+        <Divider variant="middle" sx={{ my: 2 }} />
+
         <ListItem sx={{ p: 0, width: 1 }}>
           <ListItemButton
             sx={{ color: "primary.main" }}

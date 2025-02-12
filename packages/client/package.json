@@ -17,6 +17,7 @@
     "deepmerge": "^4.3.1",
     "react": "beta",
     "react-dom": "beta",
+    "react-dropzone": "^14.3.5",
     "react-router-dom": "^6.10.0",
     "uuid": "^9.0.1"
   },

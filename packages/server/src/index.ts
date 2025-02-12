@@ -25,6 +25,8 @@ import { login } from "./routes/login/login.js";
 import { getExercise } from "./routes/exercise/:exerciseId/get-exercise.js";
 import { getExercises } from "./routes/exercises/get-exercises.js";
 import { updateExerciseSpeed } from "./routes/exercise/:exerciseId/update-exercise-speed.js";
+import { searchSongs } from "./routes/search/search-songs.js";
+import { searchSong } from "./routes/search/search-song.js";
 
 dotenv.config();
 
@@ -78,6 +80,10 @@ app.post("/exercise/:exerciseId/speed", authorizedRoute(updateExerciseSpeed));
 
 // /exercises/*
 app.get("/exercises", authorizedRoute(getExercises));
+
+// /search/*
+app.post("/search-song", authorizedRoute(searchSong));
+app.post("/search-songs", authorizedRoute(searchSongs));
 
 /*
 This route was an attempt to load UG in an iframe. It works for the first page but any link on that page then fails to connect the same way iframing the page directly does.
