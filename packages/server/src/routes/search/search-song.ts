@@ -1,29 +1,21 @@
 import { Request, Response } from "express";
-import DB from "../../db/db.js";
 import { join } from "path";
 import { readdir } from "fs/promises";
+import { getSongMetadata } from "../../utils/get-song-metadata.js";
+import { SearchSongResults } from "guitar-dashboard-types";
 
 export const searchSong = async (req: Request, res: Response) => {
-  const db = await DB();
-
   const { search, artist } = req.body;
 
   try {
     if (process.env.MP3_LIB && search) {
-      const files = await searchFileRecursively(
-        `${process.env.MP3_LIB}${
-          artist ? `/${artist.charAt(0).toUpperCase()}` : ""
-        }`,
-        search
-      );
+      const results = await searchFileRecursively(artist, search);
 
       res.send({
         error: false,
         scope: "add",
         type: "searchSong",
-        data: {
-          files,
-        },
+        data: results,
       });
     } else {
       throw "Missing required params";
@@ -34,8 +26,13 @@ export const searchSong = async (req: Request, res: Response) => {
 };
 
 // Function to search for a file asynchronously
-const searchFileRecursively = async (directory: string, search: string) => {
+const searchFileRecursively = async (artist: string, search: string) => {
   let results: string[] = [];
+
+  // If any artist is provided, use the first letter to limit which sub-directory of the MP3 lib to search in.
+  const subDir = `${process.env.MP3_LIB}${
+    artist ? `/${artist.charAt(0).toUpperCase()}` : ""
+  }`;
 
   const searchDir = async (dir: string) => {
     try {
@@ -46,7 +43,13 @@ const searchFileRecursively = async (directory: string, search: string) => {
           return searchDir(fullPath);
         } else if (
           item.isFile() &&
-          item.name.toLowerCase().includes(search.toLowerCase())
+          !item.name.startsWith(".") &&
+          item.name.endsWith(".mp3") &&
+          item.name.toLowerCase().includes(search.toLowerCase()) &&
+          // If an artist was provided, I use the first letter to restrict which sub-dir to search.
+          // Within that dir, if the artist-level dir includes the entire artist sub-string, I can prevent other artists with similar songs
+          // from being included in the results. This doesn't speed it up, but it limits the results.
+          (!artist || dir.toLowerCase().includes(`/${artist.toLowerCase()}`))
         ) {
           results.push(fullPath);
         }
@@ -57,6 +60,32 @@ const searchFileRecursively = async (directory: string, search: string) => {
     }
   };
 
-  await searchDir(directory);
-  return results;
+  await searchDir(subDir);
+
+  return await results.reduce<Promise<SearchSongResults>>(
+    async (promiseCollection, track) => {
+      const collection = await promiseCollection;
+
+      const [_, artist, album, filename] = track
+        .replace(`${process.env.MP3_LIB}/`, "")
+        .split("/");
+
+      if (!collection[artist]) collection[artist] = {};
+      if (!collection[artist][album]) collection[artist][album] = [];
+
+      const metadata = await getSongMetadata(track);
+
+      collection[artist][album].push({
+        path: track,
+        filename,
+        cover: metadata.cover,
+        title: metadata.title,
+        album: metadata.album,
+        artist: metadata.artist,
+      });
+
+      return collection;
+    },
+    Promise.resolve({})
+  );
 };

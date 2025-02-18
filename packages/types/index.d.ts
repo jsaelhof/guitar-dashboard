@@ -77,3 +77,18 @@ export type Exercise = {
   speed: number;
   loop: Omit<Loop, "label">;
 };
+
+export type SearchSongResults = {
+  [artist: string]: {
+    [album: string]: Array<SearchSongResult>;
+  };
+};
+
+export type SearchSongResult = {
+  path: string;
+  filename: string;
+  cover?: string;
+  title?: string;
+  album?: string;
+  artist?: string;
+};

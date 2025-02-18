@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
 import { Song } from "guitar-dashboard-types";
-import { v4 as uuid } from "uuid";
 
 export const deleteVideo = async (req: Request, res: Response) => {
   const db = await DB();

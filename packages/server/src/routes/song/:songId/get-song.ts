@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import DB from "../../../db/db.js";
-import jsmediatags from "jsmediatags";
 import { Song } from "guitar-dashboard-types";
 import { getUserCookie } from "../../../utils/get-user-cookie.js";
+import { getSongMetadata } from "../../../utils/get-song-metadata.js";
 
 const processRiffs = (song: Song): Pick<Song, "riffs" | "riffTimes"> => {
   // If this riff clones another, find it and overlay this data over the cloned data.
@@ -48,27 +48,8 @@ export const getSong = async (req: Request, res: Response) => {
     : null;
 
   if (songData) {
-    const metaData = await new Promise<Pick<Song, "album" | "year" | "cover">>(
-      (resolve) => {
-        jsmediatags.read(`${process.env.MP3_LIB}/${songData.file}`, {
-          onSuccess: (tagData) => {
-            const { album, year, picture } = tagData.tags ?? {};
-
-            let cover;
-            if (picture) {
-              const { data, format } = picture;
-              // @ts-expect-error Can't figure out how to type data. Its a number[] but needs to be something else.
-              const base64String = Buffer.from(data, "binary").toString(
-                "base64"
-              );
-              cover = `data:${format};base64,${base64String}`;
-            }
-
-            resolve({ album, year, cover });
-          },
-          onError: () => resolve({}),
-        });
-      }
+    const metaData = await getSongMetadata(
+      `${process.env.MP3_LIB}/${songData.file}`
     );
 
     res.send({

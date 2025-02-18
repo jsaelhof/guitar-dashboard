@@ -8,16 +8,15 @@ import {
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSongs } from "../../hooks/use-songs";
 import { History, Speed } from "@mui/icons-material";
-import AddSong from "./components/add-song/AddSong";
-import Search from "./components/search/Search";
+import SearchAndInsert from "./components/search/SearchAndInsert";
 
 export type SongListProps = ReturnType<typeof useSongs>;
 
-const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
+const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
   const navigate = useNavigate();
   const { songId = "" } = useParams();
 
@@ -38,17 +37,13 @@ const SongList = ({ recentSongs, songsByArtist }: SongListProps) => {
 
   const [recentOpen, setRecentOpen] = useState(false);
 
+  const onInsert = useCallback(() => dispatch({ type: "get" }), []);
+
   return (
     <>
       <List dense>
         <ListItem>
-          <Search />
-        </ListItem>
-
-        <Divider variant="middle" sx={{ my: 2 }} />
-
-        <ListItem>
-          <AddSong />
+          <SearchAndInsert onInsert={onInsert} />
         </ListItem>
 
         <Divider variant="middle" sx={{ my: 2 }} />
