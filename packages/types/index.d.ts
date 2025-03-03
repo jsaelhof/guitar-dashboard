@@ -91,4 +91,10 @@ export type SearchSongResult = {
   title?: string;
   album?: string;
   artist?: string;
+  existingId?: string;
+};
+
+export type InsertSongResult = {
+  path: string;
+  success: boolean;
 };

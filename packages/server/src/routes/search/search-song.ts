@@ -2,14 +2,23 @@ import { Request, Response } from "express";
 import { join } from "path";
 import { readdir } from "fs/promises";
 import { getSongMetadata } from "../../utils/get-song-metadata.js";
-import { SearchSongResults } from "guitar-dashboard-types";
+import { SearchSongResults, Song } from "guitar-dashboard-types";
+import DB from "../../db/db.js";
+import { Db } from "mongodb";
 
 export const searchSong = async (req: Request, res: Response) => {
-  const { search, artist } = req.body;
+  const db = await DB();
+
+  const { search, artist, variousArtists } = req.body;
 
   try {
     if (process.env.MP3_LIB && search) {
-      const results = await searchFileRecursively(artist, search);
+      const results = await searchFileRecursively(
+        db,
+        artist,
+        search,
+        variousArtists
+      );
 
       res.send({
         error: false,
@@ -26,12 +35,21 @@ export const searchSong = async (req: Request, res: Response) => {
 };
 
 // Function to search for a file asynchronously
-const searchFileRecursively = async (artist: string, search: string) => {
+const searchFileRecursively = async (
+  db: Db,
+  artist: string,
+  search: string,
+  variousArtists: boolean
+) => {
   let results: string[] = [];
 
   // If any artist is provided, use the first letter to limit which sub-directory of the MP3 lib to search in.
   const subDir = `${process.env.MP3_LIB}${
-    artist ? `/${artist.charAt(0).toUpperCase()}` : ""
+    variousArtists
+      ? "/Various Artists"
+      : artist
+      ? `/${artist.charAt(0).toUpperCase()}`
+      : ""
   }`;
 
   const searchDir = async (dir: string) => {
@@ -66,14 +84,19 @@ const searchFileRecursively = async (artist: string, search: string) => {
     async (promiseCollection, track) => {
       const collection = await promiseCollection;
 
-      const [_, artist, album, filename] = track
-        .replace(`${process.env.MP3_LIB}/`, "")
-        .split("/");
+      const trackSubPath = track.replace(`${process.env.MP3_LIB}/`, "");
+
+      const [_, artist, album, filename] = trackSubPath.split("/");
 
       if (!collection[artist]) collection[artist] = {};
       if (!collection[artist][album]) collection[artist][album] = [];
 
       const metadata = await getSongMetadata(track);
+
+      // Check if this file path is already listed in a record in the DB.
+      const existingRecord = await db
+        .collection<Song>("songs")
+        .findOne({ file: trackSubPath });
 
       collection[artist][album].push({
         path: track,
@@ -82,6 +105,7 @@ const searchFileRecursively = async (artist: string, search: string) => {
         title: metadata.title,
         album: metadata.album,
         artist: metadata.artist,
+        existingId: existingRecord?.id,
       });
 
       return collection;

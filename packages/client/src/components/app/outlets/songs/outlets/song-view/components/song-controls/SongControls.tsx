@@ -10,7 +10,6 @@ import { Amp } from "./SongControls.styles";
 import SwitchButton from "../player/components/switch-button/SwitchButton";
 import { AmpLabel, DigitalButton } from "../player/Player.styles";
 import { useDocumentVisibility } from "./hooks/use-document-visibility";
-import { searchTab } from "../../utils/search-tab";
 import { post } from "../../../../../../utils/post";
 
 type SongControlsProps = {
@@ -59,7 +58,7 @@ const SongControls = ({ song }: SongControlsProps) => {
       // TODO: CLEAN UP ALL THE SX AND INLINE STYLES HERE
       style={{
         display: "grid",
-        gridTemplateColumns: "1fr auto 1fr",
+        gridTemplateColumns: "1fr auto",
         alignItems: "center",
         gap: "16px",
         marginBottom: "16px",
@@ -101,26 +100,6 @@ const SongControls = ({ song }: SongControlsProps) => {
           </DigitalButton>
         )}
       </Amp>
-
-      <div style={{ display: "flex", gap: 16, justifyContent: "end" }}>
-        <Button
-          variant="contained"
-          color="success"
-          startIcon={<PlayArrow />}
-          disabled={!song.file}
-          onClick={() => play(song.id)}
-        >
-          IINA
-        </Button>
-
-        <Button
-          variant="contained"
-          startIcon={<Search />}
-          onClick={() => searchTab(song)}
-        >
-          Search Tab
-        </Button>
-      </div>
     </div>
   ) : null;
 };

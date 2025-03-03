@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import DB from "../../db/db.js";
-import { SearchSongResult } from "guitar-dashboard-types";
+import { InsertSongResult, SearchSongResult } from "guitar-dashboard-types";
 
 export const insertSongs = async (
   req: Request<
@@ -21,10 +21,8 @@ export const insertSongs = async (
     );
   }
 
-  console.log(sanitizedFiles);
-
   if (process.env.MP3_LIB && sanitizedFiles.length) {
-    const filesAdded = [];
+    const filesAdded: Array<InsertSongResult> = [];
 
     for (const { path, artist, title } of sanitizedFiles) {
       const lastDoc = await db
@@ -39,7 +37,7 @@ export const insertSongs = async (
 
         const result = await db?.collection("songs").insertOne({
           id: nextKey,
-          file: path.replace(process.env.MP3_LIB, ""),
+          file: path.replace(`${process.env.MP3_LIB}/`, ""),
           artist,
           settings: {
             volume: 0.5,

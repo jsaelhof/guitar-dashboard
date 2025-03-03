@@ -11,8 +11,8 @@ import {
 import { useCallback, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSongs } from "../../hooks/use-songs";
-import { History, Speed } from "@mui/icons-material";
-import SearchAndInsert from "./components/search/SearchAndInsert";
+import { History, LibraryMusicOutlined, Speed } from "@mui/icons-material";
+import AddSongs from "./components/add-songs/AddSongs";
 
 export type SongListProps = ReturnType<typeof useSongs>;
 
@@ -41,13 +41,7 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
 
   return (
     <>
-      <List dense>
-        <ListItem>
-          <SearchAndInsert onInsert={onInsert} />
-        </ListItem>
-
-        <Divider variant="middle" sx={{ my: 2 }} />
-
+      <List dense sx={{ overflow: "auto" }}>
         <ListItem sx={{ p: 0, width: 1 }}>
           <ListItemButton
             sx={{ color: "primary.main" }}
@@ -111,6 +105,19 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
         </ListItem>
 
         <Divider variant="middle" sx={{ my: 2 }} />
+
+        <ListItem sx={{ lineHeight: 2, pb: 2 }}>
+          <ListItemIcon>
+            <LibraryMusicOutlined />
+          </ListItemIcon>
+          <ListItemText
+            primary="Songs"
+            primaryTypographyProps={{ color: "primary" }}
+          />
+
+          {/* Trigger containing the dialog for adding new songs */}
+          <AddSongs onInsert={onInsert} />
+        </ListItem>
 
         {Object.entries(songsByArtist).map(([artist, songs]) => (
           <ListItem key={artist} sx={{ p: 0, width: 1 }}>
