@@ -11,7 +11,7 @@ export const UG1 = ({ uri, zoom }: UG1Props) => (
       <div key={i}>
         <UriTablature
           src={imageUri}
-          style={{ width: `${700 * (zoom / 100)}px` }}
+          style={{ width: `${800 * (zoom / 100)}px` }}
         />
       </div>
     ))}

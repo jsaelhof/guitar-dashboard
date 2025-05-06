@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useExercise } from "./hooks/use-exercise";
-import Tablature from "../../../songs/outlets/song-view/components/tablature/Tablature";
+import Tablature from "../../../song/outlets/song-view/components/tablature/Tablature";
 import { useParams } from "react-router-dom";
 import {
   AmpLabel,
@@ -12,8 +12,8 @@ import {
 } from "./Exercise.styles";
 import { Pause, PlayArrow } from "@mui/icons-material";
 import { formatSeconds } from "../../../../utils/format-seconds";
-import Playback from "../../../songs/outlets/song-view/components/player/components/playback/Playback";
-import AmpDial from "../../../songs/outlets/song-view/components/player/components/amp-dial/AmpDial";
+import Playback from "../../../song/outlets/song-view/components/player/components/playback/Playback";
+import AmpDial from "../../../song/outlets/song-view/components/player/components/amp-dial/AmpDial";
 import { Typography } from "@mui/material";
 
 const MAX_RETRY = 10;

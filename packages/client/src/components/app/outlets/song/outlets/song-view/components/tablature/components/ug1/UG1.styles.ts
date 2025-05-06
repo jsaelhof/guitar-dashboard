@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
 export const UriTablature = styled("img")(() => ({
-  //width: 700,
+  filter: "invert(0.9) brightness(0.7)",
   marginBottom: -24,
 }));

@@ -1,18 +1,18 @@
 import ReactDOM from "react-dom/client";
-import Songs from "./components/app/outlets/songs/Songs";
+import Song from "./components/app/outlets/song/Song";
 import {
   createBrowserRouter,
   Navigate,
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import SongView from "./components/app/outlets/songs/outlets/song-view/SongView";
+import SongView from "./components/app/outlets/song/outlets/song-view/SongView";
 import WebAudioTest from "./WebAudioTest";
 import { Login } from "./components/app/outlets/login/Login";
-import { EmptySongView } from "./components/app/outlets/songs/outlets/empty-song-view/EmptySongView";
 import { Exercises } from "./components/app/outlets/exercises/Exercises";
 import { Exercise } from "./components/app/outlets/exercises/outlets/exercise/Exercise";
 import { App } from "./components/app/App";
+import RecentSongsView from "./components/app/outlets/song/outlets/recent-songs-view/RecentSongsView";
 
 const router = createBrowserRouter([
   {
@@ -29,11 +29,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/song",
-        element: <Songs />,
+        element: <Song />,
         children: [
           {
             index: true,
-            element: <EmptySongView />,
+            element: <RecentSongsView />,
           },
           {
             path: ":songId",

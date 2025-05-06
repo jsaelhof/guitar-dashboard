@@ -7,6 +7,11 @@ export enum Tuning {
   "C" = "C",
 }
 
+export type Metrics = {
+  plays?: number;
+  lastPlayed?: number;
+};
+
 export type Song = {
   id: string;
   title: string; // DB field, but could be from tags
@@ -25,10 +30,7 @@ export type Song = {
   riffs?: Riff[];
   riffTimes?: number[];
   videos?: VideoResource[];
-  metrics?: {
-    plays?: number;
-    lastPlayed?: number;
-  };
+  metrics?: Metrics;
 };
 
 export type Loop = {
@@ -63,7 +65,10 @@ export type VideoResource = {
   url: string; // A YouTube url (not the embed url, the regular one)
 };
 
-export type RecentSong = Pick<Song, "id" | "title" | "artist" | "file">;
+export type RecentSong = Pick<
+  Song,
+  "id" | "title" | "artist" | "album" | "cover" | "file"
+> & { metrics?: Pick<Metrics, "lastPlayed"> };
 
 export type SongTitleList = Pick<Song, "id" | "title">[];
 

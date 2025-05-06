@@ -3,12 +3,12 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import SongList from "./components/song-list/SongList";
-import { Layout, LeftColumn } from "./Songs.styles";
+import { Layout, LeftColumn } from "./Song.styles";
 import { AppProvider } from "./context/AppContext";
 import { Outlet, useParams } from "react-router-dom";
 import { useSongs } from "./hooks/use-songs";
 
-function Songs() {
+function Song() {
   const { songId } = useParams();
   const songs = useSongs();
 
@@ -18,10 +18,13 @@ function Songs() {
         <LeftColumn>
           <SongList {...songs} />
         </LeftColumn>
-        <Outlet key={songId} context={{ dispatchSongs: songs.dispatch }} />
+        <Outlet
+          key={songId}
+          context={{ dispatchSongs: songs.dispatch, songs }}
+        />
       </Layout>
     </AppProvider>
   );
 }
 
-export default Songs;
+export default Song;

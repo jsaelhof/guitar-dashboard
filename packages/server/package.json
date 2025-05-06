@@ -7,7 +7,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node dist/index.js",
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\""
+    "dev": "concurrently \"nodemon -q dist/index.js --signal SIGKILL\" \"npx tsc --watch\""
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,7 @@
     "concurrently": "^7.6.0",
     "guitar-dashboard-types": "*",
     "nodemon": "^2.0.21",
+    "ts-node": "^10.9.2",
     "typescript": "^4.9.5"
   }
 }

@@ -18,5 +18,5 @@ CONNECTION_STRING=mongodb://localhost:27017/guitar;
 # Path on the local machine to the MP3 library, no trailing slash.
 # Files paths in the DB are appended to this value.
 # Those file paths are in the form `/G/Ghost/...`
-MP3_LIB=/mnt/NAS/Public/Music
+MP3_LIB=/Volumes/Public/Music
 ```

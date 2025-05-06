@@ -1,4 +1,4 @@
-import { Color, createTheme } from "@mui/material";
+import { Color, createTheme, PaletteColorOptions } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -8,27 +8,26 @@ declare module "@mui/material/styles" {
   }
 
   interface PaletteOptions {
-    lightGrey: Partial<Color>;
-    blueLights: Partial<Color>;
-    darkGrey: Partial<
-      Color & {
-        820: string;
-        840: string;
-        860: string;
-        880: string;
-      }
-    >;
-    darkSecondary: Color;
+    lightGrey: PaletteColorOptions;
+    blueLights: PaletteColorOptions;
+    darkGrey: PaletteColorOptions & {
+      820: string;
+      840: string;
+      860: string;
+      880: string;
+    };
+    darkSecondary: PaletteColorOptions;
+    stereo: PaletteColorOptions;
   }
 
   interface Theme {
-    glows: ["none", string, string, string];
+    glows: ["none", string, string];
     textGlows: ["none", string, string, string, string, string, string];
   }
 
   // allow configuration using `createTheme`
   interface ThemeOptions {
-    glows?: ["none", string, string, string];
+    glows?: ["none", string, string];
     textGlows?: ["none", string, string, string, string, string, string];
   }
 
@@ -55,6 +54,13 @@ declare module "@mui/material/IconButton" {
 }
 
 export const theme = createTheme({
+  // NOTE: Could not get color overriding to work properly using these. I added them to try and wire up a manual light/dark switch.
+  // colorSchemes: {
+  //   dark: true,
+  // },
+  // cssVariables: {
+  //   colorSchemeSelector: "class",
+  // },
   typography: {
     fontFamily: "Circular, Roboto, sans-serif",
   },
@@ -69,6 +75,10 @@ export const theme = createTheme({
     "0 0 6px #79c4e7",
   ],
   palette: {
+    mode: "dark", // This overrides any other setting of the color mode and just permanently makes the theme use dark mode.
+    primary: {
+      main: "#FAFAFA",
+    },
     secondary: {
       main: "#424242",
     },
@@ -185,8 +195,6 @@ export const theme = createTheme({
       styleOverrides: {
         // Name of the slot
         root: ({ ownerState, theme: { palette, textGlows } }) => ({
-          // Some CSS
-          //fontSize: "1rem",
           color: palette.primary.main,
           minWidth: 32,
         }),

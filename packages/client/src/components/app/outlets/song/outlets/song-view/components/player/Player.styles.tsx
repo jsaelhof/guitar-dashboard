@@ -8,7 +8,7 @@ import { IconButton, styled } from "@mui/material";
 
 export const PlayerBase = styled("div")(
   ({ $hasCover, theme: { palette } }) => ({
-    height: 120,
+    height: 164,
     fontSize: 14,
     color: palette.lightGrey[200],
     display: "grid",

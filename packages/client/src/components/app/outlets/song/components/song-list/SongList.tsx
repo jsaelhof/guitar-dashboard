@@ -59,49 +59,17 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
         <Divider variant="middle" sx={{ my: 2 }} />
 
         <ListItem sx={{ p: 0, width: 1 }}>
-          <List dense sx={{ py: 0, width: 1 }}>
-            <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
-              <ListItemButton
-                onClick={() => {
-                  setRecentOpen(!recentOpen);
-                }}
-              >
-                <ListItemIcon>
-                  <History />
-                </ListItemIcon>
-                <ListItemText primary="Recent Songs" />
-              </ListItemButton>
-            </ListSubheader>
-            <Collapse in={recentOpen}>
-              {recentSongs.map(({ id, title, artist }) => (
-                <ListItem key={id} sx={{ p: 0 }}>
-                  <ListItemButton
-                    sx={{ py: 0 }}
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                      navigate(`/song/${id}`);
-                    }}
-                    selected={id === songId}
-                  >
-                    <ListItemText
-                      primary={
-                        <div>
-                          <div>{title}</div>
-                          <div style={{ fontSize: "0.9em", opacity: 0.66 }}>
-                            {artist}
-                          </div>
-                        </div>
-                      }
-                      primaryTypographyProps={{
-                        fontSize: 12,
-                      }}
-                      sx={{ pl: 1 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </Collapse>
-          </List>
+          <ListItemButton
+            sx={{ color: "primary.main" }}
+            onClick={() => {
+              navigate("/song");
+            }}
+          >
+            <ListItemIcon>
+              <History />
+            </ListItemIcon>
+            <ListItemText primary="Recent Songs" />
+          </ListItemButton>
         </ListItem>
 
         <Divider variant="middle" sx={{ my: 2 }} />
@@ -124,16 +92,23 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
             <List dense sx={{ py: 0, width: 1 }}>
               <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
                 <ListItemButton
+                  sx={{ py: 0.1 }}
                   onClick={() => {
                     navigate(`/song/${songs[0].id}`);
                   }}
                 >
-                  {artist}
+                  <ListItemText
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                    }}
+                  >
+                    {artist}
+                  </ListItemText>
                 </ListItemButton>
               </ListSubheader>
               <Collapse in={currentArtist === artist}>
                 {songs.map((song) => (
-                  <ListItem key={song.id} sx={{ p: 0 }}>
+                  <ListItem key={song.id} sx={{ px: 0.5, py: 0 }}>
                     <ListItemButton
                       sx={{ py: 0 }}
                       onClick={(e) => {
