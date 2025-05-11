@@ -85,40 +85,37 @@ const SongView = () => {
           </div>
 
           <TabPanel>
-            <div>
-              {navTabId === 0 &&
-                (song.tablature && tablatureTabId < song.tablature.length ? (
-                  <Tablature tablature={song.tablature[tablatureTabId]} />
-                ) : (
-                  <AddTablature
-                    mode="tab"
-                    song={song}
-                    dispatchSong={dispatchSong}
-                    songIsPending={songIsPending}
-                  />
-                ))}
+            {navTabId === 0 && song.pdf ? (
+              <PDF pdf={song.pdf} />
+            ) : song.tablature && tablatureTabId < song.tablature.length ? (
+              <Tablature tablature={song.tablature[tablatureTabId]} />
+            ) : (
+              <AddTablature
+                mode="tab"
+                song={song}
+                dispatchSong={dispatchSong}
+                songIsPending={songIsPending}
+              />
+            )}
 
-              {navTabId === 1 && (
-                <>
-                  <Riffs
-                    songId={song.id}
-                    riffs={song.riffs}
-                    dispatchSong={dispatchSong}
-                  />
-                  <AddRiffCard
-                    mode="riffs"
-                    dispatchSong={dispatchSong}
-                    songIsPending={songIsPending}
-                  />
-                </>
-              )}
+            {navTabId === 1 && (
+              <>
+                <Riffs
+                  songId={song.id}
+                  riffs={song.riffs}
+                  dispatchSong={dispatchSong}
+                />
+                <AddRiffCard
+                  mode="riffs"
+                  dispatchSong={dispatchSong}
+                  songIsPending={songIsPending}
+                />
+              </>
+            )}
 
-              {navTabId === 2 && (
-                <Video videos={song.videos} dispatchSong={dispatchSong} />
-              )}
-            </div>
-
-            <PDF pdf={song.pdf} />
+            {navTabId === 2 && (
+              <Video videos={song.videos} dispatchSong={dispatchSong} />
+            )}
           </TabPanel>
         </Content>
       </Fragment>
