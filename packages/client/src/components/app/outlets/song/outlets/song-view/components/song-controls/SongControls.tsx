@@ -1,4 +1,4 @@
-import { PlayArrow, Search, Tune } from "@mui/icons-material";
+import { PlayArrow, PlayCircleOutlined, Tune } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { Song } from "guitar-dashboard-types";
@@ -16,6 +16,7 @@ type SongControlsProps = {
   song: Song;
 };
 
+// TODO: Rename... Probably something like top bar or page header
 const SongControls = ({ song }: SongControlsProps) => {
   const play = useCallback((songId: string) => {
     post(`/play/${songId}`);
@@ -79,27 +80,46 @@ const SongControls = ({ song }: SongControlsProps) => {
         )}
       </Box>
 
-      <Amp
-        onClick={() => (ampState === "on" ? ampOff() : ampOn())}
-        style={{ cursor: "pointer" }}
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          alignItems: "stretch",
+          cursor: "pointer",
+        }}
       >
-        <SwitchButton on={ampState === "on"} />
-        <AmpLabel>Guitar Amplifier</AmpLabel>
+        {/* TODO: These shouldn't be using Amp components... this should be a new kind of button and needs a rollover state */}
+        <Amp
+          onClick={(e) => {
+            e.stopPropagation();
+            play(song.id);
+          }}
+        >
+          <PlayArrow fontSize="small" sx={{ opacity: 0.5, mr: 1 }} />
+          <AmpLabel>Play on Desktop</AmpLabel>
+        </Amp>
 
-        {/* When the amp is on, calling ampOn again will focus the amp. */}
-        {ampState === "on" && (
-          <DigitalButton
-            size="small"
-            sx={{ ml: 2 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              ampOn();
-            }}
-          >
-            <Tune />
-          </DigitalButton>
-        )}
-      </Amp>
+        <Amp
+          onClick={() => (ampState === "on" ? ampOff() : ampOn())}
+          sx={{ cursor: "pointer", px: 1, py: 0.5, gap: 1 }}
+        >
+          <SwitchButton on={ampState === "on"} />
+          <AmpLabel>Guitar Amplifier</AmpLabel>
+
+          {/* When the amp is on, calling ampOn again will focus the amp. */}
+          {ampState === "on" && (
+            <DigitalButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                ampOn();
+              }}
+            >
+              <Tune />
+            </DigitalButton>
+          )}
+        </Amp>
+      </Box>
     </div>
   ) : null;
 };
