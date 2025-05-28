@@ -19,7 +19,7 @@ import AmpDial from "./components/amp-dial/AmpDial";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { useAppContext } from "../../../../context/AppContext";
 import { CustomEvents, UpdateTimeDetail } from "../../types/events";
-import SwitchButton from "./components/switch-button/SwitchButton";
+import SwitchButton from "../switch-button/SwitchButton";
 import Playback from "./components/playback/Playback";
 import LoopList from "./components/loop-list/LoopList";
 import { NEW_LOOP_ID } from "./constants";

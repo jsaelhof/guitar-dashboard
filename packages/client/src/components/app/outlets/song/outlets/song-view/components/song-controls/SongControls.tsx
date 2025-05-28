@@ -1,14 +1,8 @@
-import { PlayArrow, PlayCircleOutlined, Tune } from "@mui/icons-material";
-import { Box, Button, Typography } from "@mui/material";
+import { PlayArrow, Tune } from "@mui/icons-material";
+import { Box, Button, IconButton, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { Song } from "guitar-dashboard-types";
-import { Amp } from "./SongControls.styles";
-
-// SHOULD NOT BE BORROWING THESE FROM THE PLAYER COMPONENT.
-// These should be lifted (probably all the knob/display/switch etc)
-// Potentially SongControls needs to be merged with Player to form the "head"... Player remains a sub-component but the styling would be a cohesive "stereo component" stack.
-import SwitchButton from "../player/components/switch-button/SwitchButton";
-import { AmpLabel, DigitalButton } from "../player/Player.styles";
+import SwitchButton from "../switch-button/SwitchButton";
 import { useDocumentVisibility } from "./hooks/use-document-visibility";
 import { post } from "../../../../../../utils/post";
 
@@ -88,37 +82,39 @@ const SongControls = ({ song }: SongControlsProps) => {
           cursor: "pointer",
         }}
       >
-        {/* TODO: These shouldn't be using Amp components... this should be a new kind of button and needs a rollover state */}
-        <Amp
+        <Button
+          variant="stereo"
           onClick={(e) => {
             e.stopPropagation();
             play(song.id);
           }}
+          startIcon={<PlayArrow />}
         >
-          <PlayArrow fontSize="small" sx={{ opacity: 0.5, mr: 1 }} />
-          <AmpLabel>Play on Desktop</AmpLabel>
-        </Amp>
+          Play on Desktop
+        </Button>
 
-        <Amp
+        <Button
           onClick={() => (ampState === "on" ? ampOff() : ampOn())}
-          sx={{ cursor: "pointer", px: 1, py: 0.5, gap: 1 }}
+          variant="stereo"
+          startIcon={<SwitchButton on={ampState === "on"} />}
         >
-          <SwitchButton on={ampState === "on"} />
-          <AmpLabel>Guitar Amplifier</AmpLabel>
-
-          {/* When the amp is on, calling ampOn again will focus the amp. */}
-          {ampState === "on" && (
-            <DigitalButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                ampOn();
-              }}
-            >
-              <Tune />
-            </DigitalButton>
-          )}
-        </Amp>
+          <Box display="flex" alignItems="center" gap={1}>
+            <div>Guitar Amplifier</div>
+            {/* When the amp is on, calling ampOn again will focus the amp. */}
+            {ampState === "on" && (
+              <IconButton
+                color="blueLights"
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  ampOn();
+                }}
+              >
+                <Tune />
+              </IconButton>
+            )}
+          </Box>
+        </Button>
       </Box>
     </div>
   ) : null;

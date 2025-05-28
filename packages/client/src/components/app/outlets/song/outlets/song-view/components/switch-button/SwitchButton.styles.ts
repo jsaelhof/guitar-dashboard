@@ -1,6 +1,6 @@
 import { styled } from "@mui/material";
 
-export const AmpKnob = styled("div")(
+export const SwitchLayout = styled("div")(
   ({ $size = "large" }: { $size: "small" | "large" }) => ({
     width: 28,
     height: 28,
@@ -13,7 +13,7 @@ export const AmpKnob = styled("div")(
   })
 );
 
-export const AmpKnobBarrel = styled("div")(
+export const SwitchBase = styled("div")(
   ({ theme: { palette, glows }, $on }: { $on: boolean }) => ({
     gridArea: "1 / 1",
     position: "relative",
@@ -30,9 +30,11 @@ export const AmpKnobBarrel = styled("div")(
       position: "absolute",
       width: 14,
       height: 14,
+      top: 0,
+      left: 0,
       backgroundImage: `linear-gradient(to bottom, ${palette.darkGrey[900]}, ${palette.darkGrey[800]})`,
       borderRadius: "50%",
-      transform: "translate(1px, 1px)",
+      transform: "translate(-1px, -1px)",
       transition: "all 200ms",
 
       ...($on && {

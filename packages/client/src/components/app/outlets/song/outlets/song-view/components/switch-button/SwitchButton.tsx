@@ -1,4 +1,4 @@
-import { AmpKnob, AmpKnobBarrel } from "./SwitchButton.styles";
+import { SwitchLayout, SwitchBase } from "./SwitchButton.styles";
 
 const SwitchButton = ({
   on,
@@ -9,9 +9,9 @@ const SwitchButton = ({
   size?: "small" | "large";
 }) => {
   return (
-    <AmpKnob {...props} $size={size}>
-      <AmpKnobBarrel $on={on} />
-    </AmpKnob>
+    <SwitchLayout {...props} $size={size}>
+      <SwitchBase $on={on} />
+    </SwitchLayout>
   );
 };
 

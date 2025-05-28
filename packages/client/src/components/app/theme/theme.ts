@@ -48,8 +48,21 @@ declare module "@mui/material/IconButton" {
   interface IconButtonPropsColorOverrides {
     blueLights: true;
   }
-  interface ButtonPropsColorOverrides {
+  interface IconButtonPropsColorOverrides {
     blueLights: true;
+  }
+  interface IconButtonPropsSizeOverrides {
+    xsmall: true;
+  }
+}
+
+declare module "@mui/material/Button" {
+  interface ButtonPropsSizeOverrides {
+    xsmall: true;
+  }
+
+  interface ButtonPropsVariantOverrides {
+    stereo: true;
   }
 }
 
@@ -137,8 +150,11 @@ export const theme = createTheme({
                 },
                 "> svg": {
                   filter: `drop-shadow(${textGlows[0]})`,
+                },
+                ":hover": {
+                  backgroundColor: "transparent",
 
-                  "&:hover": {
+                  "> svg": {
                     filter: `drop-shadow(${textGlows[6]})`,
                   },
                 },
@@ -155,6 +171,29 @@ export const theme = createTheme({
         {
           props: { size: "xsmall" },
           style: { fontSize: 10, padding: "4px 6px", minWidth: 50 },
+        },
+        {
+          props: { variant: "stereo" },
+          style: ({ theme: { palette } }) => ({
+            padding: "4px 16px",
+            border: "1px solid black",
+            borderRadius: 6,
+            background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
+
+            fontFamily: "StereoGothic",
+            textTransform: "uppercase",
+            color: palette.lightGrey[200],
+            fontSize: 8,
+
+            ":hover": {
+              color: palette.blueLights[500],
+            },
+
+            "&.MuiButton-sizeSmall": {
+              fontSize: 7,
+              transform: "translateY(1px)",
+            },
+          }),
         },
       ],
       styleOverrides: {
