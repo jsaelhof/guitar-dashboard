@@ -64,6 +64,11 @@ declare module "@mui/material/Button" {
   interface ButtonPropsVariantOverrides {
     stereo: true;
   }
+
+  interface ButtonPropsColorOverrides {
+    darkSecondary: true;
+    blueLights: true;
+  }
 }
 
 export const theme = createTheme({
@@ -139,31 +144,25 @@ export const theme = createTheme({
           props: { size: "xsmall" },
           style: { padding: 4, "& .MuiSvgIcon-root": { fontSize: 14 } },
         },
-      ],
-      styleOverrides: {
-        root: ({ ownerState, theme: { palette, textGlows } }) => {
-          switch (ownerState.color) {
-            case "blueLights":
-              return {
-                "&.Mui-disabled": {
-                  color: palette.blueLights[900],
-                },
-                "> svg": {
-                  filter: `drop-shadow(${textGlows[0]})`,
-                },
-                ":hover": {
-                  backgroundColor: "transparent",
+        {
+          props: { color: "blueLights" },
+          style: ({ theme: { palette, textGlows } }) => ({
+            "&.Mui-disabled": {
+              color: palette.blueLights[900],
+            },
+            "> svg": {
+              filter: `drop-shadow(${textGlows[0]})`,
+            },
+            ":hover": {
+              backgroundColor: "transparent",
 
-                  "> svg": {
-                    filter: `drop-shadow(${textGlows[6]})`,
-                  },
-                },
-              };
-            default:
-              return;
-          }
+              "> svg": {
+                filter: `drop-shadow(${textGlows[6]})`,
+              },
+            },
+          }),
         },
-      },
+      ],
     },
 
     MuiButton: {
@@ -195,45 +194,41 @@ export const theme = createTheme({
             },
           }),
         },
-      ],
-      styleOverrides: {
-        root: ({ ownerState, theme: { palette, textGlows } }) => {
-          switch (ownerState.color) {
-            case "darkSecondary":
-              return {
-                "&.Mui-disabled": {
-                  color: "#444",
-                  borderColor: "#242424",
-                },
-                ":hover": {
-                  color: palette.blueLights[300],
-                  textShadow: textGlows[1],
-                  borderColor: palette.blueLights[800],
-                },
-              };
-            case "stereo":
-              return {
-                color: palette.blueLights[300],
-                backgroundColor: palette.darkGrey[900],
-                ":hover": {
-                  textShadow: textGlows[2],
-                  backgroundColor: palette.darkGrey[300],
-                },
-                "&.Mui-disabled": {
-                  backgroundColor: palette.darkGrey[900],
-                  color: palette.lightGrey[600],
-                },
-              };
-            default:
-              return;
-          }
+        {
+          props: { color: "blueLights" },
+          style: ({ theme: { palette, textGlows } }) => ({
+            color: palette.blueLights[300],
+            backgroundColor: palette.darkGrey[900],
+            ":hover": {
+              textShadow: textGlows[2],
+              backgroundColor: palette.darkGrey[300],
+            },
+            "&.Mui-disabled": {
+              backgroundColor: palette.darkGrey[900],
+              color: palette.lightGrey[600],
+            },
+          }),
         },
-      },
+        {
+          props: { color: "darkSecondary" },
+          style: ({ theme: { palette, textGlows } }) => ({
+            "&.Mui-disabled": {
+              color: "#444",
+              borderColor: "#242424",
+            },
+            ":hover": {
+              color: palette.blueLights[300],
+              textShadow: textGlows[1],
+              borderColor: palette.blueLights[800],
+            },
+          }),
+        },
+      ],
     },
     MuiListItemIcon: {
       styleOverrides: {
         // Name of the slot
-        root: ({ ownerState, theme: { palette, textGlows } }) => ({
+        root: ({ theme: { palette } }) => ({
           color: palette.primary.main,
           minWidth: 32,
         }),

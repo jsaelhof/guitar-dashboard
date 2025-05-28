@@ -56,7 +56,7 @@ const ExerciseMenu = () => {
           <Button
             startIcon={<ArrowLeft />}
             variant="contained"
-            color="stereo"
+            color="blueLights"
             disabled={exercises.at(0)?.id === exerciseId}
             onClick={onPrev}
           >
@@ -65,7 +65,7 @@ const ExerciseMenu = () => {
           <Button
             endIcon={<ArrowRight />}
             variant="contained"
-            color="stereo"
+            color="blueLights"
             disabled={exercises.at(-1)?.id === exerciseId}
             onClick={onNext}
           >
