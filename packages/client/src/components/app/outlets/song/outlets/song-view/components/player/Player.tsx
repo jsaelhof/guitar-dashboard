@@ -35,48 +35,51 @@ export type PlayerProps = {
   dispatchSongs: (action: SongsAction) => void;
 };
 
+export type CustomAudioElement = HTMLAudioElement & {
+  loopSec: { loopA: number; loopB?: number | undefined } | undefined;
+};
+
 const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
   const { disableShortcuts, setDisableShortcuts } = useAppContext();
 
-  const ref = useRef<HTMLAudioElement | null>(null);
+  const ref = useRef<CustomAudioElement | null>(null);
 
   const [errorRetryAttempts, setErrorRetryAttempts] = useState(0);
 
-  const [volume, setVolume] = useState<number>(0.5);
   const [appliedLoop, setAppliedLoop] = useState<Loop | null>(null);
-  const [loop, setLoop] = useState<[number, number?] | null>(null);
   const [sync, setSync] = useState(true);
   const [pitch, setPitch] = useState<number>(0);
 
   // The state of everything related to the audio is in the ref.
   // Rather than storing copies of pieces of data that the UI relies on in useState vars, this just forces a re-render whenever I need.
   // All the player UI is driven off the ref which will update any time this changes.
+  // TODO: THIS FORCES A RE-RENDER CONSTANTLY
   const [, setRefresh] = useState<number>(0);
   const refresh = useCallback(() => {
     setRefresh(Date.now());
   }, []);
 
   const cycleLoop = useCallback(() => {
-    setLoop((state) => {
-      if (!ref.current || (state && state[1] != null)) {
-        setAppliedLoop(null);
-        return null;
-      } else if (state && state.length === 1) {
-        return [state[0], ref.current.currentTime];
-      } else {
-        return [ref.current.currentTime];
-      }
-    });
-  }, [loop]);
+    if (!ref.current) return;
+    if (ref.current.loopSec?.loopB != null) {
+      ref.current.loopSec = undefined;
+      setAppliedLoop(null);
+    } else if (ref.current.loopSec?.loopA) {
+      ref.current.loopSec.loopB = ref.current.currentTime;
+    } else {
+      ref.current.loopSec = {
+        loopA: ref.current.currentTime,
+      };
+    }
+  }, []);
 
   const updateVolume = useCallback((value: number) => {
-    setVolume(value);
     if (ref.current) {
       ref.current.volume = value;
 
       dispatchSong({
         type: "volume",
-        volume: ref.current.volume,
+        volume: value,
       });
     }
   }, []);
@@ -92,7 +95,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
   // Initialize any settings when the file changes
   useEffect(() => {
-    song && updateVolume(song.settings.volume);
+    song && updateVolume(song.settings.volume ?? 0.5);
     song && setPitch(song.settings.pitch);
     refresh();
   }, [song?.file]);
@@ -100,11 +103,17 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
   // Update any loop-related things when the loop data changes (after save/delete/update actions are saved)
   useEffect(() => {
     // If a "New Loop" was just saved, the applied loop will have no data but the loops will have a new one that matches the times. Set it as the applied loop.
-    if (song?.loops && !appliedLoop && loop && loop[1] != null) {
+    if (
+      song?.loops &&
+      !appliedLoop &&
+      ref.current?.loopSec &&
+      ref.current.loopSec.loopB != null
+    ) {
       song.loops.forEach(
         (savedLoop) =>
-          savedLoop.loopA === loop[0] &&
-          savedLoop.loopB === loop[1] &&
+          ref.current?.loopSec &&
+          savedLoop.loopA === ref.current.loopSec.loopA &&
+          savedLoop.loopB === ref.current.loopSec.loopB &&
           setAppliedLoop(savedLoop)
       );
     }
@@ -134,9 +143,6 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 }
               }}
               onPlay={(e) => {
-                // When a track starts, set its volume to the player's volume
-                e.currentTarget.volume = volume;
-
                 // When a track plays for the first time, mark it as recent.
                 e.currentTarget.played.length === 0 &&
                   dispatchSongs({ type: "recent", songId: song.id });
@@ -147,11 +153,11 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 refresh();
                 // Check if a loop is defined and it is time to restart the loop
                 if (
-                  loop &&
-                  loop[1] != null &&
-                  e.currentTarget.currentTime >= loop[1]
+                  ref.current?.loopSec &&
+                  ref.current.loopSec.loopB != null &&
+                  e.currentTarget.currentTime >= ref.current.loopSec.loopB
                 ) {
-                  e.currentTarget.currentTime = loop[0];
+                  e.currentTarget.currentTime = ref.current.loopSec.loopA;
                 }
 
                 // If sync is enabled, broadcast events about the current time
@@ -213,7 +219,6 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 {/* Would be nice NOT to pass the ref but if I don't, the ref values are alaways stale because they don't cause a re-render */}
                 <Playback
                   audioRef={ref.current}
-                  loop={loop}
                   marks={(song?.riffTimes ?? []).map((time) => ({
                     value: ref.current?.duration
                       ? time / ref.current.duration
@@ -223,7 +228,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
                 <TimeDisplay>
                   {`${formatSeconds(
-                    Math.floor(ref.current.currentTime)
+                    Math.round(ref.current.currentTime)
                   )} / ${formatSeconds(
                     Math.round(
                       !isNaN(ref.current.duration) ? ref.current.duration : 0
@@ -241,7 +246,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                       columnGap: 4,
                     }}
                   >
-                    {loop && (
+                    {ref.current.loopSec && (
                       <div
                         style={{
                           fontFamily: "Circular",
@@ -254,63 +259,76 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                       </div>
                     )}
 
-                    <Light $on={loop?.[0] != null} />
+                    <Light $on={ref.current.loopSec?.loopA != null} />
                     <AmpLabel small>A</AmpLabel>
                     <LeftButton
                       // Decrease Loop A, can't be less than 0 (track start)
-                      onClick={() =>
-                        loop?.[0] != null &&
-                        setLoop([Math.max(loop[0] - 1, 0), loop[1]])
-                      }
+                      onClick={() => {
+                        if (ref.current?.loopSec?.loopA != null) {
+                          ref.current.loopSec.loopA = Math.max(
+                            ref.current.loopSec.loopA - 1,
+                            0
+                          );
+                        }
+                      }}
                     />
-                    <AmpDisplay $on={loop?.[0] != null}>
-                      {loop?.[0] != null && (
-                        <div>{formatSeconds(Math.round(loop[0]))}</div>
+                    <AmpDisplay $on={ref.current.loopSec?.loopA != null}>
+                      {ref.current.loopSec?.loopA != null && (
+                        <div>
+                          {formatSeconds(Math.round(ref.current.loopSec.loopA))}
+                        </div>
                       )}
                     </AmpDisplay>
                     <RightButton
                       // Increase Loop A, can't be more than Loop B - 1. Loop B may not be set yet so also have to check track duration.
-                      onClick={() =>
-                        loop?.[0] != null &&
-                        ref.current &&
-                        setLoop([
-                          Math.min(
-                            loop[0] + 1, // Time + 1
+                      onClick={() => {
+                        if (ref.current && ref.current.loopSec?.loopA != null) {
+                          ref.current.loopSec.loopA = Math.min(
+                            ref.current.loopSec.loopA + 1, // Time + 1
                             ref.current.duration, // Track length
-                            ...(loop?.[1] != null ? [loop[1] - 1] : []) // If exists, Loop B - 1
-                          ),
-                          loop[1],
-                        ])
-                      }
+                            ...(ref.current.loopSec.loopB != null
+                              ? [ref.current.loopSec.loopB - 1]
+                              : []) // If exists, Loop B - 1
+                          );
+                        }
+                      }}
                     />
 
-                    <Light $on={loop?.[1] != null} />
+                    <Light $on={ref.current.loopSec?.loopB != null} />
                     <AmpLabel small>B</AmpLabel>
                     <LeftButton
                       // Decrease Loop B, can't be less than Loop A + 1
-                      onClick={() =>
-                        loop?.[1] != null &&
-                        loop?.[0] != null &&
-                        setLoop([loop[0], Math.max(loop[1] - 1, loop[0] + 1)])
-                      }
+                      onClick={() => {
+                        if (
+                          ref.current?.loopSec?.loopB != null &&
+                          ref.current.loopSec.loopA != null
+                        ) {
+                          ref.current.loopSec.loopB = Math.max(
+                            ref.current.loopSec.loopB - 1,
+                            ref.current.loopSec.loopA + 1
+                          );
+                        }
+                      }}
                     />
-                    <AmpDisplay $on={loop?.[1] != null}>
-                      {loop?.[1] != null && (
-                        <div>{formatSeconds(Math.round(loop[1]))}</div>
+                    <AmpDisplay $on={ref.current.loopSec?.loopB != null}>
+                      {ref.current.loopSec?.loopB != null && (
+                        <div>
+                          {formatSeconds(Math.round(ref.current.loopSec.loopB))}
+                        </div>
                       )}
                     </AmpDisplay>
                     <RightButton
                       // Increase Loop B, can't be more than the track length.
                       // Weird little issue here... if the loop is set to end at the exact track end, it won't loop because it pauses when it reaches the end of playback.
                       // This is basically impossible to set using the keyboard shortcuts but using the arrows, it can, so I've set the max to be a fraction of a second below the track end.
-                      onClick={() =>
-                        loop?.[1] != null &&
-                        ref.current &&
-                        setLoop([
-                          loop[0],
-                          Math.min(loop[1] + 1, ref.current.duration - 0.0001),
-                        ])
-                      }
+                      onClick={() => {
+                        if (ref.current?.loopSec?.loopB != null) {
+                          ref.current.loopSec.loopB = Math.min(
+                            ref.current.loopSec.loopB + 1,
+                            ref.current.duration - 0.0001
+                          );
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -347,7 +365,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 />
 
                 <AmpDial
-                  value={volume}
+                  value={ref.current.volume}
                   divisions="20"
                   onAdjustValue={(newVal: number) => updateVolume(newVal)}
                 />
@@ -361,9 +379,11 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 <AmpLabel>
                   <SwitchButton
                     size="small"
-                    on={!!(loop && loop[1])}
+                    on={!!ref.current.loopSec?.loopB}
                     onClick={() => {
-                      setLoop(null);
+                      if (ref.current) {
+                        ref.current.loopSec = undefined;
+                      }
                       setAppliedLoop(null);
                     }}
                   />
@@ -373,20 +393,24 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                     disabled={
                       // Disable the loop list if the song has no loops and there's no pending loop set.
                       (!song?.loops || song.loops.length === 0) &&
-                      (!loop || loop[1] === undefined)
+                      (!ref.current.loopSec ||
+                        ref.current.loopSec.loopB == null)
                     }
                     loops={song?.loops ?? []}
                     appliedLoop={
                       appliedLoop ??
-                      (loop && loop[1]
-                        ? { loopA: loop[0], loopB: loop[1] }
+                      (ref.current.loopSec?.loopB
+                        ? {
+                            loopA: ref.current.loopSec.loopA,
+                            loopB: ref.current.loopSec.loopB,
+                          }
                         : undefined)
                     }
                     onOpenChange={setDisableShortcuts}
                     onSet={(loopData: Loop) => {
                       setAppliedLoop(loopData);
-                      setLoop([loopData.loopA, loopData.loopB]);
                       if (ref.current) {
+                        ref.current.loopSec = { ...loopData };
                         ref.current.currentTime = loopData.loopA;
                       }
                     }}
@@ -405,56 +429,21 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                     }}
                     onDelete={(loop: Loop) => {
                       if (loop.id === NEW_LOOP_ID) {
-                        setLoop(null);
+                        if (ref.current) ref.current.loopSec = undefined;
                       } else {
                         // If this loop being deleted is currently set, clear it.
                         if (loop.id === appliedLoop?.id) {
-                          setLoop(null);
+                          if (ref.current) ref.current.loopSec = undefined;
                           setAppliedLoop(null);
                         }
                         dispatchSong({ type: "deleteloop", ...loop });
                       }
                     }}
                     onClear={() => {
-                      setLoop(null);
+                      if (ref.current) ref.current.loopSec = undefined;
                       setAppliedLoop(null);
                     }}
                   />
-
-                  {/* <DigitalSaveButton
-                    // If a loop isn't fully set or the loop exactly matches an existing loop, disable the button
-                    disabled={
-                      loop?.[1] == null ||
-                      !!song?.loops?.find(
-                        ({ loopA, loopB }) =>
-                          loop[0] === loopA && loop[1] === loopB
-                      )
-                    }
-                    onClick={() => {
-                      if (
-                        ref.current &&
-                        loop &&
-                        loop[0] != null &&
-                        loop[1] != null
-                      ) {
-                        // Update the current selected loop or, if one is not set, create a new one.
-                        appliedLoop
-                          ? dispatchSong({
-                              type: "updateloop",
-                              ...appliedLoop,
-                              loopA: loop[0],
-                              loopB: loop[1],
-                            })
-                          : dispatchSong({
-                              type: "loop",
-                              loopA: loop[0],
-                              loopB: loop[1],
-                              // TODO: Build a UI that allows entering the loop name or at least editing this name wherever loops are displayed.
-                              label: `Loop ${(song?.loops ?? []).length + 1}`,
-                            });
-                      }
-                    }}
-                  /> */}
                 </AmpLabel>
                 <AmpLabel>Pitch</AmpLabel>
                 <AmpLabel>Speed %</AmpLabel>

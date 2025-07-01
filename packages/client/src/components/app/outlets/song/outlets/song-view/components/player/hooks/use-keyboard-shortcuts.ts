@@ -1,7 +1,8 @@
 import { RefObject, useEffect } from "react";
+import { CustomAudioElement } from "../Player";
 
 export const useKeyboardShortcuts = (
-  ref: RefObject<HTMLAudioElement | null>,
+  ref: RefObject<CustomAudioElement | null>,
   onCycleLoop: () => void,
   onVolumeChange: (value: number) => void,
   disableShortcuts: boolean
@@ -20,7 +21,7 @@ export const useKeyboardShortcuts = (
 
             // Restart
             case "-":
-              audio.currentTime = 0;
+              audio.currentTime = audio.loopSec?.loopA ?? 0;
               break;
 
             // Speed x1
@@ -53,7 +54,7 @@ export const useKeyboardShortcuts = (
 
             // Seek -20s
             case "1":
-              adui.currentTime = Math.max(audio.currentTime - 20, 0);
+              audio.currentTime = Math.max(audio.currentTime - 20, 0);
               break;
 
             // Seek -30s

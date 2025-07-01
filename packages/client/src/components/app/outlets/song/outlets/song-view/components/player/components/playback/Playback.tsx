@@ -1,16 +1,16 @@
 import { Slider } from "@mui/material";
 import { Rail, Thumb, Track } from "./playback.styles";
+import { CustomAudioElement } from "../../Player";
 
 export type PlaybackProps = {
-  loop: [number, (number | undefined)?] | null;
   marks?: {
     value: number;
     label?: React.ReactNode;
   }[];
-  audioRef: HTMLAudioElement;
+  audioRef: CustomAudioElement;
 };
 
-const Playback = ({ loop, audioRef, marks }: PlaybackProps) => (
+const Playback = ({ audioRef, marks }: PlaybackProps) => (
   <Slider
     defaultValue={0}
     max={1}
@@ -18,11 +18,11 @@ const Playback = ({ loop, audioRef, marks }: PlaybackProps) => (
     value={
       // If there is a complete loop, configure the slider for the loop.
       // Otherwise render the full song state.
-      loop?.[1] != null
+      audioRef.loopSec?.loopB != null
         ? [
             audioRef.currentTime / audioRef.duration,
-            loop[0] / audioRef.duration,
-            loop[1] / audioRef.duration,
+            audioRef.loopSec.loopA / audioRef.duration,
+            audioRef.loopSec.loopB / audioRef.duration,
           ]
         : audioRef.currentTime / audioRef.duration
     }
@@ -31,7 +31,7 @@ const Playback = ({ loop, audioRef, marks }: PlaybackProps) => (
     slotProps={{
       // Tell the thumb component whether a loop is active.
       thumb: {
-        "data-loop": loop?.[1] != null,
+        "data-loop": audioRef.loopSec?.loopB != null,
       },
     }}
     marks={marks}
