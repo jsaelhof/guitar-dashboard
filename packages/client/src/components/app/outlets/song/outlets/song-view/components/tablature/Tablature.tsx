@@ -1,4 +1,4 @@
-import { IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import { Tablature as TablatureType, Tuning } from "guitar-dashboard-types";
 import { TUNINGS } from "../../../../../../contstants";
 import { UG1 } from "./components/ug1/UG1";
@@ -26,23 +26,19 @@ const Tablature = ({ tablature: { tuning, uri, format } }: TablatureProps) => {
     <div>
       {uri ? (
         <div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
           >
-            {tuning && tuning !== Tuning.E ? (
-              <Typography variant="subtitle2">
-                Tuning:{" "}
-                <span style={{ fontFamily: "system-ui" }}>
-                  {TUNINGS[tuning]}
-                </span>
-              </Typography>
-            ) : (
-              <div />
-            )}
+            <Stack direction="row" alignItems="baseline" gap={1}>
+              {tuning && tuning !== Tuning.E && (
+                <>
+                  <Typography variant="subtitle2">Tuning:</Typography>
+                  <Typography variant="system">{TUNINGS[tuning]}</Typography>
+                </>
+              )}
+            </Stack>
 
             <ZoomControls>
               <IconButton size="xsmall" onClick={decreaseZoom}>
@@ -53,11 +49,10 @@ const Tablature = ({ tablature: { tuning, uri, format } }: TablatureProps) => {
                 <AddCircleOutline />
               </IconButton>
             </ZoomControls>
-          </div>
-          <>
-            {format === "ug1" && <UG1 uri={uri} zoom={zoom} />}
-            {format === "ug2" && <UG2 uri={uri} zoom={zoom} />}
-          </>
+          </Box>
+
+          {format === "ug1" && <UG1 uri={uri} zoom={zoom} />}
+          {format === "ug2" && <UG2 uri={uri} zoom={zoom} />}
         </div>
       ) : (
         "No tab found"

@@ -7,7 +7,7 @@ import AddTablature from "./components/add-tablature/AddTablature";
 import PDF from "./components/pdf/PDF";
 import Player from "./components/player/Player";
 import Riffs from "./components/riffs/Riffs";
-import SongControls from "./components/song-controls/SongControls";
+import TitleBar from "./components/title-bar/TitleBar";
 import Tablature from "./components/tablature/Tablature";
 import TablatureTab from "./components/tablature-tab/TablatureTab";
 import Video from "./components/video/Video";
@@ -45,7 +45,7 @@ const SongView = () => {
     song?.id && (
       <Fragment key={songId}>
         <Header>
-          <SongControls song={song} />
+          <TitleBar song={song} />
           <Player
             song={song}
             dispatchSong={dispatchSong}

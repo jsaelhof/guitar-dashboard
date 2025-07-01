@@ -71,6 +71,13 @@ declare module "@mui/material/Button" {
   }
 }
 
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    underline: true;
+    system: true;
+  }
+}
+
 export const theme = createTheme({
   // NOTE: Could not get color overriding to work properly using these. I added them to try and wire up a manual light/dark switch.
   // colorSchemes: {
@@ -138,6 +145,26 @@ export const theme = createTheme({
   },
 
   components: {
+    MuiTypography: {
+      variants: [
+        {
+          props: { variant: "underline" },
+          style: {
+            fontSize: 10,
+            textTransform: "uppercase",
+            color: "GrayText",
+            lineHeight: "10px",
+          },
+        },
+        {
+          props: { variant: "system" },
+          style: {
+            fontFamily: "system-ui",
+          },
+        },
+      ],
+    },
+
     MuiIconButton: {
       variants: [
         {
@@ -225,6 +252,7 @@ export const theme = createTheme({
         },
       ],
     },
+
     MuiListItemIcon: {
       styleOverrides: {
         // Name of the slot
