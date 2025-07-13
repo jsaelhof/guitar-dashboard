@@ -14,6 +14,8 @@ export type SongAction =
   | { type: "get" }
   | { type: "volume"; volume: number }
   | { type: "pitch"; pitch: number }
+  | { type: "startDelay"; startDelay: boolean }
+  | { type: "startOffset"; startOffset: number }
   | { type: "loop"; loopA: number; loopB: number; label: string }
   | {
       type: "updateloop";

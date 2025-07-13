@@ -162,6 +162,16 @@ export const theme = createTheme({
             fontFamily: "system-ui",
           },
         },
+        {
+          props: { variant: "stereo" },
+          style: ({ theme: { palette } }) => ({
+            color: palette.lightGrey[200],
+            fontFamily: "StereoGothic",
+            fontWeight: 400,
+            textTransform: "uppercase",
+            fontSize: 8,
+          }),
+        },
       ],
     },
 

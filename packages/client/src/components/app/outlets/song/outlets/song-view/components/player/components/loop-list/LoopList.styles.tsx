@@ -5,7 +5,8 @@ export const LoopsPopover = styled(Popover)(({ theme: { palette } }) => ({
     "& .MuiPaper-root": {
       fontFamily: "Circular",
       color: palette.lightGrey[200],
-      backgroundColor: palette.darkGrey[500],
+      background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
+      boxShadow: "inset 0 5px 15px #00000099",
       padding: 12,
       margin: 0,
       border: `1px solid ${palette.lightGrey[900]}`,

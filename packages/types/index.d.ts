@@ -24,6 +24,8 @@ export type Song = {
   settings: {
     volume: number;
     pitch: number;
+    startDelay: boolean;
+    startOffset: number;
   };
   loops?: Loop[];
   tablature?: Tablature[];

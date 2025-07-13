@@ -27,6 +27,8 @@ import { getExercises } from "./routes/exercises/get-exercises.js";
 import { updateExerciseSpeed } from "./routes/exercise/:exerciseId/update-exercise-speed.js";
 import { searchSong } from "./routes/search/search-song.js";
 import { insertSongs } from "./routes/songs/insert-songs.js";
+import { updateStartOffsetSetting } from "./routes/song/:songId/update-start-offset-setting.js";
+import { updateStartDelaySetting } from "./routes/song/:songId/update-start-delay-setting.js";
 
 dotenv.config();
 
@@ -65,6 +67,11 @@ app.post("/songs/insert-songs", authorizedRoute(insertSongs));
 app.get("/song/:songId", authorizedRoute(getSong));
 app.post("/song/:songId/volume", authorizedRoute(updateVolumeSetting));
 app.post("/song/:songId/pitch", authorizedRoute(updatePitchSetting));
+app.post(
+  "/song/:songId/startOffset",
+  authorizedRoute(updateStartOffsetSetting)
+);
+app.post("/song/:songId/startDelay", authorizedRoute(updateStartDelaySetting));
 app.post("/song/:songId/loop", authorizedRoute(insertLoop));
 app.post("/song/:songId/updateloop", authorizedRoute(updateLoop));
 app.post("/song/:songId/deleteloop", authorizedRoute(deleteLoop));

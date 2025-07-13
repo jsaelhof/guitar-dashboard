@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { formatSeconds } from "../../../../../../utils/format-seconds";
 import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
 import {
@@ -26,8 +26,11 @@ import { NEW_LOOP_ID } from "./constants";
 import { Loop, Song } from "guitar-dashboard-types";
 import { SongAction } from "../../hooks/use-song";
 import { SongsAction } from "../../../../hooks/use-songs";
+import { Box } from "@mui/material";
+import SongSettings from "./components/song-settings/SongSettings";
 
 const MAX_RETRY = 10;
+const START_DELAY_MS = 500;
 
 export type PlayerProps = {
   song: Song;
@@ -121,6 +124,8 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
   useKeyboardShortcuts(ref, cycleLoop, updateVolume, disableShortcuts);
 
+  const [startDelayActive, setStartDelayActive] = useState(false);
+
   return (
     <div>
       {errorRetryAttempts < MAX_RETRY ? (
@@ -146,6 +151,27 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 // When a track plays for the first time, mark it as recent.
                 e.currentTarget.played.length === 0 &&
                   dispatchSongs({ type: "recent", songId: song.id });
+              }}
+              onPlaying={(e) => {
+                // This event occurs whenever the track starts or unpauses.
+                // If this song has a start delay enabled and this is the start of the track (not paused somewhere in between),
+                // then this immediately pauses for second before resuming play. This is helpful on tracks that have a guitar part
+                // that starts exactly at 0 seconds (ex: Limelight).
+                if (
+                  ref.current &&
+                  ref.current.currentTime <= 0.05 &&
+                  song.settings.startDelay &&
+                  !startDelayActive
+                ) {
+                  ref.current.pause();
+                  setStartDelayActive(true);
+                  setTimeout(() => {
+                    if (ref.current) {
+                      ref.current.play();
+                      setStartDelayActive(false);
+                    }
+                  }, START_DELAY_MS);
+                }
               }}
               onRateChange={refresh}
               onDurationChange={refresh}
@@ -202,7 +228,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                   </DigitalButton>
                 )}
 
-                {/* TODO: Do I need this as a physical buttom? It's mostly a foot-shortcut thing...can't see myself clicking it much. */}
+                {/* TODO: Do I need this as a physical button? It's mostly a foot-shortcut thing...can't see myself clicking it much. */}
                 <DigitalButton
                   onClick={() => {
                     if (ref.current) {
@@ -374,7 +400,21 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
                 <AmpLabel>Play</AmpLabel>
                 <AmpLabel>Seek</AmpLabel>
-                <AmpLabel>Playback</AmpLabel>
+                <Box
+                  width="100%"
+                  display="grid"
+                  gridTemplateColumns="20px 1fr 20px"
+                  alignItems="center"
+                >
+                  <Box />
+                  <Box>
+                    <AmpLabel>Playback</AmpLabel>
+                  </Box>
+                  <SongSettings
+                    settings={song.settings}
+                    dispatch={dispatchSong}
+                  />
+                </Box>
                 <AmpLabel>Time</AmpLabel>
                 <AmpLabel>
                   <SwitchButton
