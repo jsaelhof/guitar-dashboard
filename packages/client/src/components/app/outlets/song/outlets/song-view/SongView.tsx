@@ -61,9 +61,10 @@ const SongView = () => {
               onChange={onTabChange}
             >
               <Tab label="Tab" />
-              <Tab label="Riffs" />
+              {/* <Tab label="Riffs" /> */}
               <Tab label="Video" />
             </Tabs>
+            {console.log({ navTabId })}
 
             {/* Only show the secondary tabs if this is the "tablature" tab and there is at least one tablature set up. */}
             {navTabId === 0 && (song.tablature ?? []).length > 0 && (
@@ -85,20 +86,24 @@ const SongView = () => {
           </div>
 
           <TabPanel>
-            {navTabId === 0 && song.pdf ? (
-              <PDF pdf={song.pdf} />
-            ) : song.tablature && tablatureTabId < song.tablature.length ? (
-              <Tablature tablature={song.tablature[tablatureTabId]} />
-            ) : (
-              <AddTablature
-                mode="tab"
-                song={song}
-                dispatchSong={dispatchSong}
-                songIsPending={songIsPending}
-              />
+            {navTabId === 0 && (
+              <>
+                {song.pdf ? (
+                  <PDF pdf={song.pdf} />
+                ) : song.tablature && tablatureTabId < song.tablature.length ? (
+                  <Tablature tablature={song.tablature[tablatureTabId]} />
+                ) : (
+                  <AddTablature
+                    mode="tab"
+                    song={song}
+                    dispatchSong={dispatchSong}
+                    songIsPending={songIsPending}
+                  />
+                )}
+              </>
             )}
 
-            {navTabId === 1 && (
+            {/* {navTabId === 1 && (
               <>
                 <Riffs
                   songId={song.id}
@@ -111,9 +116,9 @@ const SongView = () => {
                   songIsPending={songIsPending}
                 />
               </>
-            )}
+            )} */}
 
-            {navTabId === 2 && (
+            {navTabId === 1 && (
               <Video videos={song.videos} dispatchSong={dispatchSong} />
             )}
           </TabPanel>

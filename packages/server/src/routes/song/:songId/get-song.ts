@@ -60,6 +60,10 @@ export const getSong = async (req: Request, res: Response) => {
         song: {
           ...songData,
           ...(userSongData ?? {}),
+          settings: {
+            ...(songData.settings ?? {}),
+            ...(userSongData?.settings ?? {}),
+          },
           ...processRiffs(songData),
           ...metaData,
         },

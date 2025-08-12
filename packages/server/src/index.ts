@@ -29,6 +29,7 @@ import { searchSong } from "./routes/search/search-song.js";
 import { insertSongs } from "./routes/songs/insert-songs.js";
 import { updateStartOffsetSetting } from "./routes/song/:songId/update-start-offset-setting.js";
 import { updateStartDelaySetting } from "./routes/song/:songId/update-start-delay-setting.js";
+import { mount } from "./routes/util/mount.js";
 
 dotenv.config();
 
@@ -54,6 +55,9 @@ app.post("/login", login);
 app.post("/amp/on", ampOn);
 app.post("/amp/off", ampOff);
 app.post("/amp/status", ampStatus);
+
+// /util/*
+app.post("/util/mount", mount);
 
 // /play/*
 app.post("/play/:songId", playSong);
