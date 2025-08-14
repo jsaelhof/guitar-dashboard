@@ -396,7 +396,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                   onAdjustValue={(newVal: number) => updateVolume(newVal)}
                 />
 
-                <SwitchButton on={sync} onClick={() => setSync(!sync)} />
+                {/* <SwitchButton on={sync} onClick={() => setSync(!sync)} /> */}
 
                 <AmpLabel>Play</AmpLabel>
                 <AmpLabel>Seek</AmpLabel>
@@ -488,7 +488,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 <AmpLabel>Pitch</AmpLabel>
                 <AmpLabel>Speed %</AmpLabel>
                 <AmpLabel>Volume</AmpLabel>
-                <AmpLabel>Sync</AmpLabel>
+                {/* <AmpLabel>Sync</AmpLabel> */}
               </>
             )}
           </PlayerBase>
