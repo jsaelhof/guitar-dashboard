@@ -1,10 +1,10 @@
 import { ArrowDropDown } from "@mui/icons-material";
 import { IconButton, ListItem, ListItemText, Typography } from "@mui/material";
 import { MouseEvent, useCallback, useState } from "react";
-import { Light } from "../../Player.styles";
 import { SettingsPopover } from "./SongSettings.styles";
 import { Song } from "guitar-dashboard-types";
 import { SongAction } from "../../../../hooks/use-song";
+import { StereoLight } from "../../../../../../../../components/stereo-light/StereoLight";
 
 export type SongSettingsProps = {
   settings: Song["settings"];
@@ -59,7 +59,7 @@ const SongSettings = ({ settings, dispatch }: SongSettingsProps) => {
           <ListItemText>
             <Typography variant="stereo">Delayed Start</Typography>
           </ListItemText>
-          <Light $on={settings.startDelay} $size="large" />
+          <StereoLight $on={settings.startDelay} $size="large" />
         </ListItem>
       </SettingsPopover>
     </>

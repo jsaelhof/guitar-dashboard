@@ -14,8 +14,8 @@ export const PlayerBase = styled("div")(
     display: "grid",
     gridTemplateColumns: `${
       $hasCover ? "auto " : ""
-    }max-content max-content 1fr 90px 110px max-content max-content max-content`,
-    // Cover? Play Seek Playback Time Loop Pitch Speed Volume
+    }max-content max-content 1fr 90px 110px max-content max-content max-content max-content`,
+    // Cover? Play Seek Playback Time Loop Pitch Speed Volume Sync
     alignItems: "center",
     justifyItems: "center",
     columnGap: 32,
@@ -62,55 +62,6 @@ export const AmpDisplay = styled("div")(
     color: $on ? palette.blueLights[500] : "#FFFFFF22",
     backgroundColor: "#242424",
     boxShadow: $on ? `${palette.blueLights[800]} 0px 0px 10px inset` : "unset",
-  })
-);
-
-export const Light = styled("div")(
-  ({
-    theme: { palette, glows },
-    $on,
-    $size,
-  }: {
-    $on: boolean;
-    $size?: "small" | "large";
-  }) => ({
-    position: "relative",
-    width: 4,
-    height: 4,
-    borderRadius: "50%",
-    backgroundColor: palette.lightGrey[900],
-    border: "1px solid black",
-    transition: "transform 400ms",
-
-    ...($size === "large" && {
-      width: 8,
-      height: 8,
-    }),
-
-    ...($on && {
-      backgroundColor: palette.blueLights[500],
-      boxShadow: glows[2],
-      border: "none",
-    }),
-
-    // Highlight dot on the light bulb
-    "&:after": {
-      content: '""',
-      position: "absolute",
-      width: 2,
-      height: 1,
-      borderRadius: "50%",
-      background: "linear-gradient(to bottom, white, transparent)",
-      opacity: 0.75,
-      transform: "rotate(-45deg)",
-      top: "20%",
-      left: "10%",
-
-      ...($size === "large" && {
-        width: 4,
-        height: 2,
-      }),
-    },
   })
 );
 

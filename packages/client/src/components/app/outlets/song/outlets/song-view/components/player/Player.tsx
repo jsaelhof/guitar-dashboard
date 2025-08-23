@@ -8,7 +8,6 @@ import {
   DigitalButton,
   DownButton,
   LeftButton,
-  Light,
   PitchLayout,
   PlayerBase,
   RightButton,
@@ -28,6 +27,7 @@ import { SongAction } from "../../hooks/use-song";
 import { SongsAction } from "../../../../hooks/use-songs";
 import { Box } from "@mui/material";
 import SongSettings from "./components/song-settings/SongSettings";
+import { StereoLight } from "../../../../../../components/stereo-light/StereoLight";
 
 const MAX_RETRY = 10;
 const START_DELAY_MS = 500;
@@ -285,7 +285,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                       </div>
                     )}
 
-                    <Light $on={ref.current.loopSec?.loopA != null} />
+                    <StereoLight $on={ref.current.loopSec?.loopA != null} />
                     <AmpLabel small>A</AmpLabel>
                     <LeftButton
                       // Decrease Loop A, can't be less than 0 (track start)
@@ -320,7 +320,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                       }}
                     />
 
-                    <Light $on={ref.current.loopSec?.loopB != null} />
+                    <StereoLight $on={ref.current.loopSec?.loopB != null} />
                     <AmpLabel small>B</AmpLabel>
                     <LeftButton
                       // Decrease Loop B, can't be less than Loop A + 1
@@ -396,7 +396,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                   onAdjustValue={(newVal: number) => updateVolume(newVal)}
                 />
 
-                {/* <SwitchButton on={sync} onClick={() => setSync(!sync)} /> */}
+                <SwitchButton on={sync} onClick={() => setSync(!sync)} />
 
                 <AmpLabel>Play</AmpLabel>
                 <AmpLabel>Seek</AmpLabel>
@@ -488,7 +488,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 <AmpLabel>Pitch</AmpLabel>
                 <AmpLabel>Speed %</AmpLabel>
                 <AmpLabel>Volume</AmpLabel>
-                {/* <AmpLabel>Sync</AmpLabel> */}
+                <AmpLabel>Sync</AmpLabel>
               </>
             )}
           </PlayerBase>

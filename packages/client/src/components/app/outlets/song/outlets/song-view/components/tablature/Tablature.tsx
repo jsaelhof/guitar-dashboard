@@ -25,11 +25,19 @@ const Tablature = ({ tablature: { tuning, uri, format } }: TablatureProps) => {
   return (
     <div>
       {uri ? (
-        <div>
+        <Box>
           <Box
             display="flex"
             alignItems="center"
             justifyContent="space-between"
+            position="sticky"
+            top="0"
+            left="0"
+            zIndex="1000"
+            margin="-16px"
+            px={2}
+            pb={2}
+            sx={{ background: ({ palette }) => palette.darkGrey[860] }}
           >
             <Stack direction="row" alignItems="baseline" gap={1}>
               {tuning && tuning !== Tuning.E && (
@@ -51,9 +59,11 @@ const Tablature = ({ tablature: { tuning, uri, format } }: TablatureProps) => {
             </ZoomControls>
           </Box>
 
-          {format === "ug1" && <UG1 uri={uri} zoom={zoom} />}
-          {format === "ug2" && <UG2 uri={uri} zoom={zoom} />}
-        </div>
+          <Box sx={{ pt: 6, pb: 1 }}>
+            {format === "ug1" && <UG1 uri={uri} zoom={zoom} />}
+            {format === "ug2" && <UG2 uri={uri} zoom={zoom} />}
+          </Box>
+        </Box>
       ) : (
         "No tab found"
       )}
