@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import SongView from "./components/app/outlets/song/outlets/song-view/SongView";
-import WebAudioTest from "./WebAudioTest";
 import { Login } from "./components/app/outlets/login/Login";
 import { Exercises } from "./components/app/outlets/exercises/Exercises";
 import { Exercise } from "./components/app/outlets/exercises/outlets/exercise/Exercise";
@@ -55,10 +54,6 @@ const router = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "webaudio",
-      //   element: <WebAudioTest />,
-      // },
     ],
   },
 ]);
