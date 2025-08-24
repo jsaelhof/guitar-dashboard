@@ -30,7 +30,7 @@ import SongSettings from "./components/song-settings/SongSettings";
 import { StereoLight } from "../../../../../../components/stereo-light/StereoLight";
 
 const MAX_RETRY = 10;
-const START_DELAY_MS = 500;
+const START_DELAY_MS = 1050;
 
 export type PlayerProps = {
   song: Song;
@@ -45,6 +45,7 @@ export type CustomAudioElement = HTMLAudioElement & {
 const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
   const { disableShortcuts, setDisableShortcuts } = useAppContext();
 
+  const countInRef = useRef<HTMLAudioElement | null>(null);
   const ref = useRef<CustomAudioElement | null>(null);
 
   const [errorRetryAttempts, setErrorRetryAttempts] = useState(0);
@@ -130,6 +131,8 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
     <div>
       {errorRetryAttempts < MAX_RETRY ? (
         <>
+          <audio ref={countInRef} src="/click.mp3" />
+
           {song?.id && (
             <audio
               ref={ref}
@@ -163,6 +166,10 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                   song.settings.startDelay &&
                   !startDelayActive
                 ) {
+                  if (countInRef?.current) {
+                    countInRef.current.currentTime = 0;
+                    countInRef.current.play();
+                  }
                   ref.current.pause();
                   setStartDelayActive(true);
                   setTimeout(() => {

@@ -57,7 +57,7 @@ const SongSettings = ({ settings, dispatch }: SongSettingsProps) => {
           onClick={onToggleStartDelay}
         >
           <ListItemText>
-            <Typography variant="stereo">Delayed Start</Typography>
+            <Typography variant="stereo">Count In</Typography>
           </ListItemText>
           <StereoLight $on={settings.startDelay} $size="large" />
         </ListItem>
