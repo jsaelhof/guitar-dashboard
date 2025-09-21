@@ -44,8 +44,8 @@ app.use(
   })
 );
 app.use(express.json({ limit: "100mb" }));
-app.use(express.static("public"));
 process.env.MP3_LIB && app.use(express.static(process.env.MP3_LIB));
+process.env.ASSETS && app.use(express.static(process.env.ASSETS));
 
 // --- Setup Routes ---
 // login

@@ -48,9 +48,12 @@ export type Tablature = {
   label: string;
   labelDesc?: string;
   tuning?: Tuning;
-  uri: string[];
+  images: number;
   format: "ug1" | "ug2";
 };
+
+export type TablatureInput = Omit<Tablature, "id" | "format" | "images"> &
+  Partial<Pick<Tablature, "format">> & { uri: string[] };
 
 // Defines a smaller section of tablature.
 // It extends the idea of Tablature and augments it with additional fields.

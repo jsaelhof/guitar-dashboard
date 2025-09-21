@@ -1,6 +1,6 @@
 import { PlaylistAdd } from "@mui/icons-material";
 import { Box, Divider, Tab, Tabs, Typography } from "@mui/material";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Content, Header, TabPanel } from "./SongView.styles";
 import AddTablature from "./components/add-tablature/AddTablature";
 import PDF from "./components/pdf/PDF";
@@ -127,7 +127,10 @@ const SongView = () => {
                 {song.pdf ? (
                   <PDF pdf={song.pdf} />
                 ) : song.tablature && tablatureTabId < song.tablature.length ? (
-                  <Tablature tablature={song.tablature[tablatureTabId]} />
+                  <Tablature
+                    songId={song.id}
+                    tablature={song.tablature[tablatureTabId]}
+                  />
                 ) : (
                   <AddTablature
                     mode="tab"

@@ -277,7 +277,6 @@ const RiffForm = ({
                 } else if (mode === "tab") {
                   dispatchSong({
                     type: "addtablature",
-                    id: uuid(),
                     label,
                     labelDesc,
                     tuning,
