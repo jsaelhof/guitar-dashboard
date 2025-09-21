@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import { formatSeconds } from "../../../../../../utils/format-seconds";
 import { Pause, PlayArrow, Replay10 } from "@mui/icons-material";
 import {
@@ -28,6 +28,7 @@ import { SongsAction } from "../../../../hooks/use-songs";
 import { Box } from "@mui/material";
 import SongSettings from "./components/song-settings/SongSettings";
 import { StereoLight } from "../../../../../../components/stereo-light/StereoLight";
+import { useWebAudioProcessing } from "./hooks/use-web-audio-processing";
 
 const MAX_RETRY = 10;
 const START_DELAY_MS = 1050;
@@ -48,11 +49,15 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
   const countInRef = useRef<HTMLAudioElement | null>(null);
   const ref = useRef<CustomAudioElement | null>(null);
 
+  const { connectHTMLAudioToWebAudio, setPitch } = useWebAudioProcessing(
+    ref as RefObject<HTMLAudioElement>,
+    song
+  );
+
   const [errorRetryAttempts, setErrorRetryAttempts] = useState(0);
 
   const [appliedLoop, setAppliedLoop] = useState<Loop | null>(null);
   const [sync, setSync] = useState(true);
-  const [pitch, setPitch] = useState<number>(0);
 
   // The state of everything related to the audio is in the ref.
   // Rather than storing copies of pieces of data that the UI relies on in useState vars, this just forces a re-render whenever I need.
@@ -88,19 +93,21 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
     }
   }, []);
 
-  const updatePitch = useCallback((value: number) => {
-    setPitch(value);
+  const updatePitch = useCallback(
+    (value: number) => {
+      setPitch(value);
 
-    dispatchSong({
-      type: "pitch",
-      pitch: value,
-    });
-  }, []);
+      dispatchSong({
+        type: "pitch",
+        pitch: value,
+      });
+    },
+    [dispatchSong]
+  );
 
   // Initialize any settings when the file changes
   useEffect(() => {
     song && updateVolume(song.settings.volume ?? 0.5);
-    song && setPitch(song.settings.pitch);
     refresh();
   }, [song?.file]);
 
@@ -151,6 +158,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 }
               }}
               onPlay={(e) => {
+                connectHTMLAudioToWebAudio();
                 // When a track plays for the first time, mark it as recent.
                 e.currentTarget.played.length === 0 &&
                   dispatchSongs({ type: "recent", songId: song.id });
@@ -369,22 +377,24 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 <PitchLayout>
                   {/* Pitch is undefined if its never been set for a song. */}
                   <UpButton
-                    onClick={() => updatePitch(Math.min((pitch ?? 0) + 1, 100))}
+                    onClick={() =>
+                      updatePitch(Math.min((song.settings.pitch ?? 0) + 1, 100))
+                    }
                   />
-                  <AmpDisplay $on={pitch !== undefined}>
+                  <AmpDisplay $on={song.settings.pitch !== undefined}>
                     <div>
-                      {pitch !== undefined
-                        ? pitch === 0
-                          ? pitch
-                          : pitch < 0
-                          ? `${pitch} ♭`
-                          : `+${pitch} ♯`
+                      {song.settings.pitch
+                        ? `${song.settings.pitch}${
+                            song.settings.pitch < 0 ? " ♭" : " ♯"
+                          }`
                         : ""}
                     </div>
                   </AmpDisplay>
                   <DownButton
                     onClick={() =>
-                      updatePitch(Math.max((pitch ?? 0) - 1, -100))
+                      updatePitch(
+                        Math.max((song.settings.pitch ?? 0) - 1, -100)
+                      )
                     }
                   />
                 </PitchLayout>
