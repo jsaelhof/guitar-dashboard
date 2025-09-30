@@ -9,10 +9,13 @@ export const updateStartOffsetSetting = async (req: Request, res: Response) => {
   const { userId } = getUserCookie(req);
 
   const { songId } = req.params;
-  const startOffset = parseFloat(req.body.startOffset);
+  const startOffset =
+    req.body.startOffset == null
+      ? req.body.startOffset
+      : parseFloat(req.body.startOffset);
 
   try {
-    if (userId && songId && !isNaN(startOffset) && startOffset >= 0) {
+    if (userId && songId && (startOffset === undefined || startOffset >= 0)) {
       const songData = await db
         .collection<Song>(`${userId}_songs`)
         .findOneAndUpdate(

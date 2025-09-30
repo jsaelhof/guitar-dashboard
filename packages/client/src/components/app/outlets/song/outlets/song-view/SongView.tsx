@@ -1,4 +1,4 @@
-import { PlaylistAdd } from "@mui/icons-material";
+import { PlaylistAdd, Settings } from "@mui/icons-material";
 import { Box, Divider, Tab, Tabs, Typography } from "@mui/material";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { Content, Header, TabPanel } from "./SongView.styles";
@@ -14,6 +14,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 import { SongsAction } from "../../hooks/use-songs";
 import { CustomEvents, UpdateTimeDetail } from "./types/events";
 import { StereoLight } from "../../../../components/stereo-light/StereoLight";
+import { SongSettings } from "./components/song-settings/SongSettings";
 
 const SongView = () => {
   const { songId = "" } = useParams();
@@ -100,6 +101,8 @@ const SongView = () => {
                   </Box>
                 }
               />
+
+              <Tab label={<Settings />} />
             </Tabs>
 
             {/* Only show the secondary tabs if this is the "tablature" tab and there is at least one tablature set up. */}
@@ -159,6 +162,10 @@ const SongView = () => {
 
             {navTabId === 1 && (
               <Video videos={song.videos} dispatchSong={dispatchSong} />
+            )}
+
+            {navTabId === 2 && (
+              <SongSettings song={song} dispatchSong={dispatchSong} />
             )}
           </TabPanel>
         </Content>

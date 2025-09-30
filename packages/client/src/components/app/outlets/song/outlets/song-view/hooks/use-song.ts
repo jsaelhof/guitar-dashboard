@@ -15,7 +15,7 @@ export type SongAction =
   | { type: "volume"; volume: number }
   | { type: "pitch"; pitch: number }
   | { type: "startDelay"; startDelay: boolean }
-  | { type: "startOffset"; startOffset: number }
+  | { type: "startOffset"; startOffset: number | undefined }
   | { type: "loop"; loopA: number; loopB: number; label: string }
   | {
       type: "updateloop";

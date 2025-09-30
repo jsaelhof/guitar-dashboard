@@ -25,8 +25,6 @@ import { NEW_LOOP_ID } from "./constants";
 import { Loop, Song } from "guitar-dashboard-types";
 import { SongAction } from "../../hooks/use-song";
 import { SongsAction } from "../../../../hooks/use-songs";
-import { Box } from "@mui/material";
-import SongSettings from "./components/song-settings/SongSettings";
 import { StereoLight } from "../../../../../../components/stereo-light/StereoLight";
 import { useWebAudioProcessing } from "./hooks/use-web-audio-processing";
 
@@ -158,12 +156,20 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 }
               }}
               onPlay={(e) => {
-                connectHTMLAudioToWebAudio();
+                //connectHTMLAudioToWebAudio();
                 // When a track plays for the first time, mark it as recent.
                 e.currentTarget.played.length === 0 &&
                   dispatchSongs({ type: "recent", songId: song.id });
               }}
               onPlaying={(e) => {
+                if (
+                  ref.current &&
+                  ref.current.currentTime <= 0.5 &&
+                  song.settings.startOffset
+                ) {
+                  ref.current.currentTime = song.settings.startOffset;
+                }
+
                 // This event occurs whenever the track starts or unpauses.
                 // If this song has a start delay enabled and this is the start of the track (not paused somewhere in between),
                 // then this immediately pauses for second before resuming play. This is helpful on tracks that have a guitar part
@@ -417,21 +423,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
                 <AmpLabel>Play</AmpLabel>
                 <AmpLabel>Seek</AmpLabel>
-                <Box
-                  width="100%"
-                  display="grid"
-                  gridTemplateColumns="20px 1fr 20px"
-                  alignItems="center"
-                >
-                  <Box />
-                  <Box>
-                    <AmpLabel>Playback</AmpLabel>
-                  </Box>
-                  <SongSettings
-                    settings={song.settings}
-                    dispatch={dispatchSong}
-                  />
-                </Box>
+                <AmpLabel>Playback</AmpLabel>
                 <AmpLabel>Time</AmpLabel>
                 <AmpLabel>
                   <SwitchButton
