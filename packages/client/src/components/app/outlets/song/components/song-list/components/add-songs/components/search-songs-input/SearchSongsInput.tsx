@@ -1,4 +1,4 @@
-import { Close, HourglassBottom, Search } from "@mui/icons-material";
+import { Close, Search } from "@mui/icons-material";
 import {
   Button,
   Checkbox,
@@ -30,6 +30,11 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
 
   useEffect(() => result && onComplete(result), [onComplete, result]);
 
+  useEffect(() => {
+    setDisableShortcuts(true);
+    return () => setDisableShortcuts(false);
+  }, []);
+
   return (
     <>
       <DialogTitle
@@ -44,12 +49,22 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
       </DialogTitle>
 
       <DialogContent>
-        <div
+        <form
+          id="search-songs"
           style={{
             display: "grid",
             gap: 16,
             width: "100%",
             paddingTop: 8,
+          }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch({
+              type: "search-song",
+              search: song,
+              artist,
+              variousArtists,
+            });
           }}
         >
           <TextField
@@ -60,9 +75,8 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
             label="Song"
             autoFocus
             value={song}
-            onFocus={() => setDisableShortcuts(true)}
-            onBlur={() => setDisableShortcuts(false)}
             onChange={({ target }) => setSong(target.value)}
+            disabled={isPending}
           />
 
           <TextField
@@ -72,9 +86,7 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
             margin="none"
             label="Artist"
             value={artist}
-            disabled={variousArtists}
-            onFocus={() => setDisableShortcuts(true)}
-            onBlur={() => setDisableShortcuts(false)}
+            disabled={variousArtists || isPending}
             onChange={({ target }) => setArtist(target.value)}
           />
 
@@ -88,12 +100,15 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
               />
             }
             label="Various Artists"
+            disabled={isPending}
           />
-        </div>
+        </form>
       </DialogContent>
 
       <DialogActions sx={{ justifyContent: "center" }}>
         <Button
+          form="search-songs"
+          type="submit"
           variant="contained"
           color="primary"
           size="small"
@@ -101,14 +116,6 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
           loading={isPending}
           loadingPosition="start"
           disabled={!song || (!artist && !variousArtists) || isPending}
-          onClick={() =>
-            dispatch({
-              type: "search-song",
-              search: song,
-              artist,
-              variousArtists,
-            })
-          }
         >
           Search
         </Button>

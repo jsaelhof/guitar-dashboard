@@ -1,5 +1,5 @@
 import { Add } from "@mui/icons-material";
-import { Dialog, IconButton } from "@mui/material";
+import { Button, Dialog } from "@mui/material";
 import { useCallback, useState } from "react";
 import SearchSongsInput from "./components/search-songs-input/SearchSongsInput";
 import { InsertSongResult, SearchSongResults } from "guitar-dashboard-types";
@@ -28,9 +28,16 @@ const AddSongs = ({ onInsert }: AddSongsProps) => {
 
   return (
     <>
-      <IconButton size="small" color="primary" onClick={() => setOpen(true)}>
-        <Add />
-      </IconButton>
+      <Button
+        variant="outlined"
+        fullWidth
+        size="small"
+        onClick={() => setOpen(true)}
+        startIcon={<Add />}
+        sx={{ textTransform: "none" }}
+      >
+        Add Songs
+      </Button>
 
       <Dialog open={open} maxWidth="sm" fullWidth>
         {!searchResults && (
