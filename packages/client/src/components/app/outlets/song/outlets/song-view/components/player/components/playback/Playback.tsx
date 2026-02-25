@@ -1,5 +1,5 @@
 import { Slider, SliderProps } from "@mui/material";
-import { Rail, Thumb, Track } from "./plaback.styles";
+import { Rail, Thumb, Track } from "./Playback.styles";
 import { PlayerState } from "../../types";
 
 export type PlaybackProps = {
