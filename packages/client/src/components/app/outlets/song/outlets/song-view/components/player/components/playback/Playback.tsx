@@ -1,18 +1,19 @@
-import { Slider } from "@mui/material";
-import { Rail, Thumb, Track } from "./playback.styles";
-import { AudioControl, AudioState, PlayerState } from "../../types";
+import { Slider, SliderProps } from "@mui/material";
+import { Rail, Thumb, Track } from "./plaback.styles";
+import { PlayerState } from "../../types";
 
 export type PlaybackProps = {
+  currentTime: number;
+  duration: number;
+  loop: PlayerState["loop"];
   marks?: {
     value: number;
     label?: React.ReactNode;
   }[];
-  state: Extract<AudioState, { loading: false }>;
-  controls: AudioControl;
-  playerState: PlayerState;
+  onChange: SliderProps["onChange"];
 };
 
-const Playback = ({ state, controls, playerState, marks }: PlaybackProps) => (
+const Playback = ({ loop, currentTime, duration, ...props }: PlaybackProps) => (
   <Slider
     defaultValue={0}
     max={1}
@@ -20,33 +21,20 @@ const Playback = ({ state, controls, playerState, marks }: PlaybackProps) => (
     value={
       // If there is a complete loop, configure the slider for the loop.
       // Otherwise render the full song state.
-      playerState.loop.status === "set"
-        ? [
-            state.currentTime / state.duration,
-            playerState.loop.loopA / state.duration,
-            playerState.loop.loopB / state.duration,
-          ]
-        : state.currentTime / state.duration
+      loop.status === "set"
+        ? [currentTime / duration, loop.loopA / duration, loop.loopB / duration]
+        : currentTime / duration
     }
     // Override the thumb component with a custom one.
     slots={{ thumb: Thumb, rail: Rail, track: Track }}
     slotProps={{
       // Tell the thumb component whether a loop is active.
       thumb: {
-        "data-loop": playerState.loop.status === "set",
+        "data-loop": loop.status === "set",
       },
     }}
-    marks={marks}
-    onChange={(e, value, activeThumb) => {
-      if (value instanceof Array) {
-        // Loop
-        controls.setCurrentTime(state.duration * value[activeThumb]);
-      } else {
-        // No Loop
-        controls.setCurrentTime(state.duration * value);
-      }
-    }}
     valueLabelDisplay="off"
+    {...props}
   />
 );
 

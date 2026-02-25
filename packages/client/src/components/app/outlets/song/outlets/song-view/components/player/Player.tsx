@@ -175,12 +175,17 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 <Replay10 />
               </DigitalButton>
 
-              {/* TODO: This comment is from the pre-audioState code... I'm not sure its true now. ---> Would be nice NOT to pass the ref but if I don't, the ref values are alaways stale because they don't cause a re-render */}
-              {/* TODO: Sucks having to pass all the state in here. Callbacks? */}
               <Playback
-                state={state}
-                controls={controls}
-                playerState={playerState}
+                currentTime={state.currentTime}
+                duration={state.duration}
+                loop={playerState.loop}
+                onChange={(_e, value, activeThumb) => {
+                  controls.setCurrentTime(
+                    value instanceof Array
+                      ? state.duration * value[activeThumb] // Loop
+                      : state.duration * value // No Loop
+                  );
+                }}
                 marks={(song.riffTimes ?? []).map((time) => ({
                   value: state.duration ? time / state.duration : 0,
                 }))}
