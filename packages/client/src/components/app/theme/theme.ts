@@ -30,18 +30,6 @@ declare module "@mui/material/styles" {
     glows?: ["none", string, string];
     textGlows?: ["none", string, string, string, string, string, string];
   }
-
-  //   interface Theme {
-  //     status: {
-  //       danger: string;
-  //     };
-  //   }
-  // allow configuration using `createTheme`
-  //   interface ThemeOptions {
-  //     status?: {
-  //       danger?: string;
-  //     };
-  //   }
 }
 
 declare module "@mui/material/IconButton" {

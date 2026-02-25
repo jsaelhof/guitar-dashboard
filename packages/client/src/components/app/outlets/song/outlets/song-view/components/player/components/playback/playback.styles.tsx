@@ -14,7 +14,15 @@ export const Rail = styled(SliderRail)(({ theme: { palette } }) => ({
   borderBottom: `1px solid ${palette.lightGrey[500]}`,
 }));
 
-export const Thumb = styled((props) => <SliderThumb {...props} />)(
+export const Thumb = styled(SliderThumb)<
+  React.HTMLAttributes<HTMLSpanElement> & {
+    "data-loop": boolean;
+    // This is provided by MUI on each thumb (there can be multiple and there are 3 when a loop is set).
+    // It defines which thumb this is.
+    // In my case, we want to style the middle thumb (index 1 of 0,1,2) when there is a loop or 0 when there isn't.
+    "data-index": number;
+  }
+>(
   ({
     theme: { palette, glows },
     "data-loop": dataLoop,

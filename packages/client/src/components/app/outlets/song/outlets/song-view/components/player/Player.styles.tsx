@@ -6,30 +6,38 @@ import {
 } from "@mui/icons-material";
 import { IconButton, styled } from "@mui/material";
 
-export const PlayerBase = styled("div")(
-  ({ $hasCover, theme: { palette } }) => ({
-    height: 164,
-    fontSize: 14,
-    color: palette.lightGrey[200],
-    display: "grid",
-    gridTemplateColumns: `${
-      $hasCover ? "auto " : ""
-    }max-content max-content 1fr 90px 110px max-content max-content max-content max-content`,
-    // Cover? Play Seek Playback Time Loop Pitch Speed Volume Sync
-    alignItems: "center",
-    justifyItems: "center",
-    columnGap: 32,
-    rowGap: 8,
-    background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
-    padding: "20px 20px",
-    borderRadius: 8,
-    border: "2px solid #141414",
-    boxShadow: "inset 0 5px 15px #00000099",
-  })
-);
+interface PlayerBaseProps {
+  $hasCover: boolean;
+}
 
-export const AmpLabel = styled("div")(
-  ({ theme: { palette }, small }: { small?: boolean }) => ({
+export const PlayerBase = styled("div", {
+  shouldForwardProp: (prop) => prop !== "hasCover",
+})<PlayerBaseProps>(({ $hasCover, theme: { palette } }) => ({
+  height: 164,
+  fontSize: 14,
+  color: palette.lightGrey[200],
+  display: "grid",
+  gridTemplateColumns: `${
+    $hasCover ? "auto " : ""
+  }max-content max-content 1fr 90px 110px max-content max-content max-content max-content`,
+  // Cover? Play Seek Playback Time Loop Pitch Speed Volume Sync
+  alignItems: "center",
+  justifyItems: "center",
+  columnGap: 32,
+  rowGap: 8,
+  background: `linear-gradient(${palette.darkGrey[500]} 0%, ${palette.darkGrey[880]} 100%)`,
+  padding: "20px 20px",
+  borderRadius: 8,
+  border: "2px solid #141414",
+  boxShadow: "inset 0 5px 15px #00000099",
+}));
+
+interface AmpLabelProps {
+  small?: boolean;
+}
+
+export const AmpLabel = styled("div")<AmpLabelProps>(
+  ({ theme: { palette }, small }) => ({
     fontFamily: "StereoGothic",
     fontWeight: 400,
     textTransform: "uppercase",
@@ -46,8 +54,12 @@ export const AmpLabel = styled("div")(
   })
 );
 
-export const AmpDisplay = styled("div")(
-  ({ theme: { palette }, $on }: { $on: boolean }) => ({
+interface AmpDisplayProps {
+  $on: boolean;
+}
+
+export const AmpDisplay = styled("div")<AmpDisplayProps>(
+  ({ theme: { palette }, $on }) => ({
     fontFamily: "Circular",
     fontSize: 12,
     minWidth: 50,
@@ -65,9 +77,7 @@ export const AmpDisplay = styled("div")(
   })
 );
 
-export const DigitalButton = styled((props) => (
-  <IconButton {...props} color="blueLights" />
-))({});
+export const DigitalButton = styled(IconButton)({});
 
 export const LeftButton = styled(ArrowLeft)(
   ({ theme: { palette, textGlows } }) => ({
@@ -118,7 +128,11 @@ export const TimeDisplay = styled("div")(({ theme: { palette } }) => ({
   color: palette.blueLights[500],
 }));
 
-export const AlbumCover = styled("div")(({ $cover }) => ({
+interface AlbumCoverProps {
+  $cover: string;
+}
+
+export const AlbumCover = styled("div")<AlbumCoverProps>(({ $cover }) => ({
   gridRow: "span 2",
   width: 120,
   height: 120,

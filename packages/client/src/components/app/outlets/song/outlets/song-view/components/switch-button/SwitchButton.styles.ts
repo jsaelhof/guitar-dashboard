@@ -1,7 +1,13 @@
 import { styled } from "@mui/material";
 
 export const SwitchLayout = styled("div")(
-  ({ $size = "large" }: { $size: "small" | "large" }) => ({
+  ({
+    $size = "large",
+    $disabled,
+  }: {
+    $size: "small" | "large";
+    $disabled?: boolean;
+  }) => ({
     width: 28,
     height: 28,
     display: "grid",
@@ -10,6 +16,7 @@ export const SwitchLayout = styled("div")(
     justifyItems: "center",
 
     ...($size === "small" && { transform: "scale(0.6)" }),
+    pointerEvents: $disabled ? "none" : "auto",
   })
 );
 

@@ -1,16 +1,18 @@
 import { Slider } from "@mui/material";
 import { Rail, Thumb, Track } from "./playback.styles";
-import { CustomAudioElement } from "../../Player";
+import { AudioControl, AudioState, PlayerState } from "../../types";
 
 export type PlaybackProps = {
   marks?: {
     value: number;
     label?: React.ReactNode;
   }[];
-  audioRef: CustomAudioElement;
+  state: Extract<AudioState, { loading: false }>;
+  controls: AudioControl;
+  playerState: PlayerState;
 };
 
-const Playback = ({ audioRef, marks }: PlaybackProps) => (
+const Playback = ({ state, controls, playerState, marks }: PlaybackProps) => (
   <Slider
     defaultValue={0}
     max={1}
@@ -18,30 +20,30 @@ const Playback = ({ audioRef, marks }: PlaybackProps) => (
     value={
       // If there is a complete loop, configure the slider for the loop.
       // Otherwise render the full song state.
-      audioRef.loopSec?.loopB != null
+      playerState.loop.status === "set"
         ? [
-            audioRef.currentTime / audioRef.duration,
-            audioRef.loopSec.loopA / audioRef.duration,
-            audioRef.loopSec.loopB / audioRef.duration,
+            state.currentTime / state.duration,
+            playerState.loop.loopA / state.duration,
+            playerState.loop.loopB / state.duration,
           ]
-        : audioRef.currentTime / audioRef.duration
+        : state.currentTime / state.duration
     }
     // Override the thumb component with a custom one.
     slots={{ thumb: Thumb, rail: Rail, track: Track }}
     slotProps={{
       // Tell the thumb component whether a loop is active.
       thumb: {
-        "data-loop": audioRef.loopSec?.loopB != null,
+        "data-loop": playerState.loop.status === "set",
       },
     }}
     marks={marks}
     onChange={(e, value, activeThumb) => {
       if (value instanceof Array) {
         // Loop
-        audioRef.currentTime = audioRef.duration * value[activeThumb];
+        controls.setCurrentTime(state.duration * value[activeThumb]);
       } else {
         // No Loop
-        audioRef.currentTime = audioRef.duration * value;
+        controls.setCurrentTime(state.duration * value);
       }
     }}
     valueLabelDisplay="off"

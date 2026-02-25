@@ -1,4 +1,9 @@
-import { IconButton, Popover, styled } from "@mui/material";
+import {
+  IconButton,
+  type IconButtonProps,
+  Popover,
+  styled,
+} from "@mui/material";
 
 export const LoopsPopover = styled(Popover)(({ theme: { palette } }) => ({
   "&&": {
@@ -20,7 +25,7 @@ export const Layout = styled("div")(({ theme: { palette } }) => ({
   gap: 8,
 }));
 
-export const LoopTrigger = styled("div")(
+export const LoopTrigger = styled("div")<{ disabled: boolean }>(
   ({ theme: { palette, textGlows }, disabled }) => ({
     display: "flex",
     gap: 12,
@@ -42,7 +47,7 @@ export const Time = styled("div")(() => ({
 
 export const ActionIconButton = styled((props) => (
   <IconButton {...props} size="small" color="blueLights" />
-))({
+))<IconButtonProps>({
   transform: "scale(0.75)",
 });
 
