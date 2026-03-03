@@ -39,8 +39,7 @@ export type PlayerProps = {
 
 const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
   const { disableShortcuts, setDisableShortcuts } = useAppContext();
-  const { countInRef, audioRef, state, controls } = useAudioStore(song);
-  console.log("audioState", state);
+  const { countInRef, audioRef, state, controls } = useAudioStore();
 
   const [playerState, playerActions] = usePlayerState();
 
@@ -52,7 +51,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
         volume: value,
       });
     },
-    [controls]
+    [controls],
   );
 
   // Initialize any settings when the file changes and the audio is ready.
@@ -62,15 +61,63 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
     }
   }, [song.settings.volume, state.loading]);
 
-  // TODO: I don't love having to pass all this junk in. I think this should maybe just take a set of event handlers like onRestart() which can then access state here.
-  useKeyboardShortcuts(
-    state,
-    controls,
-    playerState,
-    playerActions.cycleLoop,
-    updateVolume,
-    disableShortcuts
+  const onTogglePlay = useCallback(() => {
+    "paused" in state && state.paused ? controls.play() : controls.pause();
+  }, [state, controls]);
+
+  const onRestart = useCallback(() => {
+    controls.setCurrentTime(
+      playerState.loop.status === "set" ? playerState.loop.loopA : 0,
+    );
+  }, [playerState.loop.status, controls]);
+
+  const onResetSpeed = useCallback(() => {
+    controls.setPlaybackRate(1);
+  }, [controls]);
+
+  const onSpeedDecrease = useCallback(() => {
+    // Limit this to 10% speed. I don't want it to go to zero and effectively pause, and going negative makes things play backward.
+    "playbackRate" in state &&
+      controls.setPlaybackRate(
+        Math.max(parseFloat((state.playbackRate - 0.1).toFixed(1)), 0.1),
+      );
+  }, [controls, state]);
+
+  const onCycleLoop = useCallback(() => {
+    "currentTime" in state && playerActions.cycleLoop(state.currentTime);
+  }, [state, playerActions.cycleLoop]);
+
+  const onSeekBackward = useCallback(
+    (seconds: number) => {
+      "currentTime" in state &&
+        controls.setCurrentTime(Math.max(state.currentTime - seconds, 0));
+    },
+    [controls, state],
   );
+
+  const onVolumeUp = useCallback(() => {
+    if ("volume" in state) {
+      updateVolume(Math.min(parseFloat((state.volume + 0.05).toFixed(2)), 1));
+    }
+  }, [state, updateVolume]);
+
+  const onVolumeDown = useCallback(() => {
+    if ("volume" in state) {
+      updateVolume(Math.max(parseFloat((state.volume - 0.05).toFixed(2)), 0));
+    }
+  }, [state, updateVolume]);
+
+  useKeyboardShortcuts({
+    onTogglePlay,
+    onRestart,
+    onResetSpeed,
+    onSpeedDecrease,
+    onSeekBackward,
+    onCycleLoop,
+    onVolumeDown,
+    onVolumeUp,
+    disableShortcuts,
+  });
 
   return (
     <div>
@@ -138,7 +185,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                       percentPlayed:
                         e.currentTarget.currentTime / e.currentTarget.duration,
                     },
-                  })
+                  }),
                 );
             },
           })}
@@ -183,7 +230,7 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                   controls.setCurrentTime(
                     value instanceof Array
                       ? state.duration * value[activeThumb] // Loop
-                      : state.duration * value // No Loop
+                      : state.duration * value, // No Loop
                   );
                 }}
                 marks={(song.riffTimes ?? []).map((time) => ({
@@ -193,9 +240,9 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
 
               <TimeDisplay>
                 {`${formatSeconds(
-                  Math.round(state.currentTime)
+                  Math.round(state.currentTime),
                 )} / ${formatSeconds(
-                  Math.round(!isNaN(state.duration) ? state.duration : 0)
+                  Math.round(!isNaN(state.duration) ? state.duration : 0),
                 )}`}
               </TimeDisplay>
 

@@ -1,11 +1,5 @@
-import { Loop, Song } from "guitar-dashboard-types";
-import {
-  useSyncExternalStore,
-  useRef,
-  type RefObject,
-  useMemo,
-  useState,
-} from "react";
+import { Song } from "guitar-dashboard-types";
+import { useSyncExternalStore, useRef, type RefObject, useMemo } from "react";
 import { AudioControl, AudioState } from "../types";
 
 // Shallow comparison utility function
@@ -35,7 +29,7 @@ const SUBSCRIBED_AUDIO_EVENTS = [
   "canplaythrough",
 ];
 
-export function useAudioStore(song: Song): {
+export function useAudioStore(): {
   countInRef: RefObject<HTMLAudioElement | null>;
   audioRef: RefObject<HTMLAudioElement | null>;
   state: AudioState;
@@ -55,13 +49,13 @@ export function useAudioStore(song: Song): {
 
       // Add event listeners
       SUBSCRIBED_AUDIO_EVENTS.forEach((event) =>
-        audio.addEventListener(event, callback)
+        audio.addEventListener(event, callback),
       );
 
       // Cleanup function
       return () =>
         SUBSCRIBED_AUDIO_EVENTS.forEach((event) =>
-          audio.removeEventListener(event, callback)
+          audio.removeEventListener(event, callback),
         );
     },
 
@@ -91,7 +85,7 @@ export function useAudioStore(song: Song): {
       }
 
       return snapshotRef.current;
-    }
+    },
   );
 
   const controls: AudioControl = useMemo(() => {
