@@ -30,6 +30,9 @@ import { insertSongs } from "./routes/songs/insert-songs.js";
 import { updateStartOffsetSetting } from "./routes/song/:songId/update-start-offset-setting.js";
 import { updateStartDelaySetting } from "./routes/song/:songId/update-start-delay-setting.js";
 import { mount } from "./routes/util/mount.js";
+import { backupDB } from "./routes/util/backup-db.js";
+import { selectRestoreDB } from "./routes/util/select-restore-db.js";
+import { restoreDB } from "./routes/util/restore-db.js";
 
 dotenv.config();
 
@@ -58,6 +61,9 @@ app.post("/amp/status", ampStatus);
 
 // /util/*
 app.post("/util/mount", mount);
+app.post("/util/backupDB", backupDB);
+app.post("/util/selectRestoreDB", selectRestoreDB);
+app.post("/util/restoreDB", restoreDB);
 
 // /play/*
 app.post("/play/:songId", playSong);

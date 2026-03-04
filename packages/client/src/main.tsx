@@ -12,6 +12,7 @@ import { Exercises } from "./components/app/outlets/exercises/Exercises";
 import { Exercise } from "./components/app/outlets/exercises/outlets/exercise/Exercise";
 import { App } from "./components/app/App";
 import RecentSongsView from "./components/app/outlets/song/outlets/recent-songs-view/RecentSongsView";
+import { Settings } from "./components/app/outlets/song/outlets/settings/Settings";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <RecentSongsView />,
+          },
+          {
+            path: "settings",
+            element: <Settings />,
           },
           {
             path: ":songId",
