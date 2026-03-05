@@ -121,6 +121,7 @@ export const useWebAudioProcessing = (
   song: Song
 ) => {
   const audioContext = new AudioContext();
+  const gainRef = useRef<Tone.Gain>(null);
   const pitchUpRef = useRef<Tone.PitchShift>(null);
   const pitchDownRef = useRef<AudioProcessor | null>(null);
 
@@ -152,6 +153,7 @@ export const useWebAudioProcessing = (
 
     // Create gain node for volume control
     const gainNode = new Tone.Gain(1);
+    gainRef.current = gainNode;
 
     // Connect: HTML Audio element output > Gain > PitchShift Down > PitchShift Up > Speakers.
     source.connect(gainNode.input);
