@@ -61,51 +61,56 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
     }
   }, [song.settings.volume, state.loading]);
 
-  const onTogglePlay = useCallback(() => {
-    "paused" in state && state.paused ? controls.play() : controls.pause();
-  }, [state, controls]);
+  const onTogglePlay = useCallback(
+    () => (state.paused ? controls.play() : controls.pause()),
+    [state.paused, controls],
+  );
 
-  const onRestart = useCallback(() => {
-    controls.setCurrentTime(
-      playerState.loop.status === "set" ? playerState.loop.loopA : 0,
-    );
-  }, [playerState.loop.status, controls]);
+  const onRestart = useCallback(
+    () =>
+      controls.setCurrentTime(
+        playerState.loop.status === "set" ? playerState.loop.loopA : 0,
+      ),
+    [playerState.loop.status, controls],
+  );
 
-  const onResetSpeed = useCallback(() => {
-    controls.setPlaybackRate(1);
-  }, [controls]);
+  const onResetSpeed = useCallback(
+    () => controls.setPlaybackRate(1),
+    [controls],
+  );
 
-  const onSpeedDecrease = useCallback(() => {
-    // Limit this to 10% speed. I don't want it to go to zero and effectively pause, and going negative makes things play backward.
-    "playbackRate" in state &&
+  const onSpeedDecrease = useCallback(
+    () =>
+      // Limit this to 10% speed. I don't want it to go to zero and effectively pause, and going negative makes things play backward.
       controls.setPlaybackRate(
         Math.max(parseFloat((state.playbackRate - 0.1).toFixed(1)), 0.1),
-      );
-  }, [controls, state]);
+      ),
+    [controls, state.playbackRate],
+  );
 
-  const onCycleLoop = useCallback(() => {
-    "currentTime" in state && playerActions.cycleLoop(state.currentTime);
-  }, [state, playerActions.cycleLoop]);
+  const onCycleLoop = useCallback(
+    () => playerActions.cycleLoop(state.currentTime),
+    [state.currentTime, playerActions.cycleLoop],
+  );
 
   const onSeekBackward = useCallback(
     (seconds: number) => {
-      "currentTime" in state &&
-        controls.setCurrentTime(Math.max(state.currentTime - seconds, 0));
+      controls.setCurrentTime(Math.max(state.currentTime - seconds, 0));
     },
-    [controls, state],
+    [controls, state.currentTime],
   );
 
-  const onVolumeUp = useCallback(() => {
-    if ("volume" in state) {
-      updateVolume(Math.min(parseFloat((state.volume + 0.05).toFixed(2)), 1));
-    }
-  }, [state, updateVolume]);
+  const onVolumeUp = useCallback(
+    () =>
+      updateVolume(Math.min(parseFloat((state.volume + 0.05).toFixed(2)), 1)),
+    [state.volume, updateVolume],
+  );
 
-  const onVolumeDown = useCallback(() => {
-    if ("volume" in state) {
-      updateVolume(Math.max(parseFloat((state.volume - 0.05).toFixed(2)), 0));
-    }
-  }, [state, updateVolume]);
+  const onVolumeDown = useCallback(
+    () =>
+      updateVolume(Math.max(parseFloat((state.volume - 0.05).toFixed(2)), 0)),
+    [state.volume, updateVolume],
+  );
 
   useKeyboardShortcuts({
     onTogglePlay,

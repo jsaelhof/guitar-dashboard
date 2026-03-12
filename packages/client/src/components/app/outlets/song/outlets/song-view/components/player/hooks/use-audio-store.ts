@@ -1,4 +1,3 @@
-import { Song } from "guitar-dashboard-types";
 import { useSyncExternalStore, useRef, type RefObject, useMemo } from "react";
 import { AudioControl, AudioState } from "../types";
 
@@ -30,6 +29,7 @@ const SUBSCRIBED_AUDIO_EVENTS = [
 ];
 
 export function useAudioStore(): {
+  loading: boolean;
   countInRef: RefObject<HTMLAudioElement | null>;
   audioRef: RefObject<HTMLAudioElement | null>;
   state: AudioState;
@@ -109,6 +109,7 @@ export function useAudioStore(): {
   }, []);
 
   return {
+    loading: !state,
     countInRef,
     audioRef,
     //audio: audioRef.current,
@@ -117,6 +118,11 @@ export function useAudioStore(): {
     // This avoids `state` being nullable and prevents a lot of optional chaining of `state?.<something>` in the code.
     state: state ?? {
       loading: true,
+      currentTime: 0,
+      duration: 0,
+      paused: true,
+      playbackRate: 1,
+      volume: 1,
     },
     controls,
   };

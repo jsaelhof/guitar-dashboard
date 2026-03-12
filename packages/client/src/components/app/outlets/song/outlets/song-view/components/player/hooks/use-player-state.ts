@@ -15,7 +15,7 @@ export const playerStateReducer = (
     | { type: "increaseLoopStart"; trackDuration: number }
     | { type: "decreaseLoopEnd" }
     | { type: "increaseLoopEnd"; trackDuration: number }
-    | { type: "cycleLoop"; time: number }
+    | { type: "cycleLoop"; time: number },
 ) => {
   switch (action.type) {
     case "toggleSync":
@@ -74,7 +74,7 @@ export const playerStateReducer = (
           loopA: Math.min(
             state.loop.loopA + 1, // Time + 1
             action.trackDuration, // Track length
-            ...(state.loop.status === "set" ? [state.loop.loopB - 1] : []) // If exists, Loop B - 1
+            ...(state.loop.status === "set" ? [state.loop.loopB - 1] : []), // If exists, Loop B - 1
           ),
         },
       };
@@ -103,7 +103,7 @@ export const playerStateReducer = (
             state.loop.loopB + 1,
             // Weird little issue here... if the loop is set to end at the exact track end, it won't loop because it pauses when it reaches the end of playback.
             // This is basically impossible to set using the keyboard shortcuts but using the arrows, it can, so I've set the max to be a fraction of a second below the track end.
-            action.trackDuration - 0.1
+            action.trackDuration - 0.1,
           ),
         },
       };
@@ -156,7 +156,7 @@ export const usePlayerState = (): [
     decreaseLoopEnd: () => void;
     increaseLoopEnd: (trackDuration: number) => void;
     cycleLoop: (time: number) => void;
-  }
+  },
 ] => {
   const [playerState, dispatch] = useReducer(playerStateReducer, {
     sync: true,
@@ -179,7 +179,7 @@ export const usePlayerState = (): [
         dispatch({ type: "increaseLoopEnd", trackDuration }),
       cycleLoop: (time: number) => dispatch({ type: "cycleLoop", time }),
     }),
-    []
+    [],
   );
 
   return [playerState, actions];

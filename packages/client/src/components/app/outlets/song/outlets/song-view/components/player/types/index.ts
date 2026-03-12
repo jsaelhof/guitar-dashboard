@@ -1,13 +1,11 @@
-export type AudioState =
-  | { loading: true }
-  | {
-      loading: false;
-      currentTime: number;
-      volume: number;
-      duration: number;
-      playbackRate: number;
-      paused: boolean;
-    };
+export type AudioState = {
+  loading: boolean;
+  currentTime: number;
+  volume: number;
+  duration: number;
+  playbackRate: number;
+  paused: boolean;
+};
 
 export type AudioControl = Pick<HTMLAudioElement, "play" | "pause"> & {
   setVolume: (value: number) => void;
