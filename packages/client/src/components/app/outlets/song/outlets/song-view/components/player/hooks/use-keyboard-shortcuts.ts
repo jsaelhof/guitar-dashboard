@@ -1,15 +1,8 @@
 import { useEffect } from "react";
 
 export const useKeyboardShortcuts = ({
-  onTogglePlay,
-  onRestart,
-  onResetSpeed,
-  onSpeedDecrease,
-  onSeekBackward,
-  onCycleLoop,
-  onVolumeDown,
-  onVolumeUp,
   disableShortcuts,
+  ...callbacks
 }: {
   onTogglePlay: () => void;
   onRestart: () => void;
@@ -23,6 +16,17 @@ export const useKeyboardShortcuts = ({
 }) => {
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
+      const {
+        onTogglePlay,
+        onRestart,
+        onResetSpeed,
+        onSpeedDecrease,
+        onSeekBackward,
+        onCycleLoop,
+        onVolumeDown,
+        onVolumeUp,
+      } = callbacks;
+
       switch (e.key) {
         // Play / Pause
         case " ": // Space
@@ -104,5 +108,5 @@ export const useKeyboardShortcuts = ({
 
     if (!disableShortcuts) window.addEventListener("keydown", listener);
     return () => window.removeEventListener("keydown", listener);
-  }, [disableShortcuts]);
+  }, [callbacks, disableShortcuts]);
 };
