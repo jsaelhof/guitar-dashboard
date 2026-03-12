@@ -8,9 +8,9 @@ import {
 } from "./RecentSongCard.styles";
 import { useNavigate } from "react-router-dom";
 
-interface RecentSongCardProps {
+export type RecentSongCardProps = {
   song: RecentSong;
-}
+};
 
 export const RecentSongCard = ({ song }: RecentSongCardProps) => {
   const navigate = useNavigate();

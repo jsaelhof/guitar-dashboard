@@ -6,13 +6,9 @@ import {
 } from "@mui/icons-material";
 import { IconButton, styled } from "@mui/material";
 
-interface PlayerBaseProps {
-  $hasCover: boolean;
-}
-
 export const PlayerBase = styled("div", {
   shouldForwardProp: (prop) => prop !== "hasCover",
-})<PlayerBaseProps>(({ $hasCover, theme: { palette } }) => ({
+})<{ $hasCover: boolean }>(({ $hasCover, theme: { palette } }) => ({
   height: 164,
   fontSize: 14,
   color: palette.lightGrey[200],
@@ -32,11 +28,7 @@ export const PlayerBase = styled("div", {
   boxShadow: "inset 0 5px 15px #00000099",
 }));
 
-interface AmpLabelProps {
-  small?: boolean;
-}
-
-export const AmpLabel = styled("div")<AmpLabelProps>(
+export const AmpLabel = styled("div")<{ small?: boolean }>(
   ({ theme: { palette }, small }) => ({
     fontFamily: "StereoGothic",
     fontWeight: 400,
@@ -51,14 +43,10 @@ export const AmpLabel = styled("div")<AmpLabelProps>(
       fontSize: 7,
       transform: "translateY(1px)",
     }),
-  })
+  }),
 );
 
-interface AmpDisplayProps {
-  $on: boolean;
-}
-
-export const AmpDisplay = styled("div")<AmpDisplayProps>(
+export const AmpDisplay = styled("div")<{ $on: boolean }>(
   ({ theme: { palette }, $on }) => ({
     fontFamily: "Circular",
     fontSize: 12,
@@ -74,7 +62,7 @@ export const AmpDisplay = styled("div")<AmpDisplayProps>(
     color: $on ? palette.blueLights[500] : "#FFFFFF22",
     backgroundColor: "#242424",
     boxShadow: $on ? `${palette.blueLights[800]} 0px 0px 10px inset` : "unset",
-  })
+  }),
 );
 
 export const DigitalButton = styled(IconButton)({});
@@ -87,7 +75,7 @@ export const LeftButton = styled(ArrowLeft)(
       color: palette.blueLights[500],
       filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
     },
-  })
+  }),
 );
 
 export const RightButton = styled(ArrowRight)(
@@ -98,7 +86,7 @@ export const RightButton = styled(ArrowRight)(
       color: palette.blueLights[500],
       filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
     },
-  })
+  }),
 );
 
 export const UpButton = styled(ArrowDropUp)(
@@ -109,7 +97,7 @@ export const UpButton = styled(ArrowDropUp)(
       color: palette.blueLights[500],
       filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
     },
-  })
+  }),
 );
 
 export const DownButton = styled(ArrowDropDown)(
@@ -120,7 +108,7 @@ export const DownButton = styled(ArrowDropDown)(
       color: palette.blueLights[500],
       filter: `drop-shadow(${textGlows[1]}) drop-shadow(${textGlows[3]})`,
     },
-  })
+  }),
 );
 
 export const TimeDisplay = styled("div")(({ theme: { palette } }) => ({
@@ -128,11 +116,7 @@ export const TimeDisplay = styled("div")(({ theme: { palette } }) => ({
   color: palette.blueLights[500],
 }));
 
-interface AlbumCoverProps {
-  $cover: string;
-}
-
-export const AlbumCover = styled("div")<AlbumCoverProps>(({ $cover }) => ({
+export const AlbumCover = styled("div")<{ $cover: string }>(({ $cover }) => ({
   gridRow: "span 2",
   width: 120,
   height: 120,

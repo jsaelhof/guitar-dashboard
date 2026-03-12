@@ -1,5 +1,4 @@
-import styled from "@emotion/styled";
-import { SliderRail, SliderThumb, SliderTrack } from "@mui/material";
+import { SliderRail, SliderThumb, SliderTrack, styled } from "@mui/material";
 
 export const Track = styled(SliderTrack)(({ theme: { palette, glows } }) => ({
   height: 2,
@@ -14,14 +13,16 @@ export const Rail = styled(SliderRail)(({ theme: { palette } }) => ({
   borderBottom: `1px solid ${palette.lightGrey[500]}`,
 }));
 
+interface ThumbProps {
+  "data-loop": boolean;
+  // This is provided by MUI on each thumb (there can be multiple and there are 3 when a loop is set).
+  // It defines which thumb this is.
+  // In my case, we want to style the middle thumb (index 1 of 0,1,2) when there is a loop or 0 when there isn't.
+  "data-index": number;
+}
+
 export const Thumb = styled(SliderThumb)<
-  React.HTMLAttributes<HTMLSpanElement> & {
-    "data-loop": boolean;
-    // This is provided by MUI on each thumb (there can be multiple and there are 3 when a loop is set).
-    // It defines which thumb this is.
-    // In my case, we want to style the middle thumb (index 1 of 0,1,2) when there is a loop or 0 when there isn't.
-    "data-index": number;
-  }
+  React.HTMLAttributes<HTMLSpanElement> & ThumbProps
 >(
   ({
     theme: { palette, glows },
@@ -39,5 +40,5 @@ export const Thumb = styled(SliderThumb)<
       : {
           width: 0,
           pointerEvents: "none",
-        }
+        },
 );

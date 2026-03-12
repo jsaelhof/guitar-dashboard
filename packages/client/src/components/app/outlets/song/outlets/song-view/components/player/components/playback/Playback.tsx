@@ -31,7 +31,7 @@ const Playback = ({ loop, currentTime, duration, ...props }: PlaybackProps) => (
       // Tell the thumb component whether a loop is active.
       thumb: {
         "data-loop": loop.status === "set",
-      },
+      } as Parameters<typeof Thumb>[0],
     }}
     valueLabelDisplay="off"
     {...props}

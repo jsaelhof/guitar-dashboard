@@ -4,7 +4,12 @@ declare module "@mui/material/styles" {
   interface Palette {
     lightGrey: Partial<Color>;
     blueLights: Partial<Color>;
-    darkGrey: Partial<Color>;
+    darkGrey: Partial<Color> & {
+      820: string;
+      840: string;
+      860: string;
+      880: string;
+    };
   }
 
   interface PaletteOptions {
@@ -63,6 +68,7 @@ declare module "@mui/material/Typography" {
   interface TypographyPropsVariantOverrides {
     underline: true;
     system: true;
+    stereo: true;
   }
 }
 
