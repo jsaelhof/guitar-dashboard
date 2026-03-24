@@ -14,7 +14,7 @@ export const Content = styled("div")(() => ({
   minHeight: 0,
 }));
 
-export const TabPanel = styled("div")(() => ({
+export const ScrollableContentArea = styled("div")(() => ({
   padding: "0 16px 16px",
   overflowY: "scroll",
 }));

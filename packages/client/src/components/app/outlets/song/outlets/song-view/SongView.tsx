@@ -1,7 +1,7 @@
 import { PlaylistAdd, Settings } from "@mui/icons-material";
-import { Box, Divider, Tab, Tabs, Typography } from "@mui/material";
-import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Content, Header, TabPanel } from "./SongView.styles";
+import { Box, Divider, Tab, Tabs } from "@mui/material";
+import { Fragment, useEffect, useRef, useState } from "react";
+import { Content, Header, ScrollableContentArea } from "./SongView.styles";
 import AddTablature from "./components/add-tablature/AddTablature";
 import PDF from "./components/pdf/PDF";
 import Player from "./components/player/Player";
@@ -54,16 +54,25 @@ const SongView = () => {
         const p = Math.max(currentTime - 30, 0) / (totalTime - 60);
         const maxScroll = Math.round(
           scrollRef.current.scrollHeight -
-            scrollRef.current.getBoundingClientRect().height
+            scrollRef.current.getBoundingClientRect().height,
         );
 
         scrollRef.current.scrollTo({ top: maxScroll * p, behavior: "instant" });
       }
     };
 
-    document.addEventListener(CustomEvents.UPDATE_TIME, listener);
-    () => document.removeEventListener(CustomEvents.UPDATE_TIME, listener);
-  }, []);
+    const isDisplayingTablature =
+      navTabId === 0 &&
+      song?.tablature &&
+      tablatureTabId < song.tablature.length;
+
+    if (isDisplayingTablature)
+      document.addEventListener(CustomEvents.UPDATE_TIME, listener);
+
+    return () => {
+      document.removeEventListener(CustomEvents.UPDATE_TIME, listener);
+    };
+  }, [navTabId, song?.tablature, tablatureTabId]);
 
   return (
     song?.id && (
@@ -124,7 +133,7 @@ const SongView = () => {
             )}
           </div>
 
-          <TabPanel ref={scrollRef}>
+          <ScrollableContentArea ref={scrollRef}>
             {navTabId === 0 && (
               <>
                 {song.pdf ? (
@@ -145,21 +154,6 @@ const SongView = () => {
               </>
             )}
 
-            {/* {navTabId === 1 && (
-              <>
-                <Riffs
-                  songId={song.id}
-                  riffs={song.riffs}
-                  dispatchSong={dispatchSong}
-                />
-                <AddRiffCard
-                  mode="riffs"
-                  dispatchSong={dispatchSong}
-                  songIsPending={songIsPending}
-                />
-              </>
-            )} */}
-
             {navTabId === 1 && (
               <Video videos={song.videos} dispatchSong={dispatchSong} />
             )}
@@ -167,7 +161,7 @@ const SongView = () => {
             {navTabId === 2 && (
               <SongSettings song={song} dispatchSong={dispatchSong} />
             )}
-          </TabPanel>
+          </ScrollableContentArea>
         </Content>
       </Fragment>
     )
