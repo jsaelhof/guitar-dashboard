@@ -13,6 +13,7 @@ export type SearchSongAction =
       search: string;
       artist: string;
       variousArtists?: boolean;
+      rockBand?: boolean;
     }
   | {
       type: "reset";

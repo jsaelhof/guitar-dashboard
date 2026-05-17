@@ -25,6 +25,7 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
   const [artist, setArtist] = useState("");
   const [song, setSong] = useState("");
   const [variousArtists, setVariousArtists] = useState(false);
+  const [rockBand, setRockBand] = useState(false);
 
   const { dispatch, result, isPending } = useSearchSong();
 
@@ -64,6 +65,7 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
               search: song,
               artist,
               variousArtists,
+              rockBand,
             });
           }}
         >
@@ -86,7 +88,7 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
             margin="none"
             label="Artist"
             value={artist}
-            disabled={variousArtists || isPending}
+            disabled={variousArtists || rockBand || isPending}
             onChange={({ target }) => setArtist(target.value)}
           />
 
@@ -102,6 +104,19 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
             label="Various Artists"
             disabled={isPending}
           />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={rockBand}
+                onChange={({ target }: React.ChangeEvent<HTMLInputElement>) =>
+                  setRockBand(target.checked)
+                }
+              />
+            }
+            label="Rock Band"
+            disabled={isPending}
+          />
         </form>
       </DialogContent>
 
@@ -115,7 +130,9 @@ const SearchSongsInput = ({ onComplete, onClose }: SearchSongsInputProps) => {
           startIcon={<Search />}
           loading={isPending}
           loadingPosition="start"
-          disabled={!song || (!artist && !variousArtists) || isPending}
+          disabled={
+            !song || (!artist && !variousArtists && !rockBand) || isPending
+          }
         >
           Search
         </Button>

@@ -9,7 +9,7 @@ import { Db } from "mongodb";
 export const searchSong = async (req: Request, res: Response) => {
   const db = await DB();
 
-  const { search, artist, variousArtists } = req.body;
+  const { search, artist, variousArtists, rockBand } = req.body;
 
   try {
     if (process.env.MP3_LIB && search) {
@@ -17,7 +17,8 @@ export const searchSong = async (req: Request, res: Response) => {
         db,
         artist,
         search,
-        variousArtists
+        variousArtists,
+        rockBand,
       );
 
       res.send({
@@ -39,7 +40,8 @@ const searchFileRecursively = async (
   db: Db,
   artist: string,
   search: string,
-  variousArtists: boolean
+  variousArtists: boolean,
+  rockBand: boolean,
 ) => {
   let results: string[] = [];
 
@@ -47,14 +49,17 @@ const searchFileRecursively = async (
   const subDir = `${process.env.MP3_LIB}${
     variousArtists
       ? "/Various Artists"
-      : artist
-      ? `/${artist.charAt(0).toUpperCase()}`
-      : ""
+      : rockBand
+        ? "/_RockBand"
+        : artist
+          ? `/${artist.charAt(0).toUpperCase()}`
+          : ""
   }`;
 
   const searchDir = async (dir: string) => {
     try {
       const items = await readdir(dir, { withFileTypes: true });
+      console.log(items);
       const promises = items.map(async (item) => {
         const fullPath = join(dir, item.name);
         if (item.isDirectory()) {
@@ -67,7 +72,10 @@ const searchFileRecursively = async (
           // If an artist was provided, I use the first letter to restrict which sub-dir to search.
           // Within that dir, if the artist-level dir includes the entire artist sub-string, I can prevent other artists with similar songs
           // from being included in the results. This doesn't speed it up, but it limits the results.
-          (!artist || dir.toLowerCase().includes(`/${artist.toLowerCase()}`))
+          (variousArtists ||
+            rockBand ||
+            !artist ||
+            dir.toLowerCase().includes(`/${artist.toLowerCase()}`))
         ) {
           results.push(fullPath);
         }
@@ -110,6 +118,6 @@ const searchFileRecursively = async (
 
       return collection;
     },
-    Promise.resolve({})
+    Promise.resolve({}),
   );
 };

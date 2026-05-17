@@ -1,5 +1,4 @@
 import {
-  Box,
   Collapse,
   Divider,
   List,
@@ -16,11 +15,15 @@ import { useSongs } from "../../hooks/use-songs";
 import { History, Search, Settings, Speed } from "@mui/icons-material";
 import AddSongs from "./components/add-songs/AddSongs";
 import { useAppContext } from "../../context/AppContext";
-import { SongTitleList } from "guitar-dashboard-types";
+import { SongsByArtist, SongTitleList } from "guitar-dashboard-types";
 
 export type SongListProps = ReturnType<typeof useSongs>;
 
-const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
+const SongList = ({
+  rockBandSongsByArtist,
+  songsByArtist,
+  dispatch,
+}: SongListProps) => {
   const navigate = useNavigate();
   const { songId = "" } = useParams();
 
@@ -33,10 +36,10 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
                 selectedArtist = artist;
               return selectedArtist;
             },
-            null
+            null,
           )
         : null,
-    [songId, songsByArtist]
+    [songId, songsByArtist],
   );
 
   const { setDisableShortcuts } = useAppContext();
@@ -44,6 +47,60 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
   const onInsert = useCallback(() => dispatch({ type: "get" }), []);
 
   const [search, setSearch] = useState("");
+
+  const buildSongMenu = useCallback(
+    (songsByArtist: SongsByArtist) =>
+      Object.entries(songsByArtist)
+        .reduce<[string, SongTitleList][]>(
+          (acc, [artist, songs]) => {
+            const filteredSongs = songs.filter(({ title }) =>
+              title.toLowerCase().includes(search.toLowerCase()),
+            );
+            if (filteredSongs.length) acc.push([artist, filteredSongs]);
+            return acc;
+          },
+          [] as [string, SongTitleList][],
+        )
+        .map(([artist, songs]) => (
+          <ListItem key={artist} sx={{ p: 0, width: 1 }}>
+            <List dense sx={{ py: 0, width: 1 }}>
+              <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
+                <ListItemButton
+                  sx={{ py: 0.1 }}
+                  onClick={() => {
+                    navigate(`/song/${songs[0].id}`);
+                  }}
+                >
+                  <ListItemText primary={artist} />
+                </ListItemButton>
+              </ListSubheader>
+              <Collapse in={currentArtist === artist}>
+                {songs.map((song) => (
+                  <ListItem key={song.id} sx={{ px: 0.5, py: 0 }}>
+                    <ListItemButton
+                      sx={{ py: 0 }}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
+                        navigate(`/song/${song.id}`);
+                      }}
+                      selected={song.id === songId}
+                    >
+                      <ListItemText
+                        primary={song.title}
+                        primaryTypographyProps={{
+                          fontSize: 12,
+                        }}
+                        sx={{ pl: 1 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </Collapse>
+            </List>
+          </ListItem>
+        )),
+    [currentArtist, search],
+  );
 
   return (
     <>
@@ -89,58 +146,20 @@ const SongList = ({ recentSongs, songsByArtist, dispatch }: SongListProps) => {
           ></TextField>
         </ListItem>
 
-        {Object.entries(songsByArtist)
-          .reduce<[string, SongTitleList][]>((acc, [artist, songs]) => {
-            const filteredSongs = songs.filter(({ title }) =>
-              title.toLowerCase().includes(search.toLowerCase())
-            );
-            if (filteredSongs.length) acc.push([artist, filteredSongs]);
-            return acc;
-          }, [] as [string, SongTitleList][])
-          .map(([artist, songs]) => (
-            <ListItem key={artist} sx={{ p: 0, width: 1 }}>
-              <List dense sx={{ py: 0, width: 1 }}>
-                <ListSubheader color="primary" sx={{ lineHeight: 2, px: 0 }}>
-                  <ListItemButton
-                    sx={{ py: 0.1 }}
-                    onClick={() => {
-                      navigate(`/song/${songs[0].id}`);
-                    }}
-                  >
-                    <ListItemText
-                      primaryTypographyProps={{
-                        fontSize: 14,
-                      }}
-                    >
-                      {artist}
-                    </ListItemText>
-                  </ListItemButton>
-                </ListSubheader>
-                <Collapse in={currentArtist === artist}>
-                  {songs.map((song) => (
-                    <ListItem key={song.id} sx={{ px: 0.5, py: 0 }}>
-                      <ListItemButton
-                        sx={{ py: 0 }}
-                        onClick={(e) => {
-                          e.stopPropagation(); // Prevent this bubbling up and invoking the artist-level click.
-                          navigate(`/song/${song.id}`);
-                        }}
-                        selected={song.id === songId}
-                      >
-                        <ListItemText
-                          primary={song.title}
-                          primaryTypographyProps={{
-                            fontSize: 12,
-                          }}
-                          sx={{ pl: 1 }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  ))}
-                </Collapse>
-              </List>
-            </ListItem>
-          ))}
+        {buildSongMenu(songsByArtist)}
+
+        <Divider variant="middle" sx={{ my: 2 }} />
+
+        <ListItem sx={{ gap: 1, mb: 1 }}>
+          <img
+            src="/rockband.png"
+            width={24}
+            height={24}
+            style={{ filter: "invert(100%)" }}
+          />
+          <ListItemText primary="Rock Band" />
+        </ListItem>
+        {buildSongMenu(rockBandSongsByArtist)}
 
         <Divider variant="middle" sx={{ my: 2 }} />
 
