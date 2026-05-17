@@ -13,9 +13,14 @@ export type SongsAction = { type: "recent"; songId: string } | { type: "get" };
 export const useSongs = () => {
   const navigate = useNavigate();
 
-  const [{ songsByArtist, recentSongs }, dispatch, isPending] = useActionState<
+  const [
+    { songsByArtist, rockBandSongsByArtist, recentSongs },
+    dispatch,
+    isPending,
+  ] = useActionState<
     {
       songsByArtist: SongsByArtist;
+      rockBandSongsByArtist: SongsByArtist;
       recentSongs: RecentSong[];
     },
     SongsAction
@@ -30,6 +35,7 @@ export const useSongs = () => {
         navigate("/login");
         return {
           songsByArtist: {},
+          rockBandSongsByArtist: {},
           recentSongs: [],
         };
       }
@@ -43,11 +49,12 @@ export const useSongs = () => {
     },
     {
       songsByArtist: {},
+      rockBandSongsByArtist: {},
       recentSongs: [],
-    }
+    },
   );
 
   useEffect(() => dispatch({ type: "get" }), []);
 
-  return { songsByArtist, recentSongs, dispatch };
+  return { songsByArtist, rockBandSongsByArtist, recentSongs, dispatch };
 };

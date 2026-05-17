@@ -14,6 +14,42 @@ export const getSongs = async (req: Request, res: Response) => {
     await db
       .collection<Song>("songs")
       .aggregate<{ _id: string; songs: SongTitleList }>([
+        // 1. Filter out songs where the path starts with '_RockBand/'
+        {
+          $match: {
+            file: { $not: /^_RockBand\// },
+          },
+        },
+        // Sort the songs alphabetically by title.
+        { $sort: { title: 1 } },
+        // Group all the songs by artist. The songs array will be sorted alphabetically b/c it respects the order of the sort in the previous stage.
+        {
+          $group: {
+            _id: "$artist",
+            songs: { $push: { id: "$id", title: "$title" } },
+          },
+        },
+        // Now that the songs are grouped by artist, sort the list of artists alphabetically.
+        { $sort: { _id: 1 } },
+      ])
+      .toArray()
+  ).reduce<SongsByArtist>((acc, { _id, songs }) => {
+    acc[_id] = songs;
+    return acc;
+  }, {});
+
+  // Execute the aggregation, send the returned cursor to an array and then reduce it.
+  // This turns each { _id: <artist>, songs: [ "Song 1", "Song 2", ... ] } into { artist: ["Song 1", "Song 2", ...] }
+  const rockBandSongsByArtist = (
+    await db
+      .collection<Song>("songs")
+      .aggregate<{ _id: string; songs: SongTitleList }>([
+        // 1. Filter out songs where the path starts with '_RockBand/'
+        {
+          $match: {
+            file: /^_RockBand\//,
+          },
+        },
         // Sort the songs alphabetically by title.
         { $sort: { title: 1 } },
         // Group all the songs by artist. The songs array will be sorted alphabetically b/c it respects the order of the sort in the previous stage.
@@ -38,6 +74,7 @@ export const getSongs = async (req: Request, res: Response) => {
     type: "init",
     data: {
       songsByArtist,
+      rockBandSongsByArtist,
       recentSongs,
     },
   });
