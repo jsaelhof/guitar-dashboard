@@ -41,7 +41,7 @@ const LoopList = ({
       setAnchor(currentTarget);
       onOpenChange(true);
     },
-    []
+    [],
   );
 
   const onLoopListClose = () => {
@@ -58,7 +58,7 @@ const LoopList = ({
       loops.length === 1 && onLoopListClose();
       onDelete(loop);
     },
-    [loops]
+    [loops],
   );
 
   const _onClear = useCallback(() => {
@@ -101,7 +101,12 @@ const LoopList = ({
               <Fragment key={loop.id}>
                 <LoopTrigger
                   disabled={!!editedLoop || loop.id === NEW_LOOP_ID}
-                  onClick={() => !disabled && onSet(loop)}
+                  onClick={() => {
+                    if (!disabled) {
+                      onLoopListClose();
+                      onSet(loop);
+                    }
+                  }}
                 >
                   {loopIsEditing ? (
                     <TextField
@@ -134,7 +139,12 @@ const LoopList = ({
 
                 <LoopTrigger
                   disabled={!!editedLoop || loop.id === NEW_LOOP_ID}
-                  onClick={() => !disabled && onSet(loop)}
+                  onClick={() => {
+                    if (!disabled) {
+                      onLoopListClose();
+                      onSet(loop);
+                    }
+                  }}
                 >
                   <Time
                     style={{
@@ -142,7 +152,7 @@ const LoopList = ({
                     }}
                   >
                     {`${formatSeconds(
-                      Math.round(loop.loopA)
+                      Math.round(loop.loopA),
                     )} - ${formatSeconds(Math.round(loop.loopB))}`}
                   </Time>
                 </LoopTrigger>

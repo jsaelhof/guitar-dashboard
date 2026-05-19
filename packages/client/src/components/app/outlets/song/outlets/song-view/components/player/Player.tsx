@@ -16,12 +16,14 @@ import { useAudioStore } from "./hooks/use-audio-store";
 import { useKeyboardShortcuts } from "./hooks/use-keyboard-shortcuts";
 import { usePlayerState } from "./hooks/use-player-state";
 import {
+  ActiveLoopLabel,
   AlbumCover,
   AmpDisplay,
   AmpLabel,
   DigitalButton,
   DownButton,
   LeftButton,
+  LoopLayout,
   PitchLayout,
   PlayerBase,
   RightButton,
@@ -60,6 +62,19 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
       updateVolume(song.settings.volume ?? 0.5);
     }
   }, [song.settings.volume, state.loading]);
+
+  // Auto-save any changes to the current loop if its been modified in state.
+  useEffect(() => {
+    if (
+      playerState.loop.status === "set" &&
+      playerState.loop.id !== NEW_LOOP_ID
+    ) {
+      dispatchSong({
+        type: "updateloop",
+        ...playerState.loop,
+      });
+    }
+  }, [playerState.loop]);
 
   const onTogglePlay = useCallback(
     () => (state.paused ? controls.play() : controls.pause()),
@@ -251,62 +266,41 @@ const Player = ({ song, dispatchSong, dispatchSongs }: PlayerProps) => {
                 )}`}
               </TimeDisplay>
 
-              <div>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "auto 20px auto 50px auto",
-                    rowGap: 4,
-                    alignItems: "center",
-                    columnGap: 4,
-                  }}
-                >
+              <LoopLayout>
+                {playerState.loop.status !== "unset" && (
+                  <ActiveLoopLabel>{playerState.loop.label}</ActiveLoopLabel>
+                )}
+
+                <StereoLight $on={playerState.loop.status !== "unset"} />
+                <AmpLabel small>A</AmpLabel>
+                <LeftButton onClick={playerActions.decreaseLoopStart} />
+                <AmpDisplay $on={playerState.loop.status !== "unset"}>
                   {playerState.loop.status !== "unset" && (
-                    <div
-                      style={{
-                        fontFamily: "Circular",
-                        fontSize: 12,
-                        textAlign: "center",
-                        gridColumn: "3 / -1",
-                      }}
-                    >
-                      {playerState.loop.label}
+                    <div>
+                      {formatSeconds(Math.round(playerState.loop.loopA))}
                     </div>
                   )}
+                </AmpDisplay>
+                <RightButton
+                  onClick={() =>
+                    playerActions.increaseLoopStart(state.duration)
+                  }
+                />
 
-                  <StereoLight $on={playerState.loop.status !== "unset"} />
-                  <AmpLabel small>A</AmpLabel>
-                  <LeftButton onClick={playerActions.decreaseLoopStart} />
-                  <AmpDisplay $on={playerState.loop.status !== "unset"}>
-                    {playerState.loop.status !== "unset" && (
-                      <div>
-                        {formatSeconds(Math.round(playerState.loop.loopA))}
-                      </div>
-                    )}
-                  </AmpDisplay>
-                  <RightButton
-                    onClick={() =>
-                      playerActions.increaseLoopStart(state.duration)
-                    }
-                  />
-
-                  <StereoLight $on={playerState.loop.status === "set"} />
-                  <AmpLabel small>B</AmpLabel>
-                  <LeftButton onClick={playerActions.decreaseLoopEnd} />
-                  <AmpDisplay $on={playerState.loop.status === "set"}>
-                    {playerState.loop.status === "set" && (
-                      <div>
-                        {formatSeconds(Math.round(playerState.loop.loopB))}
-                      </div>
-                    )}
-                  </AmpDisplay>
-                  <RightButton
-                    onClick={() =>
-                      playerActions.increaseLoopEnd(state.duration)
-                    }
-                  />
-                </div>
-              </div>
+                <StereoLight $on={playerState.loop.status === "set"} />
+                <AmpLabel small>B</AmpLabel>
+                <LeftButton onClick={playerActions.decreaseLoopEnd} />
+                <AmpDisplay $on={playerState.loop.status === "set"}>
+                  {playerState.loop.status === "set" && (
+                    <div>
+                      {formatSeconds(Math.round(playerState.loop.loopB))}
+                    </div>
+                  )}
+                </AmpDisplay>
+                <RightButton
+                  onClick={() => playerActions.increaseLoopEnd(state.duration)}
+                />
+              </LoopLayout>
 
               <PitchLayout>
                 {/* Pitch is undefined if its never been set for a song. */}

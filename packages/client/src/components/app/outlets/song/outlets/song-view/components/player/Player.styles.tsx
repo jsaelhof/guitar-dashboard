@@ -128,6 +128,21 @@ export const AlbumCover = styled("div")<{ $cover: string }>(({ $cover }) => ({
   overflow: "hidden",
 }));
 
+export const LoopLayout = styled("div")(() => ({
+  display: "grid",
+  gridTemplateColumns: "auto 20px auto 50px auto",
+  rowGap: 4,
+  alignItems: "center",
+  columnGap: 4,
+}));
+
+export const ActiveLoopLabel = styled("div")(() => ({
+  fontFamily: "Circular",
+  fontSize: 12,
+  textAlign: "center",
+  gridColumn: "3 / -1",
+}));
+
 export const PitchLayout = styled("div")(() => ({
   display: "grid",
   justifyItems: "center",
