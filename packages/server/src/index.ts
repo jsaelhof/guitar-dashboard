@@ -1,35 +1,37 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
-import cors from "cors";
 import cookieParser from "cookie-parser";
-import { getSongs } from "./routes/songs/get-songs.js";
-import { updateRecentSongs } from "./routes/songs/update-recent-songs.js";
-import { playSong as playSong } from "./routes/play/:songId/play-song.js";
-import { getSong } from "./routes/song/:songId/get-song.js";
-import { updateVolumeSetting } from "./routes/song/:songId/update-volume-setting.js";
-import { insertLoop } from "./routes/song/:songId/insert-loop.js";
-import { updateLoop } from "./routes/song/:songId/update-loop.js";
-import { deleteLoop } from "./routes/song/:songId/delete-loop.js";
-import { updateRiffTime } from "./routes/song/:songId/update-riff-time.js";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Express } from "express";
+import { getExercise } from "./routes/exercise/:exerciseId/get-exercise.js";
+import { updateExerciseSpeed } from "./routes/exercise/:exerciseId/update-exercise-speed.js";
+import { getExercises } from "./routes/exercises/get-exercises.js";
+import { ampOff } from "./routes/launch/amp-off.js";
+import { ampOn } from "./routes/launch/amp-on.js";
+import { ampStatus } from "./routes/launch/amp-status.js";
+import { login } from "./routes/login/login.js";
+import { playSong } from "./routes/play/:songId/play-song.js";
+import { searchSong } from "./routes/search/search-song.js";
 import { addRiff } from "./routes/song/:songId/add-riff.js";
-import { updateRiffOrder } from "./routes/song/:songId/update-riff-order.js";
 import { addTablature } from "./routes/song/:songId/add-tablature.js";
 import { addVideo } from "./routes/song/:songId/add-video.js";
+import { deleteLoop } from "./routes/song/:songId/delete-loop.js";
 import { deleteVideo } from "./routes/song/:songId/delete-video.js";
+import { getSong } from "./routes/song/:songId/get-song.js";
+import { insertLoop } from "./routes/song/:songId/insert-loop.js";
+import { orderTablature } from "./routes/song/:songId/order-tablature.js";
+import { updateLoop } from "./routes/song/:songId/update-loop.js";
 import { updatePitchSetting } from "./routes/song/:songId/update-pitch-setting.js";
-import { ampOn } from "./routes/launch/amp-on.js";
-import { ampOff } from "./routes/launch/amp-off.js";
-import { ampStatus } from "./routes/launch/amp-status.js";
-import { authorizedRoute } from "./utils/authorized-route.js";
-import { login } from "./routes/login/login.js";
-import { getExercise } from "./routes/exercise/:exerciseId/get-exercise.js";
-import { getExercises } from "./routes/exercises/get-exercises.js";
-import { updateExerciseSpeed } from "./routes/exercise/:exerciseId/update-exercise-speed.js";
-import { searchSong } from "./routes/search/search-song.js";
-import { insertSongs } from "./routes/songs/insert-songs.js";
-import { updateStartOffsetSetting } from "./routes/song/:songId/update-start-offset-setting.js";
+import { updateRiffOrder } from "./routes/song/:songId/update-riff-order.js";
+import { updateRiffTime } from "./routes/song/:songId/update-riff-time.js";
 import { updateStartDelaySetting } from "./routes/song/:songId/update-start-delay-setting.js";
+import { updateStartOffsetSetting } from "./routes/song/:songId/update-start-offset-setting.js";
+import { updateTablature } from "./routes/song/:songId/update-tablature.js";
+import { updateVolumeSetting } from "./routes/song/:songId/update-volume-setting.js";
+import { getSongs } from "./routes/songs/get-songs.js";
+import { insertSongs } from "./routes/songs/insert-songs.js";
+import { updateRecentSongs } from "./routes/songs/update-recent-songs.js";
 import { mount } from "./routes/util/mount.js";
+import { authorizedRoute } from "./utils/authorized-route.js";
 
 dotenv.config();
 
@@ -41,7 +43,7 @@ app.use(
   cors({
     origin: true,
     credentials: true,
-  })
+  }),
 );
 app.use(express.json({ limit: "100mb" }));
 process.env.MP3_LIB && app.use(express.static(process.env.MP3_LIB));
@@ -73,7 +75,7 @@ app.post("/song/:songId/volume", authorizedRoute(updateVolumeSetting));
 app.post("/song/:songId/pitch", authorizedRoute(updatePitchSetting));
 app.post(
   "/song/:songId/startOffset",
-  authorizedRoute(updateStartOffsetSetting)
+  authorizedRoute(updateStartOffsetSetting),
 );
 app.post("/song/:songId/startDelay", authorizedRoute(updateStartDelaySetting));
 app.post("/song/:songId/loop", authorizedRoute(insertLoop));
@@ -85,6 +87,8 @@ app.post("/song/:songId/rifftime", authorizedRoute(updateRiffTime));
 app.post("/song/:songId/addriff", authorizedRoute(addRiff));
 app.post("/song/:songId/rifforder", authorizedRoute(updateRiffOrder));
 app.post("/song/:songId/addtablature", authorizedRoute(addTablature));
+app.post("/song/:songId/ordertablature", authorizedRoute(orderTablature));
+app.post("/song/:songId/updateTablature", authorizedRoute(updateTablature));
 
 // /exercise/*
 app.get("/exercise/:exerciseId", authorizedRoute(getExercise));

@@ -1,7 +1,7 @@
 import { useActionState, useEffect } from "react";
 import { debounce } from "@mui/material";
 import deepmerge from "deepmerge";
-import { Song, TablatureInput } from "guitar-dashboard-types";
+import { Song, Tablature, TablatureInput } from "guitar-dashboard-types";
 import { useNavigate } from "react-router-dom";
 import { post } from "../../../../../utils/post";
 import { get } from "../../../../../utils/get";
@@ -46,7 +46,16 @@ export type SongAction =
     }
   | ({
       type: "addtablature";
-    } & TablatureInput);
+    } & TablatureInput)
+  | ({
+      type: "updatetablature";
+    } & Pick<Tablature, "id"> &
+      Partial<Pick<Tablature, "tuning" | "label" | "labelDesc">>)
+  | {
+      type: "ordertablature";
+      tablatureId: string;
+      order: number;
+    };
 
 export const useSong = (songId?: string) => {
   const navigate = useNavigate();

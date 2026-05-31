@@ -13,7 +13,7 @@ import { post } from "./utils/post";
 
 export const App = () => {
   const [library, setLibrary] = useState<"mounting" | "mounted" | "error">(
-    "mounting"
+    "mounting",
   );
 
   useEffect(() => {
