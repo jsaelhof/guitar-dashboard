@@ -14,7 +14,7 @@ import { writeFile, unlink, mkdir, access } from "fs/promises";
 async function writeDataUriToFile(
   dataUri: string,
   outputDir: string,
-  index: number
+  index: number,
 ) {
   // Extract base64 data
   const base64Data = dataUri.split(",")[1];
@@ -80,7 +80,8 @@ export const addTablature = async (req: Request, res: Response) => {
 
     if (songId && tab) {
       const validTabUris = uri.filter(
-        (uri) => uri && typeof uri === "string" && uri.startsWith("data:image/")
+        (uri) =>
+          uri && typeof uri === "string" && uri.startsWith("data:image/"),
       );
 
       if (validTabUris.length === 0)
@@ -101,7 +102,7 @@ export const addTablature = async (req: Request, res: Response) => {
       // TODO: Could use a retry-enabled version if a write fails.
       // Process all URIs with Promise.all for atomic operation
       const writePromises = validTabUris.map((uri, i) =>
-        writeDataUriToFile(uri, outputDir, i)
+        writeDataUriToFile(uri, outputDir, i),
       );
 
       // This will throw if any file fails to write
@@ -123,7 +124,7 @@ export const addTablature = async (req: Request, res: Response) => {
             },
           },
         },
-        { returnDocument: "after", projection: { _id: 0 } }
+        { returnDocument: "after", projection: { _id: 0 } },
       );
 
       if (songData?.tablature) {
@@ -147,7 +148,7 @@ export const addTablature = async (req: Request, res: Response) => {
     // If we have any written files and an error occurred, clean them up
     if (writtenFiles.length > 0) {
       console.log(`Cleaning up ${writtenFiles.length} files due to error...`);
-      // await cleanupFiles(writtenFiles);
+      await cleanupFiles(writtenFiles);
     }
 
     res.send({ error: true, scope: "song", type: "add" });

@@ -52,8 +52,12 @@ export type SongAction =
     } & Pick<Tablature, "id"> &
       Partial<Pick<Tablature, "tuning" | "label" | "labelDesc">>)
   | {
+      type: "deletetablature";
+      id: string;
+    }
+  | {
       type: "ordertablature";
-      tablatureId: string;
+      id: string;
       order: number;
     };
 

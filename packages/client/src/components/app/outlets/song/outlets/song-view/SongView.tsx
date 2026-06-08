@@ -1,6 +1,6 @@
 import { PlaylistAdd, Settings } from "@mui/icons-material";
 import { Box, Divider, Tab, Tabs } from "@mui/material";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Content, Header, ScrollableContentArea } from "./SongView.styles";
 import AddTablature from "./components/add-tablature/AddTablature";
 import PDF from "./components/pdf/PDF";
@@ -30,17 +30,23 @@ const SongView = () => {
   }>();
 
   const [navTabId, setNavTabId] = useState(0);
-  const onTabChange = (_, activeTab: number) => setNavTabId(activeTab);
 
   const [tablatureTabId, setTablatureTabId] = useState(0);
   const onTablatureTabChange = (_, activeTab: number) =>
     setTablatureTabId(activeTab);
 
-  // useEffect(() => {
-  //   if (song && !song.tablature?.length && !!song.riffs?.length) {
-  //     setNavTabId(1);
-  //   }
-  // }, [song]);
+  const onTabChange = useCallback(
+    (_, activeTab: number) => {
+      // Edge case here: If a tab is the last in the array and gets deleted while also active, then the tabs index becomes out of bounds.
+      // This resets it to the first tablature entry in this case when changing the top-level tabs id.
+      if (activeTab === 0 && tablatureTabId >= (song?.tablature ?? []).length) {
+        setTablatureTabId(0);
+      }
+
+      setNavTabId(activeTab);
+    },
+    [tablatureTabId, song?.tablature],
+  );
 
   const scrollRef = useRef<HTMLDivElement>(null);
 

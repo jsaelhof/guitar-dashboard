@@ -15,6 +15,7 @@ import { addRiff } from "./routes/song/:songId/add-riff.js";
 import { addTablature } from "./routes/song/:songId/add-tablature.js";
 import { addVideo } from "./routes/song/:songId/add-video.js";
 import { deleteLoop } from "./routes/song/:songId/delete-loop.js";
+import { deleteTablature } from "./routes/song/:songId/delete-tablature.js";
 import { deleteVideo } from "./routes/song/:songId/delete-video.js";
 import { getSong } from "./routes/song/:songId/get-song.js";
 import { insertLoop } from "./routes/song/:songId/insert-loop.js";
@@ -88,7 +89,8 @@ app.post("/song/:songId/addriff", authorizedRoute(addRiff));
 app.post("/song/:songId/rifforder", authorizedRoute(updateRiffOrder));
 app.post("/song/:songId/addtablature", authorizedRoute(addTablature));
 app.post("/song/:songId/ordertablature", authorizedRoute(orderTablature));
-app.post("/song/:songId/updateTablature", authorizedRoute(updateTablature));
+app.post("/song/:songId/updatetablature", authorizedRoute(updateTablature));
+app.post("/song/:songId/deletetablature", authorizedRoute(deleteTablature));
 
 // /exercise/*
 app.get("/exercise/:exerciseId", authorizedRoute(getExercise));

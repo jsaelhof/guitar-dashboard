@@ -6,10 +6,10 @@ export const orderTablature = async (req: Request, res: Response) => {
   const db = await DB();
 
   const { songId } = req.params;
-  const { tablatureId, order } = req.body;
+  const { id, order } = req.body;
 
   try {
-    if (songId && tablatureId && order != null) {
+    if (songId && id && order != null) {
       // TODO: I think this might be able to be done in mongo directly with some combo of pull and push (using $each and $position) but I haven't figured out how to capture the pulled tablature to use in the push.
       // This pull worked to remove an item: mongodb.collection("songs").findOneAndUpdate({ id: '0252' }, { $pull: { tablature: { id: "fc650b5b-f3cd-4b61-944a-891e9c725a26" } } })
 
@@ -20,13 +20,13 @@ export const orderTablature = async (req: Request, res: Response) => {
       if (songData?.tablature) {
         // Find the tablature being moved
         const tablature = songData.tablature.find(
-          ({ id }) => tablatureId === id,
+          (tablature) => tablature.id === id,
         );
 
         if (tablature) {
           // Update the tablature array by removing the tablature and then splicing it in.
           const update = songData.tablature
-            .filter(({ id }) => tablatureId !== id)
+            .filter((tablature) => tablature.id !== id)
             .toSpliced(order, 0, tablature);
 
           // Overwrite the whole array with the update.
